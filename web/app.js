@@ -180,14 +180,34 @@
 
       if (isImg) {
         reader.onload = (e) => {
-          state.stagedAttachments.push({
+          const att = {
             name: file.name,
             size: file.size,
             isImage: true,
             dataUrl: e.target.result,
             content: `[Attached Image: ${file.name} (${formatBytes(file.size)})]`,
-          });
+            analysis: null,
+            analysisMarkdown: null,
+          };
+          state.stagedAttachments.push(att);
           renderAttachedChips();
+
+          // Pre-fetch forensic visual analysis in the background
+          const b64Data = e.target.result.split(',')[1] || e.target.result;
+          fetch(`${API_BASE}/v1/images/inspect`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ b64_json: b64Data, filename: file.name }),
+          })
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+              if (data && data.report) {
+                att.analysis = data.report;
+                att.analysisMarkdown = data.markdown;
+                renderAttachedChips();
+              }
+            })
+            .catch(err => console.debug('Pre-inspection background notice:', err));
         };
         reader.readAsDataURL(file);
       } else {
@@ -468,6 +488,21 @@
   // --------------------------------------------------------------------------
   // UI Rendering & Message View
   // --------------------------------------------------------------------------
+  function getColorHexForName(name) {
+    const n = (name || '').toLowerCase();
+    if (n.includes('dark') || n.includes('black') || n.includes('navy')) return '#1e293b';
+    if (n.includes('light') || n.includes('white')) return '#f8fafc';
+    if (n.includes('gray') || n.includes('slate') || n.includes('neutral')) return '#64748b';
+    if (n.includes('red') || n.includes('crimson')) return '#ef4444';
+    if (n.includes('orange') || n.includes('amber')) return '#f97316';
+    if (n.includes('yellow') || n.includes('gold')) return '#eab308';
+    if (n.includes('green') || n.includes('emerald') || n.includes('lime')) return '#10b981';
+    if (n.includes('cyan') || n.includes('teal')) return '#06b6d4';
+    if (n.includes('blue') || n.includes('indigo')) return '#3b82f6';
+    if (n.includes('purple') || n.includes('magenta')) return '#a855f7';
+    return '#6366f1';
+  }
+
   function renderChatThread() {
     const sess = state.sessions[state.currentSessionId];
     if (!sess || !sess.messages || sess.messages.length === 0) {
@@ -481,13 +516,13 @@
     elements.chatThread.innerHTML = '';
 
     sess.messages.forEach((msg) => {
-      appendMessageToDOM(msg.role, msg.content, msg.sources, false);
+      appendMessageToDOM(msg.role, msg.displayContent || msg.content, msg.sources, false, msg.attachments || []);
     });
 
     scrollToBottom();
   }
 
-  function appendMessageToDOM(role, content, sources = [], isStreaming = false) {
+  function appendMessageToDOM(role, content, sources = [], isStreaming = false, attachments = []) {
     elements.heroWelcome.style.display = 'none';
 
     const row = document.createElement('div');
@@ -505,7 +540,7 @@
 
     const sender = document.createElement('div');
     sender.className = 'message-sender';
-    
+
     if (role === 'user') {
       sender.textContent = 'You';
     } else {
@@ -526,11 +561,199 @@
 
     const body = document.createElement('div');
     body.className = `message-body ${role === 'assistant' ? 'markdown-body' : ''}`;
-    
+
     if (role === 'assistant') {
       body.innerHTML = renderMarkdown(content) + (isStreaming ? '<span class="streaming-cursor"></span>' : '');
     } else {
-      body.textContent = content;
+      body.innerHTML = '';
+
+      // Render image attachments and files directly in chat bubble
+      if (attachments && attachments.length > 0) {
+        const attachWrapper = document.createElement('div');
+        attachWrapper.className = 'chat-message-attachments';
+
+        attachments.forEach((att) => {
+          if (att.isImage && att.dataUrl) {
+            const card = document.createElement('div');
+            card.className = 'chat-attached-image-card';
+
+            const dims = att.analysis?.dimensions || '';
+            const tone = att.analysis?.pixel_stats?.dominant_tone || '';
+
+            card.innerHTML = `
+              <div class="chat-attached-image-preview-wrapper">
+                <img src="${att.dataUrl}" alt="${att.name}" class="chat-attached-image-thumb" loading="lazy" />
+                <div class="chat-attached-image-actions-overlay">
+                  <button class="btn-chat-img-action btn-chat-zoom" title="Zoom image in lightbox">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                    Zoom
+                  </button>
+                  <button class="btn-chat-img-action btn-chat-full-inspect" title="Open Forensic Inspector Modal">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    Forensic Modal
+                  </button>
+                </div>
+              </div>
+              <div class="chat-attached-image-info-bar">
+                <div class="chat-attached-image-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  <span class="chat-attached-image-name" title="${att.name}">${att.name}</span>
+                </div>
+                <div class="chat-attached-image-badges">
+                  <span class="chat-img-badge size">${formatBytes(att.size)}</span>
+                  ${dims ? `<span class="chat-img-badge res">${dims}</span>` : ''}
+                  ${tone ? `<span class="chat-img-badge tone">${tone}</span>` : ''}
+                </div>
+              </div>
+              <div class="chat-attached-image-drawer">
+                <button class="btn-toggle-chat-analysis">
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="drawer-chevron"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    <span>Visual Content & Forensic Analysis</span>
+                  </div>
+                  <span class="chat-analyzable-tag">Analyzable</span>
+                </button>
+                <div class="chat-analysis-panel" style="display:none;">
+                  <div class="chat-analysis-loading"><div class="spinner"></div> Extracting visual & pixel metrics...</div>
+                  <div class="chat-analysis-body"></div>
+                </div>
+              </div>
+            `;
+
+            // Bind Zoom / Lightbox
+            card.querySelector('.btn-chat-zoom').onclick = () => {
+              openLightbox({ url: att.dataUrl, alt: att.name });
+            };
+            card.querySelector('.chat-attached-image-thumb').onclick = () => {
+              openLightbox({ url: att.dataUrl, alt: att.name });
+            };
+
+            // Bind Forensic Modal
+            card.querySelector('.btn-chat-full-inspect').onclick = () => {
+              openInspector();
+              runForensicInspection({ b64_json: att.dataUrl.split(',')[1] || att.dataUrl, filename: att.name });
+            };
+
+            // Bind Visual Analysis Drawer Toggle
+            const toggleBtn = card.querySelector('.btn-toggle-chat-analysis');
+            const drawerPanel = card.querySelector('.chat-analysis-panel');
+            const loadingEl = card.querySelector('.chat-analysis-loading');
+            const bodyEl = card.querySelector('.chat-analysis-body');
+            const chevron = card.querySelector('.drawer-chevron');
+
+            function renderAnalysisInDrawer(report) {
+              loadingEl.style.display = 'none';
+              const pix = report.pixel_stats || {};
+              const idat = report.idat_analysis || {};
+              const topColors = pix.dominant_colors || [];
+
+              bodyEl.innerHTML = `
+                <div class="chat-metrics-grid">
+                  <div class="chat-metric-item">
+                    <span class="metric-lbl">Resolution & Aspect</span>
+                    <span class="metric-val">${report.dimensions || 'Unknown'} (${report.aspect_ratio || 'N/A'}${report.megapixels ? `, ${report.megapixels} MP` : ''})</span>
+                  </div>
+                  <div class="chat-metric-item">
+                    <span class="metric-lbl">Visual Tone</span>
+                    <span class="metric-val">${pix.dominant_tone || 'Standard'} Tone (Mean Lum: ${pix.mean_luminance || 'N/A'}/255)</span>
+                  </div>
+                  <div class="chat-metric-item">
+                    <span class="metric-lbl">Temperature / Vibrancy</span>
+                    <span class="metric-val">${pix.color_temperature || 'Neutral'} • ${pix.saturation_desc || 'Standard'}</span>
+                  </div>
+                  <div class="chat-metric-item">
+                    <span class="metric-lbl">Contrast Range</span>
+                    <span class="metric-val">${pix.contrast_desc || 'Standard'}</span>
+                  </div>
+                  ${pix.visual_type ? `
+                    <div class="chat-metric-item full-width">
+                      <span class="metric-lbl">Visual Classification</span>
+                      <span class="metric-val">${pix.visual_type}</span>
+                    </div>
+                  ` : ''}
+                  ${topColors.length > 0 ? `
+                    <div class="chat-metric-item full-width">
+                      <span class="metric-lbl">Dominant Palette</span>
+                      <div class="chat-palette-swatches">
+                        ${topColors.map(c => `
+                          <span class="chat-swatch-tag">
+                            <span class="chat-swatch-chip" style="background:${getColorHexForName(c.name)};"></span>
+                            <span>${c.name} (${c.percent}%)</span>
+                          </span>
+                        `).join('')}
+                      </div>
+                    </div>
+                  ` : ''}
+                  <div class="chat-metric-item">
+                    <span class="metric-lbl">Compression / Payload</span>
+                    <span class="metric-val">${idat.compression_ratio ? `${idat.compression_ratio}x` : 'N/A'} (zlib compressed binary)</span>
+                  </div>
+                  <div class="chat-metric-item">
+                    <span class="metric-lbl">Entropy & Integrity</span>
+                    <span class="metric-val">${idat.compressed_entropy || 'N/A'} b/B • ${report.anomalies?.length ? `${report.anomalies.length} anomaly` : 'Clean (CRC Valid)'}</span>
+                  </div>
+                </div>
+              `;
+            }
+
+            toggleBtn.onclick = () => {
+              const isOpen = drawerPanel.style.display !== 'none';
+              if (isOpen) {
+                drawerPanel.style.display = 'none';
+                chevron.style.transform = 'rotate(0deg)';
+              } else {
+                drawerPanel.style.display = 'block';
+                chevron.style.transform = 'rotate(180deg)';
+
+                if (att.analysis) {
+                  renderAnalysisInDrawer(att.analysis);
+                } else {
+                  loadingEl.style.display = 'flex';
+                  const b64Data = att.dataUrl.split(',')[1] || att.dataUrl;
+                  fetch(`${API_BASE}/v1/images/inspect`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ b64_json: b64Data, filename: att.name }),
+                  })
+                    .then(r => r.json())
+                    .then(d => {
+                      if (d && d.report) {
+                        att.analysis = d.report;
+                        att.analysisMarkdown = d.markdown;
+                        renderAnalysisInDrawer(d.report);
+                      } else {
+                        loadingEl.textContent = 'Analysis could not be extracted.';
+                      }
+                    })
+                    .catch(e => {
+                      loadingEl.textContent = `Analysis error: ${e.message}`;
+                    });
+                }
+              }
+            };
+
+            attachWrapper.appendChild(card);
+          } else {
+            // Text or code attachment
+            const chip = document.createElement('div');
+            chip.className = 'chat-attached-file-badge';
+            chip.innerHTML = `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+              <span>${att.name} (${formatBytes(att.size)})</span>
+            `;
+            attachWrapper.appendChild(chip);
+          }
+        });
+
+        body.appendChild(attachWrapper);
+      }
+
+      if (content && content.trim()) {
+        const textNode = document.createElement('div');
+        textNode.className = 'chat-user-text';
+        textNode.textContent = content;
+        body.appendChild(textNode);
+      }
     }
 
     wrapper.appendChild(header);
@@ -1025,12 +1248,17 @@
 
     // Check if attachments are staged
     let effectiveUserPrompt = trimmedPrompt;
-    if (state.stagedAttachments && state.stagedAttachments.length > 0) {
-      const fileBlocks = state.stagedAttachments.map(att => {
+    const currentAttachments = [...state.stagedAttachments];
+    if (currentAttachments && currentAttachments.length > 0) {
+      const fileBlocks = currentAttachments.map(att => {
+        if (att.isImage) {
+          const analysisSnippet = att.analysisMarkdown ? att.analysisMarkdown : `[Attached Image: ${att.name} (${formatBytes(att.size)})]`;
+          return `### Attached Image: ${att.name} (${formatBytes(att.size)})\n${analysisSnippet}`;
+        }
         const ext = att.name.split('.').pop() || 'text';
         return `### File: ${att.name} (${formatBytes(att.size)})\n\`\`\`${ext}\n${att.content}\n\`\`\``;
       });
-      effectiveUserPrompt = `## Codebase / File Attachments (${state.stagedAttachments.length} files):\n\n` +
+      effectiveUserPrompt = `## Codebase & File Attachments (${currentAttachments.length} items):\n\n` +
         fileBlocks.join('\n\n') +
         `\n\n---\n\n## User Instruction:\n${trimmedPrompt}`;
 
@@ -1046,8 +1274,13 @@
     }
 
     // Add user message to state & DOM
-    currentSession.messages.push({ role: 'user', content: effectiveUserPrompt, displayContent: trimmedPrompt });
-    appendMessageToDOM('user', trimmedPrompt);
+    currentSession.messages.push({
+      role: 'user',
+      content: effectiveUserPrompt,
+      displayContent: trimmedPrompt,
+      attachments: currentAttachments,
+    });
+    appendMessageToDOM('user', trimmedPrompt, [], false, currentAttachments);
     saveSessions();
     scrollToBottom();
 
@@ -1067,11 +1300,23 @@
     else if (state.modes.agent) targetModel += '-agent';
     else if (state.modes.deep) targetModel += '-deep';
 
-    // Map conversation messages
-    const apiMessages = currentSession.messages.map((m) => ({
-      role: m.role,
-      content: m.content,
-    }));
+    // Map conversation messages into API payload (supporting OpenAI Vision schema)
+    const apiMessages = currentSession.messages.map((m) => {
+      if (m.role === 'user' && m.attachments && m.attachments.some(a => a.isImage && a.dataUrl)) {
+        const parts = [{ type: 'text', text: m.content }];
+        m.attachments.filter(a => a.isImage && a.dataUrl).forEach(a => {
+          parts.push({
+            type: 'image_url',
+            image_url: {
+              url: a.dataUrl,
+              filename: a.name,
+            },
+          });
+        });
+        return { role: m.role, content: parts };
+      }
+      return { role: m.role, content: m.content };
+    });
 
     state.abortController = new AbortController();
     let accumulatedContent = '';

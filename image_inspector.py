@@ -79,6 +79,41 @@ def calculate_entropy(data: bytes) -> float:
     return round(entropy, 4)
 
 
+def compute_aspect_ratio(width: int, height: int) -> Tuple[str, str]:
+    """Calculate standard aspect ratio and orientation string."""
+    if width <= 0 or height <= 0:
+        return "Unknown", "Unknown"
+    gcd_val = math.gcd(width, height)
+    rw = width // gcd_val
+    rh = height // gcd_val
+    ratio = width / height
+
+    orientation = "Square"
+    if ratio > 1.05:
+        orientation = "Landscape"
+    elif ratio < 0.95:
+        orientation = "Portrait"
+
+    if abs(ratio - 16 / 9) < 0.06:
+        ratio_str = "16:9"
+    elif abs(ratio - 4 / 3) < 0.06:
+        ratio_str = "4:3"
+    elif abs(ratio - 1.0) < 0.03:
+        ratio_str = "1:1"
+    elif abs(ratio - 9 / 16) < 0.06:
+        ratio_str = "9:16"
+    elif abs(ratio - 21 / 9) < 0.06:
+        ratio_str = "21:9"
+    elif abs(ratio - 3 / 2) < 0.06:
+        ratio_str = "3:2"
+    elif rw <= 32 and rh <= 32:
+        ratio_str = f"{rw}:{rh}"
+    else:
+        ratio_str = f"{ratio:.2f}:1"
+
+    return f"{ratio_str} ({orientation})", orientation
+
+
 class PNGInspector:
     """
     Forensic parser and IDAT decompressor for Portable Network Graphics (PNG).
@@ -100,6 +135,7 @@ class PNGInspector:
         self.error: Optional[str] = None
         self.chunks: List[Dict[str, Any]] = []
         self.header: Dict[str, Any] = {}
+        self.palette: bytes = b""
         self.text_metadata: Dict[str, str] = {}
         self.idat_chunks: List[bytes] = []
         self.trailing_bytes: bytes = b""
@@ -180,6 +216,10 @@ class PNGInspector:
                     "bytes_per_pixel": max(1, (bit_depth * channels + 7) // 8),
                 }
                 chunk_info["details"] = self.header
+
+            elif chunk_type == "PLTE":
+                self.palette = chunk_data
+                chunk_info["palette_entries"] = len(chunk_data) // 3
 
             elif chunk_type == "IDAT":
                 self.idat_chunks.append(chunk_data)
@@ -344,29 +384,96 @@ class PNGInspector:
                 for k, v in filter_counts.items()
             }
 
-            # 4. Color & Pixel Statistics
-            sample_step = max(1, total_rows // 50)  # Sample up to 50 rows for fast statistical summary
+            # 4. Color & Pixel Statistics with Deep Visual Breakdown
+            sample_step = max(1, total_rows // 60)
+            x_step = max(1, width // 60)
             sample_pixels = 0
             sum_r, sum_g, sum_b, sum_a = 0, 0, 0, 0
+            min_lum = 255.0
+            max_lum = 0.0
+            sum_sat = 0.0
+            color_counts: Dict[str, int] = {}
+
+            color_type = self.header.get("color_type", 2)
+            has_palette = (color_type == 3 and len(self.palette) >= 3)
 
             for y in range(0, height, sample_step):
                 row = unfiltered_matrix[y]
-                for x in range(0, width, max(1, width // 50)):
+                for x in range(0, width, x_step):
                     idx = x * bpp
-                    if bpp >= 3:
+                    if idx >= len(row):
+                        continue
+                    if has_palette:
+                        pal_idx = row[idx] * 3
+                        if pal_idx + 2 < len(self.palette):
+                            r = self.palette[pal_idx]
+                            g = self.palette[pal_idx + 1]
+                            b = self.palette[pal_idx + 2]
+                            a = 255
+                        else:
+                            r = g = b = 0
+                            a = 255
+                    elif bpp >= 3:
                         r = row[idx]
-                        g = row[idx + 1]
-                        b = row[idx + 2]
-                        a = row[idx + 3] if bpp >= 4 else 255
+                        g = row[idx + 1] if idx + 1 < len(row) else r
+                        b = row[idx + 2] if idx + 2 < len(row) else r
+                        a = row[idx + 3] if (bpp >= 4 and idx + 3 < len(row)) else 255
                     elif bpp == 1:
                         r = g = b = row[idx]
                         a = 255
                     elif bpp == 2:
                         r = g = b = row[idx]
-                        a = row[idx + 1]
+                        a = row[idx + 1] if idx + 1 < len(row) else 255
                     else:
                         r = g = b = a = 0
 
+                    lum = 0.299 * r + 0.587 * g + 0.114 * b
+                    if lum < min_lum:
+                        min_lum = lum
+                    if lum > max_lum:
+                        max_lum = lum
+
+                    # Saturation & Hue
+                    cmax = max(r, g, b)
+                    cmin = min(r, g, b)
+                    delta = cmax - cmin
+                    sat = (delta / cmax) if cmax > 0 else 0.0
+                    sum_sat += sat
+
+                    if a < 32:
+                        bin_name = "Transparent"
+                    elif lum < 38:
+                        bin_name = "Dark / Navy / Black"
+                    elif lum > 218 and sat < 0.15:
+                        bin_name = "Light / White Highlight"
+                    elif sat < 0.15:
+                        bin_name = "Neutral / Slate Gray"
+                    else:
+                        if delta == 0:
+                            hue = 0.0
+                        elif cmax == r:
+                            hue = (60 * ((g - b) / delta) + 360) % 360
+                        elif cmax == g:
+                            hue = (60 * ((b - r) / delta) + 120) % 360
+                        else:
+                            hue = (60 * ((r - g) / delta) + 240) % 360
+
+                        if hue < 18 or hue >= 342:
+                            bin_name = "Red / Crimson"
+                        elif hue < 45:
+                            bin_name = "Orange / Amber"
+                        elif hue < 70:
+                            bin_name = "Yellow / Gold"
+                        elif hue < 165:
+                            bin_name = "Green / Emerald"
+                        elif hue < 205:
+                            bin_name = "Cyan / Teal"
+                        elif hue < 260:
+                            bin_name = "Blue / Indigo"
+                        else:
+                            bin_name = "Purple / Magenta"
+
+                    color_counts[bin_name] = color_counts.get(bin_name, 0) + 1
                     sum_r += r
                     sum_g += g
                     sum_b += b
@@ -378,15 +485,81 @@ class PNGInspector:
                 mean_g = round(sum_g / sample_pixels, 1)
                 mean_b = round(sum_b / sample_pixels, 1)
                 mean_a = round(sum_a / sample_pixels, 1)
-                luminance = round(0.299 * mean_r + 0.587 * mean_g + 0.114 * mean_b, 1)
+                mean_lum = round(0.299 * mean_r + 0.587 * mean_g + 0.114 * mean_b, 1)
+                mean_sat = round(sum_sat / sample_pixels, 3)
+
+                # Dominant colors list
+                sorted_colors = sorted(
+                    [
+                        {"name": k, "count": v, "percent": round((v / sample_pixels) * 100, 1)}
+                        for k, v in color_counts.items()
+                        if k != "Transparent"
+                    ],
+                    key=lambda it: it["count"],
+                    reverse=True,
+                )
+                top_colors = sorted_colors[:4]
+                dominant_summary = (
+                    ", ".join(f"{c['name']} ({c['percent']}%)" for c in top_colors)
+                    if top_colors
+                    else "Uniform"
+                )
+
+                # Color temperature
+                temp_delta = mean_r - mean_b
+                if temp_delta > 15:
+                    temp_desc = "Warm"
+                elif temp_delta < -15:
+                    temp_desc = "Cool"
+                else:
+                    temp_desc = "Neutral"
+
+                # Saturation description
+                if mean_sat < 0.12:
+                    sat_desc = "Monochrome / Grayscale"
+                elif mean_sat < 0.35:
+                    sat_desc = "Muted / Low Saturation"
+                elif mean_sat < 0.65:
+                    sat_desc = "Moderate Saturation"
+                else:
+                    sat_desc = "Vibrant / High Saturation"
+
+                # Contrast description
+                contrast_span = max_lum - min_lum
+                if contrast_span > 180:
+                    contrast_desc = f"High Contrast ({min_lum:.0f} - {max_lum:.0f})"
+                elif contrast_span > 90:
+                    contrast_desc = f"Moderate Contrast ({min_lum:.0f} - {max_lum:.0f})"
+                else:
+                    contrast_desc = f"Low Contrast / Flat ({min_lum:.0f} - {max_lum:.0f})"
+
+                # Visual complexity / content type hint
+                decomp_entropy = self.scanline_analysis.get("decompressed_entropy", 0.0)
+                comp_ratio = self.scanline_analysis.get("compression_ratio", 0.0)
+                if comp_ratio > 10.0 and decomp_entropy < 5.8:
+                    visual_type = "Software UI / Code / Diagram / Clean Vector Layout"
+                elif decomp_entropy >= 7.3:
+                    visual_type = "High-Entropy Photograph / Complex Gradient or Texture"
+                else:
+                    visual_type = "Digital Artwork / Interface / Graphic Illustration"
+
                 self.pixel_stats = {
                     "sampled_pixels": sample_pixels,
                     "mean_red": mean_r,
                     "mean_green": mean_g,
                     "mean_blue": mean_b,
                     "mean_alpha": mean_a,
-                    "mean_luminance": luminance,
-                    "dominant_tone": "Light" if luminance > 128 else "Dark",
+                    "mean_luminance": mean_lum,
+                    "dominant_tone": "Light" if mean_lum > 128 else "Dark",
+                    "mean_saturation": mean_sat,
+                    "saturation_desc": sat_desc,
+                    "color_temperature": temp_desc,
+                    "contrast_desc": contrast_desc,
+                    "dominant_colors": top_colors,
+                    "dominant_summary": dominant_summary,
+                    "visual_type": visual_type,
+                    "min_luminance": round(min_lum, 1),
+                    "max_luminance": round(max_lum, 1),
                 }
 
     def get_summary(self) -> Dict[str, Any]:
@@ -413,12 +586,20 @@ class PNGInspector:
                     "description": f"CRC32 mismatch in chunk '{c.get('type')}'.",
                 })
 
+        width = self.header.get("width", 0)
+        height = self.header.get("height", 0)
+        ratio_str, orientation = compute_aspect_ratio(width, height)
+        megapixels = round((width * height) / 1_000_000, 2)
+
         return {
             "format": "PNG",
             "valid": self.valid,
             "error": self.error,
             "file_size": len(self.raw),
-            "dimensions": f"{self.header.get('width', 0)}x{self.header.get('height', 0)}",
+            "dimensions": f"{width}x{height}",
+            "aspect_ratio": ratio_str,
+            "orientation": orientation,
+            "megapixels": megapixels,
             "header": self.header,
             "total_chunks": len(self.chunks),
             "chunk_type_counts": chunk_type_counts,
@@ -496,12 +677,18 @@ class JPEGInspector:
         return self.get_summary()
 
     def get_summary(self) -> Dict[str, Any]:
+        w = self.header.get("width", 0)
+        h = self.header.get("height", 0)
+        ratio_str, orientation = compute_aspect_ratio(w, h)
         return {
             "format": "JPEG",
             "valid": self.valid,
             "error": self.error,
             "file_size": len(self.raw),
-            "dimensions": f"{self.header.get('width', 0)}x{self.header.get('height', 0)}",
+            "dimensions": f"{w}x{h}",
+            "aspect_ratio": ratio_str,
+            "orientation": orientation,
+            "megapixels": round((w * h) / 1_000_000, 2),
             "header": self.header,
             "markers_count": len(self.markers),
             "markers": self.markers,
@@ -548,11 +735,18 @@ class WEBPInspector:
                 "is_animated": is_anim,
             }
 
+        w = self.header.get("width", 0)
+        h = self.header.get("height", 0)
+        ratio_str, orientation = compute_aspect_ratio(w, h)
+
         return {
             "format": "WEBP",
             "valid": self.valid,
             "file_size": len(self.raw),
-            "dimensions": f"{self.header.get('width', 0)}x{self.header.get('height', 0)}",
+            "dimensions": f"{w}x{h}",
+            "aspect_ratio": ratio_str,
+            "orientation": orientation,
+            "megapixels": round((w * h) / 1_000_000, 2),
             "header": self.header,
         }
 
@@ -593,12 +787,16 @@ class ImageInspector:
         # GIF detection
         if data.startswith(b"GIF87a") or data.startswith(b"GIF89a"):
             w, h = struct.unpack("<HH", data[6:10]) if len(data) >= 10 else (0, 0)
+            ratio_str, orientation = compute_aspect_ratio(w, h)
             return {
                 "format": "GIF",
                 "valid": True,
                 "filename": filename,
                 "file_size": len(data),
                 "dimensions": f"{w}x{h}",
+                "aspect_ratio": ratio_str,
+                "orientation": orientation,
+                "megapixels": round((w * h) / 1_000_000, 2),
                 "header": {"width": w, "height": h, "version": data[:6].decode("ascii", errors="replace")},
                 "base64_thumbnail": cls._generate_data_uri(data, "image/gif"),
             }
@@ -658,11 +856,18 @@ class ImageInspector:
 
     @classmethod
     def format_markdown_summary(cls, rep: Dict[str, Any]) -> str:
-        """Render a formatted markdown summary for terminal display or prompt injection."""
+        """Render an in-depth visual and forensic markdown summary for prompt injection or chat display."""
         fmt = rep.get("format", "UNKNOWN")
+        dims = rep.get("dimensions", "Unknown")
+        aspect = rep.get("aspect_ratio")
+        mp = rep.get("megapixels")
+        dim_str = f"`{dims}`"
+        if aspect:
+            dim_str += f" ({aspect}" + (f", {mp} MP)" if mp else ")")
+
         lines = [
-            f"### Forensic Image Analysis: {rep.get('filename', 'image')} ({fmt})",
-            f"- **Resolution**: `{rep.get('dimensions', 'Unknown')}`",
+            f"### Visual & Forensic Image Analysis: {rep.get('filename', 'image')} ({fmt})",
+            f"- **Resolution & Aspect**: {dim_str}",
             f"- **File Size**: `{rep.get('file_size', 0):,} bytes`",
         ]
 
@@ -672,8 +877,24 @@ class ImageInspector:
             pix = rep.get("pixel_stats", {})
             anomalies = rep.get("anomalies", [])
 
-            lines.append(f"- **Color Space**: `{hdr.get('color_space')} ({hdr.get('bit_depth')}-bit)`")
-            lines.append(f"- **Interlace**: `{hdr.get('interlace_method')}`")
+            lines.append(f"- **Color Space & Depth**: `{hdr.get('color_space')} ({hdr.get('bit_depth')}-bit)` | Interlace: `{hdr.get('interlace_method')}`")
+
+            # Visual characteristics
+            if pix:
+                lines.append(
+                    f"- **Dominant Tone & Brightness**: `{pix.get('dominant_tone')} Tone` "
+                    f"(Mean Luminance: `{pix.get('mean_luminance')}`/255 | {pix.get('contrast_desc')})"
+                )
+                if pix.get("dominant_summary"):
+                    lines.append(f"- **Color Palette**: `{pix.get('dominant_summary')}`")
+                lines.append(
+                    f"- **Color Metrics**: Mean RGB(`{pix.get('mean_red')}`, `{pix.get('mean_green')}`, `{pix.get('mean_blue')}`) | "
+                    f"Temperature: `{pix.get('color_temperature')}` | Saturation: `{pix.get('saturation_desc')}`"
+                )
+                if pix.get("visual_type"):
+                    lines.append(f"- **Visual Layout Type**: `{pix.get('visual_type')}`")
+
+            # Binary / Forensic characteristics
             lines.append(f"- **Total Chunks**: `{rep.get('total_chunks', 0)}` (IDAT chunks: `{idat.get('idat_chunks_count', 0)}`)")
             lines.append(
                 f"- **IDAT Compression**: `zlib-compressed binary` "
@@ -691,12 +912,6 @@ class ImageInspector:
             if filt_dist:
                 filt_str = ", ".join(f"{k}: {v.get('percent')}%" for k, v in filt_dist.items() if v.get("count", 0) > 0)
                 lines.append(f"- **Scanline Filter Usage**: `{filt_str}`")
-
-            if pix:
-                lines.append(
-                    f"- **Pixel Color Metrics**: Mean RGB(`{pix.get('mean_red')}`, `{pix.get('mean_green')}`, `{pix.get('mean_blue')}`) | "
-                    f"Luminance: `{pix.get('mean_luminance')}` ({pix.get('dominant_tone')})"
-                )
 
             if anomalies:
                 lines.append(f"- **Security / Anomalies Detected**: `{len(anomalies)} issue(s)`")

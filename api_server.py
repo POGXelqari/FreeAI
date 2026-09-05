@@ -321,25 +321,70 @@ def get_maintainer() -> PoolMaintainer:
 def extract_prompt_and_context(messages: List[ChatMessage]) -> Tuple[str, Optional[str], List[Dict[str, str]]]:
     """
     Extracts current user prompt, system instructions, and prior dialogue history
-    from OpenAI messages array.
+    from OpenAI messages array. Multimodal image_url parts and image data URIs are
+    automatically processed via ImageInspector into rich visual & structural metrics.
     """
+    import re
     system_prompt = None
     history: List[Dict[str, str]] = []
     current_user_prompt = ""
 
     for i, msg in enumerate(messages):
-        # Extract plain string content
+        content_str = ""
+        # Extract string or multimodal list parts
         if isinstance(msg.content, str):
             content_str = msg.content
         elif isinstance(msg.content, list):
-            text_parts = [
-                part.get("text", "")
-                for part in msg.content
-                if isinstance(part, dict) and part.get("type") == "text"
-            ]
+            text_parts: List[str] = []
+            image_blocks: List[str] = []
+            for part in msg.content:
+                if not isinstance(part, dict):
+                    continue
+                ptype = part.get("type", "")
+                if ptype == "text":
+                    text_parts.append(part.get("text", ""))
+                elif ptype in ("image_url", "image", "file"):
+                    img_data = part.get("image_url") or part.get("image") or part
+                    url = img_data.get("url") if isinstance(img_data, dict) else str(img_data)
+                    fname = (
+                        (img_data.get("filename") if isinstance(img_data, dict) else None)
+                        or part.get("name")
+                        or "attached_image.png"
+                    )
+                    if ImageInspector and url:
+                        try:
+                            if url.startswith("data:"):
+                                rep = ImageInspector.inspect_base64(url, filename=fname)
+                            elif url.startswith("http://") or url.startswith("https://"):
+                                rep = ImageInspector.inspect_url(url)
+                            elif os.path.isfile(url):
+                                rep = ImageInspector.inspect_file(url)
+                            else:
+                                rep = ImageInspector.inspect_base64(url, filename=fname)
+
+                            if rep.get("valid", True):
+                                md = ImageInspector.format_markdown_summary(rep)
+                                image_blocks.append(f"## Visual Analysis for Attached Image ({fname}):\n{md}")
+                        except Exception as exc:
+                            logger.warning(f"[Vision] Failed to inspect image part '{fname}': {exc}")
+
             content_str = "".join(text_parts)
+            if image_blocks:
+                content_str += "\n\n" + "\n\n".join(image_blocks)
         else:
             content_str = str(msg.content)
+
+        # Also inspect any raw base64 data URIs embedded inside a string
+        if ImageInspector and ("data:image/" in content_str):
+            uris = re.findall(r"data:image/(?:png|jpe?g|webp|gif|bmp);base64,([A-Za-z0-9+/=]+)", content_str)
+            for idx, b64 in enumerate(uris[:2]):
+                try:
+                    rep = ImageInspector.inspect_base64(b64, filename=f"image_{idx+1}.png")
+                    if rep.get("valid", True):
+                        md = ImageInspector.format_markdown_summary(rep)
+                        content_str += f"\n\n## Visual Analysis for Attached Image (image_{idx+1}.png):\n{md}"
+                except Exception as exc:
+                    logger.warning(f"[Vision] Failed to inspect embedded base64 image: {exc}")
 
         content_str = content_str.strip()
 
@@ -639,6 +684,27 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
             dirs=raw_dirs if raw_dirs else None,
         )
         current_prompt = bundled_prompt
+
+    # Ingest image attachments via ImageInspector for deep visual metrics
+    if ImageInspector and raw_files:
+        img_analysis_blocks = []
+        for rf in raw_files:
+            if isinstance(rf, str) and (rf.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif")) or rf.startswith("data:image/")):
+                try:
+                    if rf.startswith("data:image/"):
+                        rep = ImageInspector.inspect_base64(rf)
+                        fname = "attached_image.png"
+                    elif os.path.isfile(rf):
+                        rep = ImageInspector.inspect_file(rf)
+                        fname = os.path.basename(rf)
+                    else:
+                        continue
+                    if rep.get("valid", True):
+                        img_analysis_blocks.append(f"## Visual Analysis for Attached Image ({fname}):\n" + ImageInspector.format_markdown_summary(rep))
+                except Exception as e:
+                    logger.warning(f"[Vision] Could not inspect file {rf}: {e}")
+        if img_analysis_blocks:
+            current_prompt += "\n\n" + "\n\n".join(img_analysis_blocks)
 
     effective_prompt = format_effective_prompt(current_prompt, system_prompt, history)
 

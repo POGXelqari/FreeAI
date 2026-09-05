@@ -1817,6 +1817,292 @@ html, body {
 }
 
 /* ==========================================================================
+   Chat Message Attachments & Direct Image Visualization
+   ========================================================================== */
+
+.chat-message-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.chat-attached-image-card {
+  background: rgba(13, 19, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  max-width: 540px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.chat-attached-image-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.chat-attached-image-preview-wrapper {
+  position: relative;
+  width: 100%;
+  max-height: 280px;
+  min-height: 120px;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.chat-attached-image-thumb {
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.chat-attached-image-preview-wrapper:hover .chat-attached-image-thumb {
+  transform: scale(1.02);
+}
+
+.chat-attached-image-actions-overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.chat-attached-image-preview-wrapper:hover .chat-attached-image-actions-overlay {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.btn-chat-img-action {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-chat-img-action:hover {
+  background: #6366f1;
+  border-color: #818cf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.chat-attached-image-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(2, 6, 23, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.chat-attached-image-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-attached-image-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+
+.chat-attached-image-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.chat-img-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chat-img-badge.res {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.chat-img-badge.tone {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.chat-attached-image-drawer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 13, 24, 0.55);
+}
+
+.btn-toggle-chat-analysis {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: none;
+  border: none;
+  color: #a5b4fc;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.btn-toggle-chat-analysis:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #c7d2fe;
+}
+
+.drawer-chevron {
+  transition: transform 0.2s ease;
+}
+
+.chat-analyzable-tag {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 12px;
+  padding: 1px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chat-analysis-panel {
+  padding: 12px 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  background: rgba(2, 6, 23, 0.4);
+}
+
+.chat-analysis-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 4px 0;
+}
+
+.chat-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+}
+
+.chat-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chat-metric-item.full-width {
+  grid-column: span 2;
+}
+
+.chat-metric-item .metric-lbl {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chat-metric-item .metric-val {
+  color: #f1f5f9;
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+
+.chat-palette-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.chat-swatch-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  color: #cbd5e1;
+}
+
+.chat-swatch-chip {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: inline-block;
+}
+
+.chat-attached-file-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  max-width: fit-content;
+}
+
+.chat-user-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #f1f5f9;
+  word-break: break-word;
+}
+
+/* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
 
