@@ -668,6 +668,54 @@ class UseAIChatClient:
             print(f"[ChatClient] Error retrieving auth tokens: {e}")
             return None, None
 
+    def upload_file(
+        self,
+        file_bytes: bytes,
+        filename: str = "image.png",
+        mime_type: str = "image/png",
+        timeout: int = 25,
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Uploads a binary file or image to Use.ai's Cloudflare R2 storage endpoint (https://files.use.ai/upload).
+        Returns a dict containing:
+          - 'key': R2 storage key (e.g., 'chat/files/<uuid>-<filename>')
+          - 'url': Public CDN URL (e.g., 'https://files.use.ai/files/<key>')
+          - 'filename': Clean filename
+          - 'mediaType': MIME type
+        Returns None if upload fails.
+        """
+        try:
+            upload_url = "https://files.use.ai/upload"
+            s = requests.Session()
+            s.cookies = self.session.cookies
+            headers = {
+                "User-Agent": self.USER_AGENT,
+                "Origin": self.BASE_URL,
+                "Referer": f"{self.BASE_URL}/",
+                "X-User-Id": self.user_id,
+            }
+            files = {
+                "file": (filename, file_bytes, mime_type)
+            }
+            resp = s.post(upload_url, files=files, headers=headers, timeout=timeout)
+            if resp.status_code in (200, 201):
+                data = resp.json()
+                key = data.get("key")
+                if key:
+                    public_url = f"https://files.use.ai/files/{key}"
+                    return {
+                        "success": True,
+                        "key": key,
+                        "url": public_url,
+                        "filename": filename,
+                        "mediaType": mime_type,
+                    }
+            print(f"[ChatClient] Upload failed ({resp.status_code}): {resp.text[:200]}")
+            return None
+        except Exception as e:
+            print(f"[ChatClient] Error uploading file to R2: {e}")
+            return None
+
     async def stream_chat(
         self,
         prompt: str,
@@ -679,6 +727,7 @@ class UseAIChatClient:
         image_style: str = "realistic",
         image_ratio: str = "1:1",
         timeout: int = 50,
+        parts: Optional[List[Dict[str, Any]]] = None,
     ) -> Dict[str, Any]:
         """
         Sends the prompt over WebSocket and streams incoming tokens in real-time.
@@ -723,6 +772,15 @@ class UseAIChatClient:
             "Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
         }
 
+        # Construct message parts (multimodal attachments + text prompt)
+        if parts:
+            msg_parts = list(parts)
+            has_text = any(p.get("type") == "text" for p in msg_parts)
+            if not has_text and prompt:
+                msg_parts.append({"type": "text", "text": prompt})
+        else:
+            msg_parts = [{"type": "text", "text": prompt}]
+
         # Chat prompt payload with live modes
         payload = {
             "chatId": chat_id,
@@ -734,7 +792,7 @@ class UseAIChatClient:
                 {
                     "id": msg_id,
                     "role": "user",
-                    "parts": [{"type": "text", "text": prompt}],
+                    "parts": msg_parts,
                 }
             ],
             "messageId": msg_id,
@@ -881,6 +939,7 @@ class UseAIChatClient:
         image_style: str = "realistic",
         image_ratio: str = "1:1",
         timeout: int = 50,
+        parts: Optional[List[Dict[str, Any]]] = None,
     ):
         """
         Async generator yielding chunks over WebSocket for API server integration.
@@ -930,6 +989,15 @@ class UseAIChatClient:
             "Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
         }
 
+        # Construct message parts (multimodal attachments + text prompt)
+        if parts:
+            msg_parts = list(parts)
+            has_text = any(p.get("type") == "text" for p in msg_parts)
+            if not has_text and prompt:
+                msg_parts.append({"type": "text", "text": prompt})
+        else:
+            msg_parts = [{"type": "text", "text": prompt}]
+
         payload = {
             "chatId": chat_id,
             "userId": self.user_id,
@@ -940,7 +1008,7 @@ class UseAIChatClient:
                 {
                     "id": msg_id,
                     "role": "user",
-                    "parts": [{"type": "text", "text": prompt}],
+                    "parts": msg_parts,
                 }
             ],
             "messageId": msg_id,

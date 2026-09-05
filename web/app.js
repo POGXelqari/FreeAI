@@ -860,9 +860,19 @@
   // --------------------------------------------------------------------------
   function openLightbox(src) {
     if (!elements.lightboxModal) return;
-    elements.lightboxImg.src = src;
-    elements.lightboxDownloadBtn.href = src;
-    elements.lightboxInspectBtn.dataset.imgUrl = src;
+    let url = '';
+    let alt = 'Image';
+    if (typeof src === 'object' && src !== null) {
+      url = src.url || src.src || src.dataUrl || '';
+      alt = src.alt || src.filename || src.name || 'Image';
+    } else if (typeof src === 'string') {
+      url = src;
+    }
+    if (!url || typeof url !== 'string' || url === '[object Object]') return;
+    elements.lightboxImg.src = url;
+    elements.lightboxImg.alt = alt;
+    elements.lightboxDownloadBtn.href = url;
+    elements.lightboxInspectBtn.dataset.imgUrl = url;
     elements.lightboxModal.style.display = 'flex';
   }
 
@@ -1250,17 +1260,18 @@
     let effectiveUserPrompt = trimmedPrompt;
     const currentAttachments = [...state.stagedAttachments];
     if (currentAttachments && currentAttachments.length > 0) {
-      const fileBlocks = currentAttachments.map(att => {
-        if (att.isImage) {
-          const analysisSnippet = att.analysisMarkdown ? att.analysisMarkdown : `[Attached Image: ${att.name} (${formatBytes(att.size)})]`;
-          return `### Attached Image: ${att.name} (${formatBytes(att.size)})\n${analysisSnippet}`;
-        }
-        const ext = att.name.split('.').pop() || 'text';
-        return `### File: ${att.name} (${formatBytes(att.size)})\n\`\`\`${ext}\n${att.content}\n\`\`\``;
-      });
-      effectiveUserPrompt = `## Codebase & File Attachments (${currentAttachments.length} items):\n\n` +
-        fileBlocks.join('\n\n') +
-        `\n\n---\n\n## User Instruction:\n${trimmedPrompt}`;
+      const nonImageAttachments = currentAttachments.filter(att => !att.isImage);
+      if (nonImageAttachments.length > 0) {
+        const fileBlocks = nonImageAttachments.map(att => {
+          const ext = att.name.split('.').pop() || 'text';
+          return `### File: ${att.name} (${formatBytes(att.size)})\n\`\`\`${ext}\n${att.content}\n\`\`\``;
+        });
+        effectiveUserPrompt = `## Codebase & File Attachments (${nonImageAttachments.length} items):\n\n` +
+          fileBlocks.join('\n\n') +
+          `\n\n---\n\n## User Instruction:\n${trimmedPrompt}`;
+      } else {
+        effectiveUserPrompt = trimmedPrompt;
+      }
 
       // Reset staged attachments
       state.stagedAttachments = [];
@@ -1303,7 +1314,8 @@
     // Map conversation messages into API payload (supporting OpenAI Vision schema)
     const apiMessages = currentSession.messages.map((m) => {
       if (m.role === 'user' && m.attachments && m.attachments.some(a => a.isImage && a.dataUrl)) {
-        const parts = [{ type: 'text', text: m.content }];
+        const cleanPrompt = m.displayContent || m.content || '';
+        const parts = [{ type: 'text', text: cleanPrompt }];
         m.attachments.filter(a => a.isImage && a.dataUrl).forEach(a => {
           parts.push({
             type: 'image_url',

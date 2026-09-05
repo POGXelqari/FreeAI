@@ -318,16 +318,72 @@ def get_maintainer() -> PoolMaintainer:
 # Helper: Format Messages Array into Injected Context
 # ---------------------------------------------------------------------------
 
-def extract_prompt_and_context(messages: List[ChatMessage]) -> Tuple[str, Optional[str], List[Dict[str, str]]]:
+def extract_raw_image_data(url_or_path: str, fname: str = "image.png") -> Optional[Dict[str, Any]]:
+    """Extracts binary image payload, filename, and mime type from data URIs, file paths, or remote URLs."""
+    import base64
+    import mimetypes
+
+    if not url_or_path:
+        return None
+
+    raw_bytes = None
+    mime_type = "image/png"
+
+    try:
+        if url_or_path.startswith("data:image/"):
+            header, b64_str = url_or_path.split(",", 1)
+            if ";" in header:
+                mime_type = header.split(";")[0].replace("data:", "").strip()
+            raw_bytes = base64.b64decode(b64_str)
+        elif os.path.isfile(url_or_path):
+            with open(url_or_path, "rb") as f:
+                raw_bytes = f.read()
+            guessed, _ = mimetypes.guess_type(url_or_path)
+            if guessed:
+                mime_type = guessed
+            fname = os.path.basename(url_or_path)
+        elif url_or_path.startswith("http://") or url_or_path.startswith("https://"):
+            import requests
+            r = requests.get(url_or_path, timeout=12)
+            if r.status_code == 200:
+                raw_bytes = r.content
+                ctype = r.headers.get("content-type")
+                if ctype and "image/" in ctype:
+                    mime_type = ctype.split(";")[0].strip()
+        else:
+            try:
+                raw_bytes = base64.b64decode(url_or_path)
+            except Exception:
+                pass
+
+        if raw_bytes and len(raw_bytes) > 0:
+            ext = mime_type.split("/")[-1] if "/" in mime_type else "png"
+            if ext == "jpeg":
+                ext = "jpg"
+            if not fname or fname == "attached_image.png":
+                fname = f"attached_image.{ext}"
+            return {
+                "bytes": raw_bytes,
+                "filename": fname,
+                "mime_type": mime_type,
+            }
+    except Exception as exc:
+        logger.warning(f"[Vision] Could not extract raw image bytes: {exc}")
+    return None
+
+
+def extract_prompt_and_context(
+    messages: List[ChatMessage]
+) -> Tuple[str, Optional[str], List[Dict[str, str]], List[Dict[str, Any]]]:
     """
-    Extracts current user prompt, system instructions, and prior dialogue history
-    from OpenAI messages array. Multimodal image_url parts and image data URIs are
-    automatically processed via ImageInspector into rich visual & structural metrics.
+    Extracts current user prompt, system instructions, prior dialogue history,
+    and any attached image payloads (bytes, filename, mime_type) for true multimodal streaming.
     """
     import re
     system_prompt = None
     history: List[Dict[str, str]] = []
     current_user_prompt = ""
+    extracted_images: List[Dict[str, Any]] = []
 
     for i, msg in enumerate(messages):
         content_str = ""
@@ -336,7 +392,6 @@ def extract_prompt_and_context(messages: List[ChatMessage]) -> Tuple[str, Option
             content_str = msg.content
         elif isinstance(msg.content, list):
             text_parts: List[str] = []
-            image_blocks: List[str] = []
             for part in msg.content:
                 if not isinstance(part, dict):
                     continue
@@ -351,40 +406,22 @@ def extract_prompt_and_context(messages: List[ChatMessage]) -> Tuple[str, Option
                         or part.get("name")
                         or "attached_image.png"
                     )
-                    if ImageInspector and url:
-                        try:
-                            if url.startswith("data:"):
-                                rep = ImageInspector.inspect_base64(url, filename=fname)
-                            elif url.startswith("http://") or url.startswith("https://"):
-                                rep = ImageInspector.inspect_url(url)
-                            elif os.path.isfile(url):
-                                rep = ImageInspector.inspect_file(url)
-                            else:
-                                rep = ImageInspector.inspect_base64(url, filename=fname)
-
-                            if rep.get("valid", True):
-                                md = ImageInspector.format_markdown_summary(rep)
-                                image_blocks.append(f"## Visual Analysis for Attached Image ({fname}):\n{md}")
-                        except Exception as exc:
-                            logger.warning(f"[Vision] Failed to inspect image part '{fname}': {exc}")
+                    if url:
+                        img_item = extract_raw_image_data(url, fname=fname)
+                        if img_item:
+                            extracted_images.append(img_item)
 
             content_str = "".join(text_parts)
-            if image_blocks:
-                content_str += "\n\n" + "\n\n".join(image_blocks)
         else:
             content_str = str(msg.content)
 
-        # Also inspect any raw base64 data URIs embedded inside a string
-        if ImageInspector and ("data:image/" in content_str):
-            uris = re.findall(r"data:image/(?:png|jpe?g|webp|gif|bmp);base64,([A-Za-z0-9+/=]+)", content_str)
-            for idx, b64 in enumerate(uris[:2]):
-                try:
-                    rep = ImageInspector.inspect_base64(b64, filename=f"image_{idx+1}.png")
-                    if rep.get("valid", True):
-                        md = ImageInspector.format_markdown_summary(rep)
-                        content_str += f"\n\n## Visual Analysis for Attached Image (image_{idx+1}.png):\n{md}"
-                except Exception as exc:
-                    logger.warning(f"[Vision] Failed to inspect embedded base64 image: {exc}")
+        # Also extract raw base64 data URIs embedded inside a string
+        if "data:image/" in content_str:
+            uris = re.findall(r"data:image/(?:png|jpe?g|webp|gif|bmp);base64,[A-Za-z0-9+/=]+", content_str)
+            for idx, uri in enumerate(uris[:3]):
+                img_item = extract_raw_image_data(uri, fname=f"image_{idx+1}.png")
+                if img_item:
+                    extracted_images.append(img_item)
 
         content_str = content_str.strip()
 
@@ -399,11 +436,10 @@ def extract_prompt_and_context(messages: List[ChatMessage]) -> Tuple[str, Option
             history.append({"role": msg.role, "content": content_str})
 
     if not current_user_prompt and messages:
-        # Fallback if last message was not marked as user
         last_msg = messages[-1]
         current_user_prompt = str(last_msg.content).strip()
 
-    return current_user_prompt, system_prompt, history
+    return current_user_prompt, system_prompt, history, extracted_images
 
 
 def format_effective_prompt(current_prompt: str, system_prompt: Optional[str], history: List[Dict[str, str]]) -> str:
@@ -671,47 +707,45 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
     pool = get_pool()
     cache = get_cache()
 
-    current_prompt, system_prompt, history = extract_prompt_and_context(req.messages)
+    current_prompt, system_prompt, history, extracted_images = extract_prompt_and_context(req.messages)
 
     # Ingest file attachments / directories and expand in-prompt @path mentions
     raw_files = (req.attachments or []) + (req.files or [])
     raw_dirs = req.dirs or []
-    if AttachmentIngestor is not None and (raw_files or raw_dirs or "@" in current_prompt):
+
+    # Check if raw_files contains images
+    if raw_files:
+        for rf in raw_files:
+            if isinstance(rf, dict) and (rf.get("dataUrl") or rf.get("url")):
+                img_item = extract_raw_image_data(rf.get("dataUrl") or rf.get("url"), fname=rf.get("name") or "image.png")
+                if img_item:
+                    extracted_images.append(img_item)
+            elif isinstance(rf, str) and (rf.startswith("data:image/") or rf.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"))):
+                img_item = extract_raw_image_data(rf)
+                if img_item:
+                    extracted_images.append(img_item)
+
+    # Ingest text code/files into prompt context (excluding image attachments)
+    non_image_files = [
+        f for f in raw_files
+        if not (isinstance(f, str) and (f.startswith("data:image/") or f.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif", ".bmp"))))
+        and not (isinstance(f, dict) and (f.get("isImage") or str(f.get("dataUrl", "")).startswith("data:image/")))
+    ]
+    if AttachmentIngestor is not None and (non_image_files or raw_dirs or "@" in current_prompt):
         ingestor = AttachmentIngestor()
         bundled_prompt, _, _ = ingestor.bundle_context(
             current_prompt,
-            files=raw_files if raw_files else None,
+            files=non_image_files if non_image_files else None,
             dirs=raw_dirs if raw_dirs else None,
         )
         current_prompt = bundled_prompt
-
-    # Ingest image attachments via ImageInspector for deep visual metrics
-    if ImageInspector and raw_files:
-        img_analysis_blocks = []
-        for rf in raw_files:
-            if isinstance(rf, str) and (rf.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".gif")) or rf.startswith("data:image/")):
-                try:
-                    if rf.startswith("data:image/"):
-                        rep = ImageInspector.inspect_base64(rf)
-                        fname = "attached_image.png"
-                    elif os.path.isfile(rf):
-                        rep = ImageInspector.inspect_file(rf)
-                        fname = os.path.basename(rf)
-                    else:
-                        continue
-                    if rep.get("valid", True):
-                        img_analysis_blocks.append(f"## Visual Analysis for Attached Image ({fname}):\n" + ImageInspector.format_markdown_summary(rep))
-                except Exception as e:
-                    logger.warning(f"[Vision] Could not inspect file {rf}: {e}")
-        if img_analysis_blocks:
-            current_prompt += "\n\n" + "\n\n".join(img_analysis_blocks)
 
     effective_prompt = format_effective_prompt(current_prompt, system_prompt, history)
 
     created_timestamp = int(time.time())
     completion_id = f"chatcmpl-{uuid.uuid4().hex[:12]}"
 
-    # 1. Check Read Cache (Bypassed if image generation is requested)
+    # 1. Check Read Cache (Bypassed if image generation is requested or images are attached)
     cache_query = effective_prompt if history else current_prompt
     cached_response = (
         cache.get(
@@ -721,7 +755,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
             agentic=agentic,
             deep_research=deep_research,
         )
-        if (cache.enabled and not image_gen)
+        if (cache.enabled and not image_gen and not extracted_images)
         else None
     )
 
@@ -824,6 +858,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
             max_retries = 3
             accumulated: List[str] = []
             sources: List[Dict[str, str]] = []
+            uploaded_file_parts: List[Dict[str, Any]] = []
             success = False
 
             for attempt in range(max_retries):
@@ -848,6 +883,29 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                 client = UseAIChatClient(account)
                 has_sent_role_chunk = False
 
+                # Upload multimodal images to Use.ai R2 storage for native visual perception
+                if extracted_images and not uploaded_file_parts:
+                    for img in extracted_images:
+                        try:
+                            up_res = client.upload_file(
+                                img["bytes"],
+                                filename=img["filename"],
+                                mime_type=img["mime_type"],
+                            )
+                            if up_res and up_res.get("key"):
+                                uploaded_file_parts.append({
+                                    "type": "file",
+                                    "filename": up_res.get("filename", img["filename"]),
+                                    "mediaType": up_res.get("mediaType", img["mime_type"]),
+                                    "url": up_res.get("url"),
+                                    "r2Key": up_res.get("key"),
+                                })
+                                logger.info(f"[Vision] Successfully uploaded {img['filename']} to R2: {up_res.get('url')}")
+                        except Exception as up_err:
+                            logger.warning(f"[Vision] R2 upload error for {img.get('filename')}: {up_err}")
+
+                multimodal_parts = list(uploaded_file_parts) + [{"type": "text", "text": effective_prompt}] if uploaded_file_parts else None
+
                 got_tokens = False
                 try:
                     async for frame in client.stream_chat_generator(
@@ -859,6 +917,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                         image_gen=image_gen,
                         image_style=image_style,
                         image_ratio=image_ratio,
+                        parts=multimodal_parts,
                     ):
                         f_type = frame.get("type")
                         if f_type == "source":
@@ -922,7 +981,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                             if got_tokens or (frame.get("response") and not frame.get("error")):
                                 success = True
                                 full_resp = "".join(accumulated).strip() or frame.get("response", "").strip()
-                                if cache.enabled and full_resp and not image_gen:
+                                if cache.enabled and full_resp and not image_gen and not extracted_images:
                                     cache.set(
                                         model_slug,
                                         cache_query,
@@ -1011,6 +1070,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
     max_retries = 3
     final_text = ""
     result_sources: List[Dict[str, str]] = []
+    uploaded_file_parts: List[Dict[str, Any]] = []
     for _ in range(max_retries):
         account = pool.get_account(auto_create=True)
         if not account:
@@ -1018,6 +1078,29 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
 
         email = account.get("email")
         client = UseAIChatClient(account)
+
+        # Upload multimodal images to Use.ai R2 storage for native visual perception
+        if extracted_images and not uploaded_file_parts:
+            for img in extracted_images:
+                try:
+                    up_res = client.upload_file(
+                        img["bytes"],
+                        filename=img["filename"],
+                        mime_type=img["mime_type"],
+                    )
+                    if up_res and up_res.get("key"):
+                        uploaded_file_parts.append({
+                            "type": "file",
+                            "filename": up_res.get("filename", img["filename"]),
+                            "mediaType": up_res.get("mediaType", img["mime_type"]),
+                            "url": up_res.get("url"),
+                            "r2Key": up_res.get("key"),
+                        })
+                        logger.info(f"[Vision] Successfully uploaded {img['filename']} to R2: {up_res.get('url')}")
+                except Exception as up_err:
+                    logger.warning(f"[Vision] R2 upload error for {img.get('filename')}: {up_err}")
+
+        multimodal_parts = list(uploaded_file_parts) + [{"type": "text", "text": effective_prompt}] if uploaded_file_parts else None
         try:
             result = await client.stream_chat(
                 effective_prompt,
@@ -1028,6 +1111,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                 image_gen=image_gen,
                 image_style=image_style,
                 image_ratio=image_ratio,
+                parts=multimodal_parts,
             )
         except Exception as e:
             logger.exception(f"[Gateway] Non-streaming chat error with account {email}: {e}")
@@ -1043,7 +1127,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                 img_urls = [im.get("url") for im in result["images"] if im.get("url")]
                 final_text = "\n\n".join([f"![Generated Image]({u})" for u in img_urls])
             result_sources = result.get("sources", [])
-            if cache.enabled and not image_gen:
+            if cache.enabled and not image_gen and not extracted_images:
                 cache.set(
                     model_slug,
                     cache_query,
