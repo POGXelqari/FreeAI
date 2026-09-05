@@ -1,0 +1,132 @@
+[
+  {
+    "id": "gateway-fable-5",
+    "name": "Fable 5",
+    "provider": "p02",
+    "brandedName": "Claude Fable 5",
+    "providerName": "Anthropic",
+    "available": true,
+    "subtitleKey": "model_fable_5_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-opus-5",
+    "name": "Opus 5",
+    "provider": "p02",
+    "brandedName": "Claude Opus 5",
+    "providerName": "Anthropic",
+    "available": true,
+    "subtitleKey": "model_opus_5_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-opus-4-8",
+    "name": "Opus 4.8",
+    "provider": "p02",
+    "brandedName": "Claude Opus 4.8",
+    "providerName": "Anthropic",
+    "available": true,
+    "subtitleKey": "model_opus_4_8_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-sonnet-5",
+    "name": "Sonnet 5",
+    "provider": "p02",
+    "brandedName": "Claude Sonnet 5",
+    "providerName": "Anthropic",
+    "available": true,
+    "subtitleKey": "model_sonnet_5_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-gpt-5-6",
+    "name": "GPT-5.6 Sol",
+    "provider": "p01",
+    "brandedName": "GPT-5.6 Sol",
+    "providerName": "OpenAI",
+    "available": true,
+    "subtitleKey": "model_gpt_5_6_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-gpt-5-5",
+    "name": "GPT-5.5",
+    "provider": "p01",
+    "brandedName": "GPT-5.5",
+    "providerName": "OpenAI",
+    "available": true,
+    "subtitleKey": "model_gpt_5_5_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-gpt-5-4",
+    "name": "GPT-5.4",
+    "provider": "p01",
+    "brandedName": "GPT-5.4",
+    "providerName": "OpenAI",
+    "available": true,
+    "subtitleKey": "model_gpt_5_4_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-gemini-3-6-flash",
+    "name": "Gemini 3.6 Flash",
+    "provider": "p03",
+    "brandedName": "Gemini 3.6 Flash",
+    "providerName": "Google",
+    "available": true,
+    "subtitleKey": "model_gemini_3_6_flash_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-deepseek-v4-pro",
+    "name": "DeepSeek V4 Pro",
+    "provider": "p05",
+    "brandedName": "DeepSeek V4 Pro",
+    "providerName": "DeepSeek",
+    "available": true,
+    "subtitleKey": "model_deepseek_v4_pro_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-kimi-k3",
+    "name": "Kimi K3",
+    "provider": "p08",
+    "brandedName": "Kimi K3",
+    "providerName": "Moonshot AI",
+    "available": true,
+    "subtitleKey": "model_kimi_k3_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-kimi-k2-6",
+    "name": "Kimi K2.6",
+    "provider": "p08",
+    "brandedName": "Kimi K2.6",
+    "providerName": "Moonshot AI",
+    "available": true,
+    "subtitleKey": "model_kimi_k2_6_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-grok-4-6",
+    "name": "Grok 4.6",
+    "provider": "p04",
+    "brandedName": "Grok 4.6",
+    "providerName": "xAI",
+    "available": true,
+    "subtitleKey": "model_grok_4_6_subtitle",
+    "supportsAgentic": true
+  },
+  {
+    "id": "gateway-glm-5-2",
+    "name": "GLM 5.2",
+    "provider": "p09",
+    "brandedName": "GLM 5.2",
+    "providerName": "Z.AI",
+    "available": true,
+    "subtitleKey": "model_glm_5_2_subtitle",
+    "supportsAgentic": true
+  }
+]

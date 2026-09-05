@@ -1,0 +1,50 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/better-auth-client-session.service-ercwbZKT.js
+ * Module: better-auth-client-session.service
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t } from "./framework-D-uKrMmN.js";
+import { i as n, t as r } from "./better-auth-client.service-Ck6mOMB1.js";
+import { t as i } from "./recovery-marker.util-BHO296he.js";
+var a = e(t(), 1),
+  o = ``,
+  s = !1,
+  c = null,
+  l = !1,
+  u = new Set,
+  d = () => { if (!s) { s = !0; for (let e of u) e() } },
+  f = 4e3;
+
+function p() { try { let e = r.$store?.atoms?.session; if (!e?.get) return null; let t = e.get(); if (!t || t
+      .isPending || t.error) return null; let n = t.data?.user; return !n || !t.data?.session ? !1 : n.type !==
+    `guest` } catch { return null } }
+
+function m() { let { data: e, isPending: t, error: p, refetch: m } = r.useSession(), h = e?.user && e.session ?
+    { user: { id: e.user.id, email: e.user.email || void 0, name: e.user.name || void 0, image: e.user.image || void 0,
+        emailVerified: e.user.emailVerified ? new Date(e.user.emailVerified) : void 0, type: e.user.type || `regular`,
+        mixpanelUserId: e.user.mixpanelUserId || null, accessToken: e.session.accessToken || null }, session: { id: e
+          .session.id, token: e.session.token, expiresAt: new Date(e.session.expiresAt), createdAt: e.session
+          .createdAt ? new Date(e.session.createdAt) : void 0, ipAddress: e.session.ipAddress || null, userAgent: e
+          .session.userAgent || null } } : null, [g, _] = (0, a.useState)(null), [v, y] = (0, a.useState)(null), b = h ?
+    `${h.session.token}|${h.session.expiresAt.getTime()}` : null;
+  h && b !== v && (y(b), _(h)); let x = (0, a.useEffectEvent)(() => { m() }),
+    S = !!h,
+    C = !!g;
+  (0, a.useEffect)(() => { if (S || !C) return;
+    x(); let e = setTimeout(() => { _(null), y(null) }, f); return () => clearTimeout(e) }, [S, C]); let w = !s && !t &&
+    !S && !C && i(),
+    [, T] = (0, a.useState)(0);
+  (0, a.useEffect)(() => { let e = () => T(e => e + 1); return u.add(e), s && e(), () => { u.delete(e) } }, []), (0, a
+    .useEffect)(() => { if (!w) { S && d(); return } c === null && (c = Date.now() + f), l || (l = !0, x()); let e =
+      setTimeout(d, Math.max(0, c - Date.now())); return () => clearTimeout(e) }, [w, S]); let E = h ?? g,
+    D = !h && C,
+    O = t || w,
+    k;
+  k = O ? `loading` : E ? `authenticated` : `unauthenticated`; let A = !!E?.user && E.user.type !== `guest`,
+    j = `${k}|stale:${D}|err:${!!p}|user:${!!E?.user}`,
+    M = (0, a.useEffectEvent)(() => { n(`useSession`, { status: k, isStale: D, hasError: !!p, hasUser: !!E?.user,
+        userType: E?.user?.type }) }); return (0, a.useEffect)(() => { j !== o && (o = j, M()) }, [j]), { data: E,
+    status: k, isPending: O, error: p, refetch: m, isAuthenticated: A, isStale: D, isColdStartHold: w } }
+export { m as n, p as t };

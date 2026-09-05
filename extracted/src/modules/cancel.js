@@ -1,0 +1,14 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/cancel-2J3UTq9u.js
+ * Module: cancel
+ * Extracted & Beautified
+ */
+
+import "./rolldown-runtime-C0FnF6B9.js";
+import { i as e, r as t } from "./framework-D-uKrMmN.js";
+e();
+var n = t(),
+  r = e => (0, n.jsx)(`svg`, { xmlns: `http://www.w3.org/2000/svg`, viewBox: `0 0 24 24`, color: `inherit`,
+    fill: `none`, ...e, children: (0, n.jsx)(`path`, { d: `M18 6L6.00081 17.9992M17.9992 18L6 6.00085`,
+      stroke: `currentColor`, strokeWidth: 1.5, strokeLinecap: `round`, strokeLinejoin: `round` }) });
+export { r as t };

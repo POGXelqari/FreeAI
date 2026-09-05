@@ -1,0 +1,26 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/post-payment.store-jgy38Ijx.js
+ * Module: post-payment.store
+ * Extracted & Beautified
+ */
+
+import { n as e } from "./env-C6AULCj5.js";
+import { n as t } from "./freemium-funnel.util-D0KPcbFz.js";
+import { t as n } from "./react-D8-vnz5K.js";
+import { n as r, r as i } from "./middleware-BT98JsiD.js";
+var a = 18e5,
+  o = e => Date.now() - e.stashedAt < a,
+  s = () => { t() && l.getState().stashPendingPaywalledChoice({ kind: `image-mode` }) },
+  c = { pendingNavPath: null, pendingPaywalledChoice: null, preserveModesFromPayment: !1, readyToAutoSubmitAfterPayment:
+      !1, isPostAuthPaywallOpen: !1 },
+  l = n()(r(i(e => ({ ...c, setPendingNavPath: t => e({ pendingNavPath: t }), stashPendingPaywalledChoice: t =>
+  e({ pendingPaywalledChoice: { ...t, stashedAt: Date.now() } }), clearPendingPaywalledChoice: () =>
+  e({ pendingPaywalledChoice: null }), clearPendingModelChoice: () => e(e => e.pendingPaywalledChoice?.kind ===
+      `model` ? { pendingPaywalledChoice: null } : e), setPreserveModesFromPayment: t =>
+  e({ preserveModesFromPayment: t }), setReadyToAutoSubmitAfterPayment: t =>
+  e({ readyToAutoSubmitAfterPayment: t }), setIsPostAuthPaywallOpen: t => e({ isPostAuthPaywallOpen: t }),
+    resetPostPaymentFlags: () => e({ pendingPaywalledChoice: null, preserveModesFromPayment: !1,
+      readyToAutoSubmitAfterPayment: !1, isPostAuthPaywallOpen: !1 }) }), { name: `post-payment-store`,
+    partialize: e => ({ pendingNavPath: e.pendingNavPath, pendingPaywalledChoice: e
+      .pendingPaywalledChoice }) }), { name: `PostPaymentStore`, enabled: e.NEXT_PUBLIC_ENV !== `production` && !0 }));
+export { s as n, l as r, o as t };

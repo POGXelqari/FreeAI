@@ -1,0 +1,1 @@
+import{o as e,r as t}from"./rolldown-runtime-C0FnF6B9.js";import{i as n,r}from"./framework-D-uKrMmN.js";var i=t({InitialMobileProvider:()=>c,useInitialIsMobile:()=>l}),a=e(n(),1),o=r(),s=(0,a.createContext)(!1);function c(e){let{value:t,children:n}=e;return(0,o.jsx)(s.Provider,{value:t,children:n})}function l(){return(0,a.useContext)(s)}export{l as n,i as t};

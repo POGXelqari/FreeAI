@@ -1,0 +1,1 @@
+import{n as e}from"./intl.constant-DpFKv8U4.js";var t=t=>{let[,n=``,...r]=t.split(`/`);return e.some(e=>e.toLowerCase()===n.toLowerCase())?`/${r.join(`/`)}`:t};export{t};

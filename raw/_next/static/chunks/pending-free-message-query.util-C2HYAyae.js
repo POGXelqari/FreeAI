@@ -1,0 +1,1 @@
+import{t as e}from"./safe-session-storage.util-DN4NSHVM.js";var t=`pending_free_message_query`,n=n=>{e.setItem(t,n||`true`)},r=()=>{e.removeItem(t)},i=()=>e.getItem(t)!==null,a=()=>{let n=e.getItem(t);return!n||n===`true`?null:n};export{n as i,a as n,i as r,r as t};

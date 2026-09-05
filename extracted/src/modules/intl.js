@@ -1,0 +1,76 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/intl-5y7Gu4iP.js
+ * Module: intl
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t, r as n } from "./framework-D-uKrMmN.js";
+import { $ as r, Ln as i, Rn as a, et as o } from "./vinext-CqpRraGS.js";
+import { a as s, c, d as l, f as u, i as d, l as f, m as p, n as m, o as h, p as g, r as _, s as v,
+  u as y } from "./BaseLink-DAgr-zci.js";
+import { r as b } from "./react-CWjhjU4R.js";
+import { n as x } from "./intl.constant-DpFKv8U4.js";
+var S = e(t(), 1),
+  C = n(),
+  w = { en: `en`, de: `de`, fr: `fr`, pt: `pt`, es: `es`, ru: `ru`, it: `it`, pl: `pl`, ro: `ro`,
+  ua: `ua`, "sr-RS": `sr-RS`, hr: `hr`, hu: `hu`, el: `el`, sl: `sl`, jp: `ja`, ja: `ja`, zh: `zh`, "ar-sa": `ar-sa`,
+    sv: `sv`, sk: `sk`, no: `no`, ko: `ko`, nl: `nl`, da: `da`, fi: `fi`, is: `is`, id: `id`,
+tr: `tr`, "nl-be": `nl-BE` },
+  T = { arrayMerge: (e, t) => t },
+  E = [`Auth`, `Toast`, `CookieConsent`, `AuthError`, `EmailConfirmation`];
+[...E];
+var D = [`SelectPlanTrialModal`, `ImageGeneration`],
+  O = [...E, `Footer`, `Header`, `Pricing`, `PricingPage`, `Privacy`, `Terms`, `CookiePolicy`, `CheckEmail`, `Help`,
+    `AccountDelete`, `SubscriptionCancel`, `ReactivateSubscription`, `RenewalModal`, `MobileSubscription`,
+    `SelectLanguage`, `UserDropdown`, `SelectPlanTrialModal`, `Sidebar`, `Profile`
+  ];
+[...E], [...E], [...O];
+
+function k(e) { return e }
+var A = k({ locales: x, defaultLocale: `en`, localePrefix: { mode: `as-needed` }, alternateLinks: !1,
+    localeCookie: { secure: !0 } }),
+  j = `NEXT_LOCALE`,
+  M = e => { typeof document > `u` || x.includes(e) && (document.cookie = `${j}=${e}; Path=/; SameSite=Lax; Secure`) };
+
+function N(e) { return { ...e, localePrefix: (n = e.localePrefix, typeof n == `object` ? n : { mode: n || `always` }),
+    localeCookie: (t = e.localeCookie, !!(t ?? 1) && { name: `NEXT_LOCALE`, sameSite: `lax`, ...typeof t == `object` &&
+      t }), localeDetection: e.localeDetection ?? !0, alternateLinks: e.alternateLinks ?? !0 }; var t, n }
+var P = S.use;
+
+function F(e, t) { let n = N(t || {}),
+    r = n.pathnames;
+
+  function o({ href: t, locale: i, ...a }, o) { let s, c;
+    typeof t == `object` ? (s = t.pathname, c = t.params) : s = t; let l = y(t),
+      d = e(),
+      f = p(d) ? P(d) : d,
+      h = l ? u({ locale: i || f, href: r == null ? s : { pathname: s, params: c }, forcePrefix: i != null ||
+        void 0 }) : s; return (0, C.jsx)(m, { ref: o, href: typeof t == `object` ? { ...t, pathname: h } : h, locale: i,
+      localeCookie: n.localeCookie, ...a }) } let l = (0, S.forwardRef)(o);
+
+  function u(e) { let { forcePrefix: t, href: i, locale: a } = e, o; return r == null ? typeof i == `object` ? (o = i
+      .pathname, i.query && (o += c(i.query))) : o = i : o = s({ locale: a, ...d(i), pathnames: n.pathnames }), v(o,
+      a, n, t) }
+
+  function f(e) { return function(t, ...n) { return e(u(t), ...n) } } return { config: n, Link: l, redirect: f(a),
+    permanentRedirect: f(i), getPathname: u } }
+
+function I(e) { let t = r(),
+    n = b(); return (0, S.useMemo)((() => { if (!t) return t; let r = t,
+      i = l(n, e.localePrefix); if (u(i, t)) r = g(t, i);
+    else if (e.localePrefix.mode !== `never` && e.localePrefix.prefixes) { let e = f(n);
+      u(e, t) && (r = g(t, e)) } return r }), [e.localePrefix, n, t]) }
+
+function L(e) { let { Link: t, config: n, getPathname: i, ...a } = F(b, e); return { ...a, Link: t,
+    usePathname: function() { let e = I(n),
+          t = b(); return (0, S.useMemo)((() => e && n.pathnames ? h(t, e, n.pathnames) : e), [t, e]) },
+    useRouter: function() { let e = o(),
+          t = b(),
+          a = r(); return (0, S.useMemo)((() => {
+          function r(e) { return function(r, o) { let { locale: s, ...c } = o || {}, l = [i({ href: r,
+                locale: s || t, forcePrefix: s != null || void 0 })];
+              Object.keys(c).length > 0 && l.push(c), _(n.localeCookie, a, t, s), e(...l) } } return { ...e,
+            push: r(e.push), replace: r(e.replace), prefetch: r(e.prefetch) } }), [t, a, e]) }, getPathname: i } }
+var { Link: R, usePathname: z, useRouter: B } = L(A);
+export { D as a, M as i, z as n, T as o, B as r, w as s, R as t };

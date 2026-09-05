@@ -1,0 +1,16 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/error-6zDpPiXu.js
+ * Module: error
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t, r as n } from "./framework-D-uKrMmN.js";
+import { t as r } from "./abort-error.util-BDjcGeGf.js";
+var i = e(t(), 1),
+  a = e => { let { error: t, reset: n } = e, a = r(t); if ((0, i.useEffect)(() => { a && n() }, [a, n]), !a)
+  throw t; return null },
+  o = n();
+
+function s(e) { let { error: t, reset: n } = e; return (0, o.jsx)(a, { error: t, reset: n }) }
+export { s as default };

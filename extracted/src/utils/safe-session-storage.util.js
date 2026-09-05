@@ -1,0 +1,13 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/safe-session-storage.util-DN4NSHVM.js
+ * Module: safe-session-storage.util
+ * Extracted & Beautified
+ */
+
+var e = { getItem(e) { try { return sessionStorage.getItem(e) } catch (t) { return console.warn(
+        `Failed to get sessionStorage item "${e}":`, t), null } }, setItem(e, t) { try { sessionStorage.setItem(e,
+      t) } catch (t) { console.warn(`Failed to set sessionStorage item "${e}":`, t) } }, removeItem(
+  e) { try { sessionStorage.removeItem(e) } catch (t) { console.warn(`Failed to remove sessionStorage item "${e}":`,
+        t) } }, clear() { try { sessionStorage.clear() } catch (e) { console.warn(`Failed to clear sessionStorage:`,
+        e) } } };
+export { e as t };

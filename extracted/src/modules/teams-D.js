@@ -1,0 +1,58 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/teams-D-JmxjA5.js
+ * Module: teams-D
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t } from "./framework-D-uKrMmN.js";
+import { t as n } from "./useQuery-B3vkDNet.js";
+import { i as r } from "./rest-api-DNPFxXXP.js";
+import { o as i, s as a, u as o } from "./teams.mutation-C9duAdia.js";
+import { n as s, t as c } from "./user.model-CISYB7eF.js";
+import { n as l } from "./better-auth-client-session.service-ercwbZKT.js";
+import { t as u } from "./use-has-mounted.hook-BZPIYb5B.js";
+import { n as d } from "./user-data.provider-fGhNbbcZ.js";
+import { t as f } from "./workspace-scope.provider-Cm72CHah.js";
+import { t as p } from "./react-D8-vnz5K.js";
+import { r as m, t as h } from "./middleware-BT98JsiD.js";
+import { n as g, t as _ } from "./settings-cookie.util-C5vl4muy.js";
+var v = e(t(), 1),
+  y = () => _().workspace !== void 0,
+  b = p()(m(e => ({ workspace: `personal`, _hasHydrated: !1, setWorkspace: t => { e({ workspace: t }),
+    g({ workspace: t }) }, setHasHydrated: t => e({ _hasHydrated: t }) }), { name: `workspace`, storage: h(() =>
+      localStorage), partialize: e => ({ workspace: e.workspace }), onRehydrateStorage: () => e => { e
+        ?.setHasHydrated(!0), e && !y() && g({ workspace: e.workspace }) } })),
+  x = async () => { let e = await r.get(c.API_USER_PROFILE_WITH_SUBSCRIPTION); if (!e.ok) { let t = Error(
+          `Failed to fetch user profile (${e.status})`); throw t.status = e.status, t } return await e.json() }, S =
+    async () => await (await r.get(c.API_USER_SETTINGS)).json(), C = async e => await (await r.patch(c
+      .API_USER_SETTINGS, { json: e })).json(), w = async e => await (await r.patch(c
+    .API_USER_PROFILE, { json: e })).json(), T = async e => await (await r.patch(
+    `${c.API_USER_PROFILE}/email`, { json: e })).json(), E = (e, t) => n({ queryKey: [s
+        .USER_PROFILE_WITH_SUBSCRIPTION_QUERY
+      ], queryFn: x, enabled: t?.enabled ?? (!!e?.user?.id && e.user.type !== `guest`) }), D = (e, t) =>
+  n({ queryKey: [s.USER_SETTINGS_QUERY], queryFn: S, enabled: t?.enabled ?? (!!e?.user?.id && e.user.type !==
+        `guest`) }), O = () => { let { data: e, isAuthenticated: t } = l(), r = t ? e?.user?.id : void 0, i = E(
+          e, { enabled: !!r }).data?.data?.user?.teamStatus, s = i === `none` || i === `removed` || i ===
+        `deleted` || i === `owner_deleted`; return n({ queryKey: [o.TEAMS_QUERY, r], queryFn: a, enabled: !!r &&
+          !s }) }, k = (e = !0) => { let { data: t, isAuthenticated: r } = l(), a = r ? t?.user?.id : void 0,
+        s = n({ queryKey: [o.REVOKED_TEAM_QUERY, a], queryFn: i, enabled: !!a && e }); return { ...s, team: s
+          .data?.team ?? null } }, A = () => { let { data: e, isAuthenticated: t } = l(); return E(e, { enabled:
+          !!(t && e?.user?.id) }).data?.data?.user?.teamStatus ?? null }, j = () => { let { isPending: e,
+        isAuthenticated: t } = l(), n = O(), r = e || t && n.isLoading; return { ...n, data: n.data?.teams?.[
+          0] ?? null, isInTeam: (n.data?.teams?.length ?? 0) > 0, isLoading: r } }, M = () => { let e = f(),
+        t = u(),
+        n = b(e => e.workspace),
+        { data: r, isInTeam: i, isLoading: a } = j(),
+        o = t ? n : e?.workspace ?? `personal`,
+        s = a ? e?.isInTeam ?? !1 : i; return { workspace: o, isInTeam: s, isTeamScope: o === `organization` &&
+          s, team: r ?? e?.team ?? null } }, N = () => { let { userProfileWithSubscription: e } = d
+      (), { isTeamScope: t } = M(), n = e.data?.data, r = n?.subscription?.isSubscribed === !0, i = n
+        ?.userProfile?.isTestUser === !0; return r || i || t }, P = () => { let { data: e } = j(); return !!e
+        ?.subscription?.isPastDue }, F = () => { let { data: e } = l(), { data: t } = j(); return !t || !e?.user
+        ?.id ? !1 : t.ownerId === e.user.id }, I = () => { let { data: e } = l(), { data: t } = j(); return !
+        t || !e?.user?.id ? null : t.members.find(t => t.userId === e.user?.id)?.role ?? null }, L =
+  () => { let { data: e } = j(); return (0, v.useMemo)(() => { let t = new Map; for (let n of e?.members ?? [])
+          t.set(n.userId, { name: n.name, image: n.image, email: n.email }); return t }, [e?.members]) };
+export { L as a, N as c, D as d, T as f, b as g, y as h, k as i, M as l, C as m, P as n, I as o, w as p, F as r, A as s,
+  j as t, E as u };

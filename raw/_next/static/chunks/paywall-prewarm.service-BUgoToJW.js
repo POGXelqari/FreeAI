@@ -1,0 +1,1 @@
+var e=null,t=t=>{e=t},n=()=>e?e():Promise.resolve();export{n,t};

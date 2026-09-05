@@ -1,0 +1,1 @@
+var e=function(e){return e.LIMITS_QUERY=`limits_query`,e}({}),t=function(e){return e.API_LIMITS=`limits`,e}({});export{e as n,t};

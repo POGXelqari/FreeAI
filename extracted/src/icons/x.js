@@ -1,0 +1,12 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/x-DWv_kCKr.js
+ * Module: x
+ * Extracted & Beautified
+ */
+
+import { t as e } from "./createLucideIcon-CVSF7wvO.js";
+var t = e(`x`, [
+  [`path`, { d: `M18 6 6 18`, key: `1bl5f8` }],
+  [`path`, { d: `m6 6 12 12`, key: `d8bk6v` }]
+]);
+export { t };

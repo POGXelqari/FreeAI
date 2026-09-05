@@ -1,0 +1,1 @@
+function e(e){return()=>{throw Error(`\`${e}\` is not supported in Client Components.`)}}var t=e(`getLocale`);export{t};

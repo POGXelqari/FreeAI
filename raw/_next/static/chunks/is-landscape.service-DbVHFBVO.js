@@ -1,0 +1,1 @@
+import{t as e}from"./dist-V17-Ndhz.js";var t=()=>e(`(orientation: landscape) and (max-height: 649px)`,{initializeWithValue:!1});export{t};

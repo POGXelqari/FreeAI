@@ -1,0 +1,17 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/new-chat-DRFSeAfv.js
+ * Module: new-chat
+ * Extracted & Beautified
+ */
+
+import "./rolldown-runtime-C0FnF6B9.js";
+import { i as e, r as t } from "./framework-D-uKrMmN.js";
+e();
+var n = t(),
+  r = e => (0, n.jsxs)(`svg`, { xmlns: `http://www.w3.org/2000/svg`, viewBox: `0 0 24 24`, fill: `none`, ...e,
+    children: [(0, n.jsx)(
+      `path`, { d: `M16.6668 4.2009L17.7109 3.1568C18.5759 2.2918 19.9783 2.2918 20.8432 3.1568C21.7081 4.0218 21.7081 5.4241 20.8432 6.2891L19.7991 7.3332M16.6668 4.2009L9.6434 11.2242C9.1082 11.7595 8.7285 12.4301 8.5449 13.1645L7.7814 16.2186L10.8355 15.4551L11.5699 15.2716L12.2405 14.8918L12.7758 14.3565L19.7991 7.3332M16.6668 4.2009L19.7991 7.3332`,
+        stroke: `currentColor`, strokeWidth: 1.5, strokeLinejoin: `round` }), (0, n.jsx)(
+      `path`, { d: `M19.3825 13.582C19.3825 17.0492 19.3825 18.7827 18.425 19.9496C18.2497 20.1632 18.0539 20.359 17.8402 20.5343C16.6734 21.4919 14.9398 21.4919 11.4726 21.4919H10.9453C6.968 21.4919 4.9793 21.4919 3.7437 20.2563C2.5081 19.0208 2.5081 17.032 2.5081 13.0547V12.5273C2.5081 9.0602 2.5081 7.3266 3.4656 6.1598C3.6409 5.9461 3.8368 5.7503 4.0504 5.5749C5.2173 4.6174 6.9508 4.6174 10.418 4.6174`,
+        stroke: `currentColor`, strokeWidth: 1.5, strokeLinecap: `round`, strokeLinejoin: `round` })] });
+export { r as t };

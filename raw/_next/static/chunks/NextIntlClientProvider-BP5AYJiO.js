@@ -1,0 +1,1 @@
+import{r as e}from"./rolldown-runtime-C0FnF6B9.js";import{r as t}from"./framework-D-uKrMmN.js";import{a as n}from"./react-CWjhjU4R.js";var r=e({default:()=>a}),i=t();function a({locale:e,...t}){if(!e)throw Error(void 0);return(0,i.jsx)(n,{locale:e,...t})}export{a as n,r as t};

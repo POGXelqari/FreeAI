@@ -1,0 +1,22 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/first-party-url.util-CX2n5k9d.js
+ * Module: first-party-url.util
+ * Extracted & Beautified
+ */
+
+import { n as e, t } from "./env-C6AULCj5.js";
+import { t as n } from "./file-upload.constant-B3pVoarn.js";
+var r = `https://files.use.ai`,
+  i = new Set([`localhost`, `127.0.0.1`, `0.0.0.0`]),
+  a = new Set([r, e.NEXT_PUBLIC_R2_WORKER_URL].map(e => { try { return e ? new URL(e).origin.toLowerCase() :
+      null } catch { return null } }).filter(e => e !== null)),
+  o = e => e.startsWith(`/v1/files/`) ? !e.split(/[?#]/, 1)[0].toLowerCase().split(`/`).some(e => e === `..` || e ===
+    `%2e%2e` || e === `.%2e` || e === `%2e.`) : !1,
+  s = `/files/`,
+  c = e => { if (o(e)) return e; let t; try { t = new URL(e).origin.toLowerCase() } catch { return e } if (!a.has(t))
+      return e; let r = e.indexOf(`://`); if (r === -1) return e; let i = e.indexOf(`/`, r + 3); if (i === -1)
+  return e; let c = e.slice(i); return c.startsWith(s) ? `${n}/${c.slice(7)}` : e },
+  l = e => { if (typeof e != `string`) return !1; if (o(e)) return !0; try { let { protocol: n, hostname: r,
+      origin: o } = new URL(e); if (n !== `https:` && n !== `http:`) return !1; let s = r.toLowerCase(); return a.has(o
+        .toLowerCase()) || t && i.has(s) } catch { return !1 } };
+export { o as n, c as r, l as t };

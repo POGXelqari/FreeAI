@@ -1,0 +1,1 @@
+var e=`bg-surface-secondary-active dark:bg-gray-100/10`;export{e as t};

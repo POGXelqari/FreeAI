@@ -1,0 +1,1 @@
+import{s as e}from"./intl-5y7Gu4iP.js";var t=t=>e[t]===`ar-sa`;export{t};

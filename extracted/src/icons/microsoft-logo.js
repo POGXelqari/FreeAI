@@ -1,0 +1,16 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/microsoft-logo-DpIPd5_1.js
+ * Module: microsoft-logo
+ * Extracted & Beautified
+ */
+
+import "./rolldown-runtime-C0FnF6B9.js";
+import { i as e, r as t } from "./framework-D-uKrMmN.js";
+e();
+var n = t(),
+  r = e => (0, n.jsxs)(`svg`, { viewBox: `0 0 16 16`, fill: `none`, xmlns: `http://www.w3.org/2000/svg`, ...e,
+    children: [(0, n.jsx)(`path`, { d: `M7.6535 7.6535H1V1H7.6535V7.6535Z`, fill: `#F1511B` }), (0, n.jsx)(
+      `path`, { d: `M15.0011 7.6535H8.34766V1H15.0011V7.6535Z`, fill: `#80CC28` }), (0, n.jsx)(
+      `path`, { d: `M7.65334 15.0002H1V8.34668H7.65334V15.0002Z`, fill: `#00ADEF` }), (0, n.jsx)(
+      `path`, { d: `M15.0011 15.0002H8.34766V8.34668H15.0011V15.0002Z`, fill: `#FBBC09` })] });
+export { r as t };

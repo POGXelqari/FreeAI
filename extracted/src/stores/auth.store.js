@@ -1,0 +1,39 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/auth.store-CecpbI3z.js
+ * Module: auth.store
+ * Extracted & Beautified
+ */
+
+import { n as e } from "./env-C6AULCj5.js";
+import { I as t } from "./analytics.service-BIbiLKmC.js";
+import { m as n } from "./freemium-funnel.util-D0KPcbFz.js";
+import { i as r } from "./mixpanel-CkBALibP.js";
+import { t as i } from "./react-D8-vnz5K.js";
+import { n as a } from "./middleware-BT98JsiD.js";
+import { t as o } from "./site-route.interface-DlOSDxTR.js";
+import { t as s } from "./locale-path.util-nU2-KrUb.js";
+import { t as c } from "./paywall-intent.util-T2BKTtbQ.js";
+var l = function(e) { return e.SIGN_IN = `sign-in`, e.SIGN_UP = `sign-up`, e }({}),
+  u = [o.APPS, `/images`, `/background-removal`, `/image-enhancer`],
+  d = e => { let t = s(e).replace(/\/+$/, ``) || `/`; return u.includes(t) ? e : void 0 },
+  f = [r.CONNECTORS_CONNECT_BUTTON],
+  p = e => { let t = new URL(e, `http://redirect.invalid`); return t.searchParams.set(`paywall`, `true`),
+      `${t.pathname}${t.search}${t.hash}` },
+  m = (e, t) => { if (t) return t; if (/\/share\/[^/]+/.test(window.location.pathname)) return window.location
+    .pathname; let n = d(window.location.pathname); if (n) return f.includes(e) ? p(n) : n },
+  h = (e, r) => { n.setItem(`signupModalSource`, e), n.setItem(t.PendingPostAuthHistoryRewrite, String(Date.now())),
+  c(); let i = m(e, r);
+    i ? (n.setItem(t.CustomAuthRedirectUrl, i), n.setItem(t.CustomAuthRedirectUrlStashedAt, String(Date.now()))) : (n
+      .removeItem(t.CustomAuthRedirectUrl), n.removeItem(t.CustomAuthRedirectUrlStashedAt)) },
+  g = { isAuthModalOpen: !1, authModalVariant: l.SIGN_IN, signupModalSource: null, isGoogleSignupModalOpen: !1,
+    isPostAuthTransition: !1, guestRailSnapshot: null },
+  _ = i()(a(e => ({ ...g, openSignInModal: (t, n) => (h(t, n), e(() => ({ isAuthModalOpen: !0, authModalVariant: l
+        .SIGN_IN, signupModalSource: t }))), openSignUpModal: (t, n) => (h(t, n), e(() => ({ isAuthModalOpen: !0,
+      authModalVariant: l.SIGN_UP, signupModalSource: t }))), closeAuthModal: () => { e({ isAuthModalOpen: !
+          1 }) }, switchToSignIn: () => e({ authModalVariant: l.SIGN_IN }), switchToSignUp: () =>
+  e({ authModalVariant: l.SIGN_UP }), setSignupModalSource: t => e({ signupModalSource: t ?? null }),
+    setIsGoogleSignupModalOpen: t => e({ isGoogleSignupModalOpen: t }), setPostAuthTransition: t => e(e => e
+      .isPostAuthTransition === t ? e : { isPostAuthTransition: t }), setGuestRailSnapshot: t => e(e => e
+      .guestRailSnapshot === t ? e : { guestRailSnapshot: t }) }), { name: `AuthStore`, enabled: e
+      .NEXT_PUBLIC_ENV !== `production` && !0 }));
+export { _ as t };

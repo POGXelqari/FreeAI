@@ -1,0 +1,1 @@
+var e=function(e){return e.DEEP_RESEARCH_CHATS_QUERY=`deep_research_chats_query`,e}({});export{e as t};

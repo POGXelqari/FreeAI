@@ -1,0 +1,14 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/settings-cookie.util-C5vl4muy.js
+ * Module: settings-cookie.util
+ * Extracted & Beautified
+ */
+
+import { t as e } from "./js.cookie-LuQ0sRX_.js";
+import { t } from "./cookie.interface-BM92z_O9.js";
+var n = { path: `/`, expires: 365, sameSite: `lax` },
+  r = () => { let n = e.get(t.SETTINGS); if (!n) return {}; try { let e = JSON.parse(n); return e && typeof e ==
+        `object` ? e : {} } catch { return {} } },
+  i = i => { let a = { ...r(), ...i }; return e.set(t.SETTINGS, JSON.stringify(a), { ...n, secure: globalThis.location
+        ?.protocol === `https:` }), a };
+export { i as n, r as t };

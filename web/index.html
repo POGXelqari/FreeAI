@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreeAI Studio - Local Multi-Model Intelligence</title>
+  <meta name="description" content="Sleek, zero-cost AI chat interface powered by FreeAI Local API Gateway with Live Web Search, Agentic Reasoning, and 14 top-tier models.">
+  <link rel="stylesheet" href="/static/style.css">
+  
+  <!-- Highlight.js for Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <!-- Marked for Markdown Parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="brand-logo" id="brand-logo">
+          <div class="brand-icon">F</div>
+          <span class="brand-name">FreeAI</span>
+          <span class="brand-badge">Gateway</span>
+        </a>
+        <button class="btn-icon" id="sidebar-close-btn" title="Close sidebar" aria-label="Close sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sidebar-action-bar">
+        <button class="btn-new-chat" id="btn-new-chat" aria-label="Start new chat">
+          <span style="display:flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            New Chat
+          </span>
+          <span class="shortcut">Ctrl+K</span>
+        </button>
+      </div>
+
+      <div class="sidebar-search">
+        <div class="search-input-wrapper">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" class="search-input" id="search-conv-input" placeholder="Search conversations..." aria-label="Search conversations">
+        </div>
+      </div>
+
+      <div class="conversation-list" id="conversation-list">
+        <!-- Dynamically rendered past conversations -->
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="pool-status-card" id="pool-status-card">
+          <div class="pool-indicator">
+            <div class="status-dot"></div>
+            <div>
+              <div class="pool-text" id="pool-accounts-count">53 Accounts Ready</div>
+              <div class="pool-subtext" id="cache-stats-text">Cache: 0 Hits (0.0 KB)</div>
+            </div>
+          </div>
+          <button class="btn-icon" id="btn-refresh-pool" title="Refresh gateway status" aria-label="Refresh status">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="nav-left">
+          <button class="btn-icon" id="sidebar-toggle-btn" title="Toggle sidebar" aria-label="Toggle sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+          </button>
+
+          <!-- Model Picker Button & Dropdown -->
+          <div class="model-picker-wrapper">
+            <button class="model-picker-btn" id="model-picker-btn" aria-haspopup="true" aria-expanded="false">
+              <span class="model-provider-badge provider-anthropic" id="current-model-provider">Anthropic</span>
+              <span id="current-model-name">Claude Sonnet 5</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="dropdown-menu" id="dropdown-models">
+              <!-- Populated dynamically with all 14 models -->
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-right">
+          <!-- Execution Mode Pills -->
+          <div class="mode-pills-container">
+            <div class="mode-pill" id="pill-web" data-mode="web" title="Toggle Real-Time Web Search & Live Citations">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              <span>Web Search</span>
+            </div>
+
+            <div class="mode-pill" id="pill-agent" data-mode="agent" title="Toggle Agentic Multi-Step Reasoning">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <span>Agentic</span>
+            </div>
+
+            <div class="mode-pill" id="pill-deep" data-mode="deep" title="Toggle Deep Research Mode">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              <span>Deep Research</span>
+            </div>
+          </div>
+
+          <button class="btn-icon" id="btn-clear-chat" title="Clear current view" aria-label="Clear chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Chat Viewport -->
+      <section class="chat-viewport" id="chat-viewport">
+        <div class="chat-thread" id="chat-thread">
+          <!-- Hero Welcome (Displayed when conversation is empty) -->
+          <div class="hero-welcome" id="hero-welcome">
+            <div class="hero-icon">⚡</div>
+            <h1 class="hero-title">Intelligent Multi-Model Studio</h1>
+            <p class="hero-subtitle">
+              Seamlessly interact with Claude Sonnet 5, GPT-5, Gemini 3.6 Flash, and DeepSeek V4.
+              Equipped with live web search, agentic reasoning, and local response caching.
+            </p>
+
+            <div class="hero-cards-grid">
+              <div class="hero-card" data-prompt="Analyze the core differences between Claude Sonnet 5 and GPT-5 architecture.">
+                <div class="hero-card-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                  Architecture Compare
+                </div>
+                <div class="hero-card-desc">Deep technical comparison between frontier models.</div>
+              </div>
+
+              <div class="hero-card" data-prompt="Search for today's breaking news in artificial intelligence and summarize top 3 breakthroughs." data-web="true">
+                <div class="hero-card-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+                  Live Web Research
+                </div>
+                <div class="hero-card-desc">Query the live web with clickable citation links.</div>
+              </div>
+
+              <div class="hero-card" data-prompt="Calculate (25 * 12) + (144 / 12) - 50 step-by-step with full arithmetic proofs." data-agent="true">
+                <div class="hero-card-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                  Agentic Reasoning
+                </div>
+                <div class="hero-card-desc">Execute multi-step calculation and verification logic.</div>
+              </div>
+
+              <div class="hero-card" data-prompt="Write a high-performance Python async WebSocket client with reconnection logic and backoff.">
+                <div class="hero-card-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                  Async Code Synthesis
+                </div>
+                <div class="hero-card-desc">Clean, production-ready code with syntax highlighting.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Input Area -->
+      <footer class="input-section">
+        <div class="prompt-box">
+          <textarea 
+            class="prompt-textarea" 
+            id="prompt-input" 
+            placeholder="Message FreeAI (Shift+Enter for newline, Enter to send)..." 
+            rows="1"
+            aria-label="Message prompt input"
+          ></textarea>
+
+          <div class="prompt-toolbar">
+            <div class="toolbar-left">
+              <span id="typing-indicator" style="display:none; font-size:12px; color:var(--text-muted); align-items:center; gap:6px;">
+                <span class="status-dot" style="background:#6366f1;"></span>
+                Thinking...
+              </span>
+            </div>
+
+            <div class="toolbar-right">
+              <button class="btn-stop" id="btn-stop" title="Stop streaming response">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                </svg>
+                Stop
+              </button>
+
+              <button class="btn-send" id="btn-send" title="Send Message (Enter)" aria-label="Send Message">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="input-disclaimer">
+          Connected to FreeAI Local Gateway at <code>http://127.0.0.1:8000/v1</code> &bull; All conversations saved locally.
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/user-SAxAP6bK.js
+ * Module: user
+ * Extracted & Beautified
+ */
+
+import { t as e } from "./useMutation-DldRSjFA.js";
+import { n as t } from "./QueryClientProvider-DGxN9XtP.js";
+import { n } from "./user.model-CISYB7eF.js";
+import { f as r, m as i, p as a } from "./teams-D-JmxjA5.js";
+var o = (e, t) => e.refetchQueries({ queryKey: [t] }),
+  s = r => { let a = t(); return e({ mutationFn: i, onSuccess: async e => { await o(a, n.USER_SETTINGS_QUERY), r
+          ?.onSuccess?.(e) }, onError: r?.onError }) },
+  c = r => { let i = t(); return e({ mutationFn: a, onSuccess: async (e, t) => { await o(i, n
+          .USER_PROFILE_WITH_SUBSCRIPTION_QUERY), r?.onSuccess?.(e, t) }, onError: r?.onError }) },
+  l = i => { let a = t(); return e({ mutationFn: r, onSuccess: async e => { if (!e.success) { i?.onError?.(Error(e
+            .error)); return } await o(a, n.USER_PROFILE_WITH_SUBSCRIPTION_QUERY), i?.onSuccess?.(e) }, onError: i
+        ?.onError }) };
+export { c as n, s as r, l as t };

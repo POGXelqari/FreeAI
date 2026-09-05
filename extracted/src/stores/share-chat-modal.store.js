@@ -1,0 +1,14 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/share-chat-modal.store-x6SY0kzg.js
+ * Module: share-chat-modal.store
+ * Extracted & Beautified
+ */
+
+import { t as e } from "./react-D8-vnz5K.js";
+var t = e((e, t) => ({ isOpen: !1, chatId: null, shareIdCache: {}, open: t => e({ isOpen: !0, chatId: t }), close: () =>
+    e({ isOpen: !1, chatId: null }), onOpenChange: t => { t || e({ isOpen: !1, chatId: null }) }, getShareId: (e,
+    n) => { let r = t().shareIdCache[e]; return n === `private` ? r?.privateShareId : r?.publicShareId },
+  setShareId: (t, n, r) => { e(e => ({ shareIdCache: { ...e.shareIdCache, [t]: { ...e.shareIdCache[t], ...r ===
+          `private` ? { privateShareId: n } : { publicShareId: n } } } })) }, clearShareId: t => { e(e => { let
+        n = { ...e.shareIdCache }; return delete n[t], { shareIdCache: n } }) } }));
+export { t };

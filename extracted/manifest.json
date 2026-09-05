@@ -1,0 +1,1817 @@
+{
+  "source": "https://use.ai",
+  "extractedAt": "2026-09-04T21:25:48.364Z",
+  "totalChunks": 299,
+  "categories": {
+    "utils": 29,
+    "constants": 6,
+    "services": 29,
+    "components": 24,
+    "modules": 72,
+    "providers": 14,
+    "icons": 35,
+    "components/ui": 13,
+    "stores": 14,
+    "interfaces": 4,
+    "vendor": 17,
+    "models": 8,
+    "hooks": 33,
+    "api": 1
+  },
+  "files": [
+    {
+      "rawChunk": "abort-error.util-BDjcGeGf.js",
+      "category": "utils",
+      "extractedPath": "src/utils/abort-error.util.js",
+      "sizeBytes": 516
+    },
+    {
+      "rawChunk": "account-suspended.util-CYa_GLLV.js",
+      "category": "utils",
+      "extractedPath": "src/utils/account-suspended.util.js",
+      "sizeBytes": 113
+    },
+    {
+      "rawChunk": "active-row.constant-ECKBKjkl.js",
+      "category": "constants",
+      "extractedPath": "src/constants/active-row.constant.js",
+      "sizeBytes": 78
+    },
+    {
+      "rawChunk": "analytics-hooks.service-fJFOoVJi.js",
+      "category": "services",
+      "extractedPath": "src/services/analytics-hooks.service.js",
+      "sizeBytes": 4042
+    },
+    {
+      "rawChunk": "analytics-initializer.component-Di7Tyel_.js",
+      "category": "components",
+      "extractedPath": "src/components/analytics-initializer.component.js",
+      "sizeBytes": 2743
+    },
+    {
+      "rawChunk": "analytics.service-BIbiLKmC.js",
+      "category": "services",
+      "extractedPath": "src/services/analytics.service.js",
+      "sizeBytes": 57176
+    },
+    {
+      "rawChunk": "AnimatePresence-wBEFtpNn.js",
+      "category": "modules",
+      "extractedPath": "src/modules/AnimatePresence.js",
+      "sizeBytes": 5415
+    },
+    {
+      "rawChunk": "app-shell-header.provider-mIN8qd-l.js",
+      "category": "providers",
+      "extractedPath": "src/providers/app-shell-header.provider.js",
+      "sizeBytes": 326
+    },
+    {
+      "rawChunk": "app.constant-CQOe5N6O.js",
+      "category": "constants",
+      "extractedPath": "src/constants/app.constant.js",
+      "sizeBytes": 86
+    },
+    {
+      "rawChunk": "arrow-right-C1xqmvO2.js",
+      "category": "icons",
+      "extractedPath": "src/icons/arrow-right.js",
+      "sizeBytes": 198
+    },
+    {
+      "rawChunk": "arrow-up-right-u72iYOnW.js",
+      "category": "icons",
+      "extractedPath": "src/icons/arrow-up-right.js",
+      "sizeBytes": 200
+    },
+    {
+      "rawChunk": "attachment-CeJdpRrU.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/attachment.js",
+      "sizeBytes": 1746
+    },
+    {
+      "rawChunk": "auth-modal.component-hFpdr88a.js",
+      "category": "components",
+      "extractedPath": "src/components/auth-modal.component.js",
+      "sizeBytes": 29998
+    },
+    {
+      "rawChunk": "auth-modal.service-Cqqf3TRB.js",
+      "category": "services",
+      "extractedPath": "src/services/auth-modal.service.js",
+      "sizeBytes": 2052
+    },
+    {
+      "rawChunk": "auth-redirect-context.util-DZvFX7LK.js",
+      "category": "utils",
+      "extractedPath": "src/utils/auth-redirect-context.util.js",
+      "sizeBytes": 472
+    },
+    {
+      "rawChunk": "auth-redirect-verifier.component-Du5DDh0U.js",
+      "category": "components",
+      "extractedPath": "src/components/auth-redirect-verifier.component.js",
+      "sizeBytes": 115
+    },
+    {
+      "rawChunk": "auth.store-CecpbI3z.js",
+      "category": "stores",
+      "extractedPath": "src/stores/auth.store.js",
+      "sizeBytes": 2569
+    },
+    {
+      "rawChunk": "badge-fH5lAmij.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/badge.js",
+      "sizeBytes": 1418
+    },
+    {
+      "rawChunk": "BaseLink-DAgr-zci.js",
+      "category": "modules",
+      "extractedPath": "src/modules/BaseLink.js",
+      "sizeBytes": 20110
+    },
+    {
+      "rawChunk": "better-auth-client-session.service-ercwbZKT.js",
+      "category": "services",
+      "extractedPath": "src/services/better-auth-client-session.service.js",
+      "sizeBytes": 2768
+    },
+    {
+      "rawChunk": "better-auth-client.service-Ck6mOMB1.js",
+      "category": "services",
+      "extractedPath": "src/services/better-auth-client.service.js",
+      "sizeBytes": 39563
+    },
+    {
+      "rawChunk": "billing-CclPhhLo.js",
+      "category": "modules",
+      "extractedPath": "src/modules/billing.js",
+      "sizeBytes": 17771
+    },
+    {
+      "rawChunk": "billing.interface-DgJbHepV.js",
+      "category": "interfaces",
+      "extractedPath": "src/interfaces/billing.interface.js",
+      "sizeBytes": 692
+    },
+    {
+      "rawChunk": "blur-keyboard.service-Cw_wHZxR.js",
+      "category": "services",
+      "extractedPath": "src/services/blur-keyboard.service.js",
+      "sizeBytes": 244
+    },
+    {
+      "rawChunk": "bundle-mjs-cJTHqqzI.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/bundle-mjs.js",
+      "sizeBytes": 36676
+    },
+    {
+      "rawChunk": "button-B7ERdP8H.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/button.js",
+      "sizeBytes": 3757
+    },
+    {
+      "rawChunk": "camera-C34auD4V.js",
+      "category": "icons",
+      "extractedPath": "src/icons/camera.js",
+      "sizeBytes": 379
+    },
+    {
+      "rawChunk": "cancel-2J3UTq9u.js",
+      "category": "modules",
+      "extractedPath": "src/modules/cancel.js",
+      "sizeBytes": 451
+    },
+    {
+      "rawChunk": "card-DTfbhj7q.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/card.js",
+      "sizeBytes": 1291
+    },
+    {
+      "rawChunk": "catalog-locale-C1DasskV.js",
+      "category": "modules",
+      "extractedPath": "src/modules/catalog-locale.js",
+      "sizeBytes": 3126
+    },
+    {
+      "rawChunk": "chat-actions-CIThz8ZM.js",
+      "category": "modules",
+      "extractedPath": "src/modules/chat-actions.js",
+      "sizeBytes": 12363
+    },
+    {
+      "rawChunk": "chat-actions-dropdown.service-CGv07yp5.js",
+      "category": "services",
+      "extractedPath": "src/services/chat-actions-dropdown.service.js",
+      "sizeBytes": 292
+    },
+    {
+      "rawChunk": "chat-auth.util-CHugSHZw.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chat-auth.util.js",
+      "sizeBytes": 4057
+    },
+    {
+      "rawChunk": "chat-history-Ck4B7fB_.js",
+      "category": "modules",
+      "extractedPath": "src/modules/chat-history.js",
+      "sizeBytes": 5709
+    },
+    {
+      "rawChunk": "chat-key.constant-DXJEa87X.js",
+      "category": "constants",
+      "extractedPath": "src/constants/chat-key.constant.js",
+      "sizeBytes": 486
+    },
+    {
+      "rawChunk": "chat-landing-variant.provider-CFxvAtmo.js",
+      "category": "providers",
+      "extractedPath": "src/providers/chat-landing-variant.provider.js",
+      "sizeBytes": 576
+    },
+    {
+      "rawChunk": "chat-model-cookie.util-BFNaMDUF.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chat-model-cookie.util.js",
+      "sizeBytes": 504
+    },
+    {
+      "rawChunk": "chat-route.util-DIaoD1cB.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chat-route.util.js",
+      "sizeBytes": 1286
+    },
+    {
+      "rawChunk": "chat-uploads.util-DAI5F9yJ.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chat-uploads.util.js",
+      "sizeBytes": 2633
+    },
+    {
+      "rawChunk": "chat.model-oMaun5dH.js",
+      "category": "models",
+      "extractedPath": "src/models/chat.model.js",
+      "sizeBytes": 230
+    },
+    {
+      "rawChunk": "chat.service-Czpxrkso.js",
+      "category": "services",
+      "extractedPath": "src/services/chat.service.js",
+      "sizeBytes": 177025
+    },
+    {
+      "rawChunk": "chat.store-CVJElyGt.js",
+      "category": "stores",
+      "extractedPath": "src/stores/chat.store.js",
+      "sizeBytes": 50077
+    },
+    {
+      "rawChunk": "check-CWA6FeXs.js",
+      "category": "icons",
+      "extractedPath": "src/icons/check.js",
+      "sizeBytes": 148
+    },
+    {
+      "rawChunk": "checkout-token-preload-initializer.component-CTdt72KU.js",
+      "category": "components",
+      "extractedPath": "src/components/checkout-token-preload-initializer.component.js",
+      "sizeBytes": 3423
+    },
+    {
+      "rawChunk": "checkout-universal-form.service-CxHch_si.js",
+      "category": "services",
+      "extractedPath": "src/services/checkout-universal-form.service.js",
+      "sizeBytes": 10806
+    },
+    {
+      "rawChunk": "chevron-down-CY8S3ZfR.js",
+      "category": "icons",
+      "extractedPath": "src/icons/chevron-down.js",
+      "sizeBytes": 152
+    },
+    {
+      "rawChunk": "chevron-left-BXhKvLzg.js",
+      "category": "icons",
+      "extractedPath": "src/icons/chevron-left.js",
+      "sizeBytes": 154
+    },
+    {
+      "rawChunk": "chevron-right-Dw6SaFc4.js",
+      "category": "icons",
+      "extractedPath": "src/icons/chevron-right.js",
+      "sizeBytes": 154
+    },
+    {
+      "rawChunk": "chunk-error.util-8lmmDUxL.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chunk-error.util.js",
+      "sizeBytes": 1152
+    },
+    {
+      "rawChunk": "circle-alert-CjKwzCDt.js",
+      "category": "icons",
+      "extractedPath": "src/icons/circle-alert.js",
+      "sizeBytes": 308
+    },
+    {
+      "rawChunk": "circle-BS-Vzwf7.js",
+      "category": "icons",
+      "extractedPath": "src/icons/circle.js",
+      "sizeBytes": 158
+    },
+    {
+      "rawChunk": "circle-question-mark-C060llBg.js",
+      "category": "icons",
+      "extractedPath": "src/icons/circle-question-mark.js",
+      "sizeBytes": 294
+    },
+    {
+      "rawChunk": "client-DWC7O25X.js",
+      "category": "modules",
+      "extractedPath": "src/modules/client.js",
+      "sizeBytes": 212
+    },
+    {
+      "rawChunk": "composer-modes.provider-C-48A9eP.js",
+      "category": "providers",
+      "extractedPath": "src/providers/composer-modes.provider-C.js",
+      "sizeBytes": 565
+    },
+    {
+      "rawChunk": "config.model-C-TFE2oV.js",
+      "category": "models",
+      "extractedPath": "src/models/config.model-C.js",
+      "sizeBytes": 193
+    },
+    {
+      "rawChunk": "connector-catalog-lazy.service-BSf-5rRs.js",
+      "category": "services",
+      "extractedPath": "src/services/connector-catalog-lazy.service.js",
+      "sizeBytes": 869
+    },
+    {
+      "rawChunk": "connector-icon.component-CDOi5dKA.js",
+      "category": "components",
+      "extractedPath": "src/components/connector-icon.component.js",
+      "sizeBytes": 3940
+    },
+    {
+      "rawChunk": "connector-intl.provider-BHMUftuf.js",
+      "category": "providers",
+      "extractedPath": "src/providers/connector-intl.provider.js",
+      "sizeBytes": 5831
+    },
+    {
+      "rawChunk": "connector-search-input.component-DgBAGGEg.js",
+      "category": "components",
+      "extractedPath": "src/components/connector-search-input.component.js",
+      "sizeBytes": 2076
+    },
+    {
+      "rawChunk": "connectors-BU3y6DIC.js",
+      "category": "modules",
+      "extractedPath": "src/modules/connectors.js",
+      "sizeBytes": 12461
+    },
+    {
+      "rawChunk": "connectors-catalog.service-C2W0ZTIl.js",
+      "category": "services",
+      "extractedPath": "src/services/connectors-catalog.service.js",
+      "sizeBytes": 1228
+    },
+    {
+      "rawChunk": "connectors-list-skeletons-BzT4K5F7.js",
+      "category": "modules",
+      "extractedPath": "src/modules/connectors-list-skeletons.js",
+      "sizeBytes": 2623
+    },
+    {
+      "rawChunk": "connectors-page-skeleton.component-Cgf0XRxA.js",
+      "category": "components",
+      "extractedPath": "src/components/connectors-page-skeleton.component.js",
+      "sizeBytes": 2747
+    },
+    {
+      "rawChunk": "connectors.hook-BS1NEVLs.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/connectors.hook.js",
+      "sizeBytes": 1679
+    },
+    {
+      "rawChunk": "connectors.mutation-DCZIwE-0.js",
+      "category": "modules",
+      "extractedPath": "src/modules/connectors.mutation.js",
+      "sizeBytes": 2338
+    },
+    {
+      "rawChunk": "connectors.service-BvuH6FUI.js",
+      "category": "services",
+      "extractedPath": "src/services/connectors.service.js",
+      "sizeBytes": 6175
+    },
+    {
+      "rawChunk": "connectors.store-ta4ejFxC.js",
+      "category": "stores",
+      "extractedPath": "src/stores/connectors.store.js",
+      "sizeBytes": 4309
+    },
+    {
+      "rawChunk": "cookie.interface-BM92z_O9.js",
+      "category": "interfaces",
+      "extractedPath": "src/interfaces/cookie.interface.js",
+      "sizeBytes": 357
+    },
+    {
+      "rawChunk": "copy-DQkd77kV.js",
+      "category": "icons",
+      "extractedPath": "src/icons/copy.js",
+      "sizeBytes": 279
+    },
+    {
+      "rawChunk": "copy-formatted.util-CTbr3TnW.js",
+      "category": "utils",
+      "extractedPath": "src/utils/copy-formatted.util.js",
+      "sizeBytes": 2372
+    },
+    {
+      "rawChunk": "createLucideIcon-CVSF7wvO.js",
+      "category": "modules",
+      "extractedPath": "src/modules/createLucideIcon.js",
+      "sizeBytes": 1501
+    },
+    {
+      "rawChunk": "deep-research-chats.model-Bm4CwR0q.js",
+      "category": "models",
+      "extractedPath": "src/models/deep-research-chats.model.js",
+      "sizeBytes": 116
+    },
+    {
+      "rawChunk": "deferred-google-tag-manager.component-COj0PWA3.js",
+      "category": "components",
+      "extractedPath": "src/components/deferred-google-tag-manager.component.js",
+      "sizeBytes": 993
+    },
+    {
+      "rawChunk": "dialog-7Locadch.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/dialog.js",
+      "sizeBytes": 5245
+    },
+    {
+      "rawChunk": "dist-1ej2Hjrt.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 7097
+    },
+    {
+      "rawChunk": "dist-BbbTHrHw.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 890
+    },
+    {
+      "rawChunk": "dist-Bk3YTB5a.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 3293
+    },
+    {
+      "rawChunk": "dist-Bwy9E6PB.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 5583
+    },
+    {
+      "rawChunk": "dist-C8KK_I18.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 38095
+    },
+    {
+      "rawChunk": "dist-CEdsmZbM.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 401
+    },
+    {
+      "rawChunk": "dist-CQDSGHYK.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 4177
+    },
+    {
+      "rawChunk": "dist-DbhSOkZC.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 9769
+    },
+    {
+      "rawChunk": "dist-DHTrxFRs.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 2255
+    },
+    {
+      "rawChunk": "dist-DKq-7tPa.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 3628
+    },
+    {
+      "rawChunk": "dist-DNAaWyma.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 853
+    },
+    {
+      "rawChunk": "dist-jciTo-QL.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 5521
+    },
+    {
+      "rawChunk": "dist-UOiSWAIU.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 6284
+    },
+    {
+      "rawChunk": "dist-uRWxuiG0.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 3486
+    },
+    {
+      "rawChunk": "dist-V17-Ndhz.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 3077
+    },
+    {
+      "rawChunk": "dist-wURgM5if.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 471
+    },
+    {
+      "rawChunk": "download-10KlyRTr.js",
+      "category": "icons",
+      "extractedPath": "src/icons/download.js",
+      "sizeBytes": 274
+    },
+    {
+      "rawChunk": "download-chat-button.service-CctxGjXF.js",
+      "category": "services",
+      "extractedPath": "src/services/download-chat-button.service.js",
+      "sizeBytes": 18504
+    },
+    {
+      "rawChunk": "drawer-CrlfHJuB.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/drawer.js",
+      "sizeBytes": 36063
+    },
+    {
+      "rawChunk": "dropdown-menu-D6_Lrewr.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/dropdown-menu.js",
+      "sizeBytes": 27931
+    },
+    {
+      "rawChunk": "dynamic-preload-chunks-C2tdlbzD.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dynamic-preload-chunks.js",
+      "sizeBytes": 268
+    },
+    {
+      "rawChunk": "dynamic.service-BDdZlREf.js",
+      "category": "services",
+      "extractedPath": "src/services/dynamic.service.js",
+      "sizeBytes": 3119
+    },
+    {
+      "rawChunk": "email.util-D8k5pUXC.js",
+      "category": "utils",
+      "extractedPath": "src/utils/email.util.js",
+      "sizeBytes": 6473
+    },
+    {
+      "rawChunk": "ensure-connector-registrations.service-8f4euYJb.js",
+      "category": "services",
+      "extractedPath": "src/services/ensure-connector-registrations.service.js",
+      "sizeBytes": 1289
+    },
+    {
+      "rawChunk": "env-C6AULCj5.js",
+      "category": "modules",
+      "extractedPath": "src/modules/env.js",
+      "sizeBytes": 103952
+    },
+    {
+      "rawChunk": "error-6zDpPiXu.js",
+      "category": "modules",
+      "extractedPath": "src/modules/error.js",
+      "sizeBytes": 458
+    },
+    {
+      "rawChunk": "es2015-fuZyN7gw.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/es2015.js",
+      "sizeBytes": 21400
+    },
+    {
+      "rawChunk": "existing-chat-DX8nfOwY.js",
+      "category": "modules",
+      "extractedPath": "src/modules/existing-chat.js",
+      "sizeBytes": 20072
+    },
+    {
+      "rawChunk": "experiment-client.service-Dbg--_Jv.js",
+      "category": "services",
+      "extractedPath": "src/services/experiment-client.service.js",
+      "sizeBytes": 58331
+    },
+    {
+      "rawChunk": "experiment.provider-CQRJZnpd.js",
+      "category": "providers",
+      "extractedPath": "src/providers/experiment.provider.js",
+      "sizeBytes": 985
+    },
+    {
+      "rawChunk": "file-upload.constant-B3pVoarn.js",
+      "category": "constants",
+      "extractedPath": "src/constants/file-upload.constant.js",
+      "sizeBytes": 54
+    },
+    {
+      "rawChunk": "files-D6piZW1u.js",
+      "category": "icons",
+      "extractedPath": "src/icons/files.js",
+      "sizeBytes": 638
+    },
+    {
+      "rawChunk": "first-party-url.util-CX2n5k9d.js",
+      "category": "utils",
+      "extractedPath": "src/utils/first-party-url.util.js",
+      "sizeBytes": 1198
+    },
+    {
+      "rawChunk": "floating-ui.react-dom-xN1K-ASj.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/floating-ui.react-dom.js",
+      "sizeBytes": 29276
+    },
+    {
+      "rawChunk": "folder-BsW44kWZ.js",
+      "category": "icons",
+      "extractedPath": "src/icons/folder.js",
+      "sizeBytes": 258
+    },
+    {
+      "rawChunk": "footer-CjOVPpm1.js",
+      "category": "modules",
+      "extractedPath": "src/modules/footer.js",
+      "sizeBytes": 41
+    },
+    {
+      "rawChunk": "footer.component-CiKJBwzY.js",
+      "category": "components",
+      "extractedPath": "src/components/footer.component.js",
+      "sizeBytes": 11330
+    },
+    {
+      "rawChunk": "formbricks.provider-DQWvTNkK.js",
+      "category": "providers",
+      "extractedPath": "src/providers/formbricks.provider.js",
+      "sizeBytes": 1162
+    },
+    {
+      "rawChunk": "framework-D-uKrMmN.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/framework-D.js",
+      "sizeBytes": 275391
+    },
+    {
+      "rawChunk": "freemium-funnel.provider-AazaL16l.js",
+      "category": "providers",
+      "extractedPath": "src/providers/freemium-funnel.provider.js",
+      "sizeBytes": 446
+    },
+    {
+      "rawChunk": "freemium-funnel.store-B7BDrTBQ.js",
+      "category": "stores",
+      "extractedPath": "src/stores/freemium-funnel.store.js",
+      "sizeBytes": 769
+    },
+    {
+      "rawChunk": "freemium-funnel.util-D0KPcbFz.js",
+      "category": "utils",
+      "extractedPath": "src/utils/freemium-funnel.util.js",
+      "sizeBytes": 3656
+    },
+    {
+      "rawChunk": "funnel-guest-topbar.component-CaUCBSkE.js",
+      "category": "components",
+      "extractedPath": "src/components/funnel-guest-topbar.component.js",
+      "sizeBytes": 3701
+    },
+    {
+      "rawChunk": "geo.service-BPKKTJpo.js",
+      "category": "services",
+      "extractedPath": "src/services/geo.service.js",
+      "sizeBytes": 583
+    },
+    {
+      "rawChunk": "global-error-9wsj_fxP.js",
+      "category": "modules",
+      "extractedPath": "src/modules/global-error.js",
+      "sizeBytes": 17096
+    },
+    {
+      "rawChunk": "global-error-capture.component-BaE1ds7c.js",
+      "category": "components",
+      "extractedPath": "src/components/global-error-capture.component.js",
+      "sizeBytes": 2888
+    },
+    {
+      "rawChunk": "global.store-DsM3x4UJ.js",
+      "category": "stores",
+      "extractedPath": "src/stores/global.store.js",
+      "sizeBytes": 2370
+    },
+    {
+      "rawChunk": "globe-D1MVs8b6.js",
+      "category": "icons",
+      "extractedPath": "src/icons/globe.js",
+      "sizeBytes": 288
+    },
+    {
+      "rawChunk": "greeting-BMnEPWM2.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/greeting.js",
+      "sizeBytes": 10096
+    },
+    {
+      "rawChunk": "growthbook-server-to-client-analytics.component-CMkevCIi.js",
+      "category": "components",
+      "extractedPath": "src/components/growthbook-server-to-client-analytics.component.js",
+      "sizeBytes": 1093
+    },
+    {
+      "rawChunk": "gtm-DkKjcpHp.js",
+      "category": "modules",
+      "extractedPath": "src/modules/gtm.js",
+      "sizeBytes": 5523
+    },
+    {
+      "rawChunk": "guest-limit-retry.util-B5MoFEDH.js",
+      "category": "utils",
+      "extractedPath": "src/utils/guest-limit-retry.util.js",
+      "sizeBytes": 682
+    },
+    {
+      "rawChunk": "guest-new-chat.component-DnE9bgPv.js",
+      "category": "components",
+      "extractedPath": "src/components/guest-new-chat.component.js",
+      "sizeBytes": 53797
+    },
+    {
+      "rawChunk": "guest-sidebar-menu.component-WviJnH5Q.js",
+      "category": "components",
+      "extractedPath": "src/components/guest-sidebar-menu.component.js",
+      "sizeBytes": 32298
+    },
+    {
+      "rawChunk": "guest-sidebar-menu.store-D01MKXdQ.js",
+      "category": "stores",
+      "extractedPath": "src/stores/guest-sidebar-menu.store.js",
+      "sizeBytes": 377
+    },
+    {
+      "rawChunk": "header-CVRMnOaC.js",
+      "category": "modules",
+      "extractedPath": "src/modules/header.js",
+      "sizeBytes": 53
+    },
+    {
+      "rawChunk": "header.component-BJY8EK6h.js",
+      "category": "components",
+      "extractedPath": "src/components/header.component.js",
+      "sizeBytes": 7809
+    },
+    {
+      "rawChunk": "help-category.module-BsXxWyLm.js",
+      "category": "modules",
+      "extractedPath": "src/modules/help-category.module.js",
+      "sizeBytes": 4203
+    },
+    {
+      "rawChunk": "help-route.util-DOvwIYGh.js",
+      "category": "utils",
+      "extractedPath": "src/utils/help-route.util.js",
+      "sizeBytes": 148
+    },
+    {
+      "rawChunk": "help.model-AUjRNMGX.js",
+      "category": "models",
+      "extractedPath": "src/models/help.model.js",
+      "sizeBytes": 1024
+    },
+    {
+      "rawChunk": "hydration-BI7_jV4G.js",
+      "category": "modules",
+      "extractedPath": "src/modules/hydration.js",
+      "sizeBytes": 1787
+    },
+    {
+      "rawChunk": "HydrationBoundary-Diq6F1j_.js",
+      "category": "modules",
+      "extractedPath": "src/modules/HydrationBoundary.js",
+      "sizeBytes": 1145
+    },
+    {
+      "rawChunk": "image-C4T3aCpn.js",
+      "category": "icons",
+      "extractedPath": "src/icons/image.js",
+      "sizeBytes": 1547
+    },
+    {
+      "rawChunk": "image-compression.util-dcofMV1t.js",
+      "category": "utils",
+      "extractedPath": "src/utils/image-compression.util.js",
+      "sizeBytes": 2564
+    },
+    {
+      "rawChunk": "image-I9wsg_Y3.js",
+      "category": "icons",
+      "extractedPath": "src/icons/image.js",
+      "sizeBytes": 325
+    },
+    {
+      "rawChunk": "incognito-chat-enabled-BE8jAbsG.js",
+      "category": "modules",
+      "extractedPath": "src/modules/incognito-chat-enabled.js",
+      "sizeBytes": 3119
+    },
+    {
+      "rawChunk": "index-uz8tLlss.js",
+      "category": "modules",
+      "extractedPath": "src/modules/index.js",
+      "sizeBytes": 280344
+    },
+    {
+      "rawChunk": "initial-auth-state.provider-DUS-CXUE.js",
+      "category": "providers",
+      "extractedPath": "src/providers/initial-auth-state.provider.js",
+      "sizeBytes": 416
+    },
+    {
+      "rawChunk": "initial-mobile.provider-DAAXBXtb.js",
+      "category": "providers",
+      "extractedPath": "src/providers/initial-mobile.provider.js",
+      "sizeBytes": 438
+    },
+    {
+      "rawChunk": "input-Cn8pMAH2.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/input.js",
+      "sizeBytes": 1555
+    },
+    {
+      "rawChunk": "intl-5y7Gu4iP.js",
+      "category": "modules",
+      "extractedPath": "src/modules/intl.js",
+      "sizeBytes": 4146
+    },
+    {
+      "rawChunk": "intl.constant-DpFKv8U4.js",
+      "category": "constants",
+      "extractedPath": "src/constants/intl.constant.js",
+      "sizeBytes": 655
+    },
+    {
+      "rawChunk": "is-landscape.service-DbVHFBVO.js",
+      "category": "services",
+      "extractedPath": "src/services/is-landscape.service.js",
+      "sizeBytes": 157
+    },
+    {
+      "rawChunk": "is-locale-arabic.util-B4BIdGa2.js",
+      "category": "utils",
+      "extractedPath": "src/utils/is-locale-arabic.util.js",
+      "sizeBytes": 90
+    },
+    {
+      "rawChunk": "is-mobile.service-c24xKO50.js",
+      "category": "services",
+      "extractedPath": "src/services/is-mobile.service.js",
+      "sizeBytes": 639
+    },
+    {
+      "rawChunk": "js.cookie-LuQ0sRX_.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/js.cookie.js",
+      "sizeBytes": 1771
+    },
+    {
+      "rawChunk": "layout-segment-context-Byr4c-Gc.js",
+      "category": "modules",
+      "extractedPath": "src/modules/layout-segment-context.js",
+      "sizeBytes": 611
+    },
+    {
+      "rawChunk": "layout-sidebar-icon.component-Chawdw6U.js",
+      "category": "components",
+      "extractedPath": "src/components/layout-sidebar-icon.component.js",
+      "sizeBytes": 4919
+    },
+    {
+      "rawChunk": "limits.interface-CnG5W0wJ.js",
+      "category": "interfaces",
+      "extractedPath": "src/interfaces/limits.interface.js",
+      "sizeBytes": 154
+    },
+    {
+      "rawChunk": "loader-circle-C38mqwuC.js",
+      "category": "icons",
+      "extractedPath": "src/icons/loader-circle.js",
+      "sizeBytes": 168
+    },
+    {
+      "rawChunk": "locale-path.util-nU2-KrUb.js",
+      "category": "utils",
+      "extractedPath": "src/utils/locale-path.util.js",
+      "sizeBytes": 207
+    },
+    {
+      "rawChunk": "lock-B2ZQPtdc.js",
+      "category": "icons",
+      "extractedPath": "src/icons/lock.js",
+      "sizeBytes": 249
+    },
+    {
+      "rawChunk": "logo-icon-C5Mo55YO.js",
+      "category": "icons",
+      "extractedPath": "src/icons/logo-icon.js",
+      "sizeBytes": 1597
+    },
+    {
+      "rawChunk": "logo-icon-white-QiZ2Ybc-.js",
+      "category": "icons",
+      "extractedPath": "src/icons/logo-icon-white.js",
+      "sizeBytes": 1612
+    },
+    {
+      "rawChunk": "logo-spinner-CYcNfjAa.js",
+      "category": "icons",
+      "extractedPath": "src/icons/logo-spinner.js",
+      "sizeBytes": 1692
+    },
+    {
+      "rawChunk": "logout-teardown.service-BVsq4fds.js",
+      "category": "services",
+      "extractedPath": "src/services/logout-teardown.service.js",
+      "sizeBytes": 226
+    },
+    {
+      "rawChunk": "logout.store-DDMyOgQ2.js",
+      "category": "stores",
+      "extractedPath": "src/stores/logout.store.js",
+      "sizeBytes": 196
+    },
+    {
+      "rawChunk": "magnifier-CHjDndnj.js",
+      "category": "icons",
+      "extractedPath": "src/icons/magnifier.js",
+      "sizeBytes": 1326
+    },
+    {
+      "rawChunk": "mail-CTj0GzeV.js",
+      "category": "icons",
+      "extractedPath": "src/icons/mail.js",
+      "sizeBytes": 254
+    },
+    {
+      "rawChunk": "marketing-attribution.service-CG12a6fw.js",
+      "category": "services",
+      "extractedPath": "src/services/marketing-attribution.service.js",
+      "sizeBytes": 748
+    },
+    {
+      "rawChunk": "menu-DmuxtmLj.js",
+      "category": "icons",
+      "extractedPath": "src/icons/menu.js",
+      "sizeBytes": 708
+    },
+    {
+      "rawChunk": "mic-Cuoatejj.js",
+      "category": "icons",
+      "extractedPath": "src/icons/mic.js",
+      "sizeBytes": 434
+    },
+    {
+      "rawChunk": "microsoft-logo-DpIPd5_1.js",
+      "category": "icons",
+      "extractedPath": "src/icons/microsoft-logo.js",
+      "sizeBytes": 645
+    },
+    {
+      "rawChunk": "middleware-BT98JsiD.js",
+      "category": "modules",
+      "extractedPath": "src/modules/middleware.js",
+      "sizeBytes": 6717
+    },
+    {
+      "rawChunk": "mixpanel-auth.component-Bb51XnQp.js",
+      "category": "components",
+      "extractedPath": "src/components/mixpanel-auth.component.js",
+      "sizeBytes": 2263
+    },
+    {
+      "rawChunk": "mixpanel-CkBALibP.js",
+      "category": "modules",
+      "extractedPath": "src/modules/mixpanel.js",
+      "sizeBytes": 18337
+    },
+    {
+      "rawChunk": "mixpanel.hook-CmubyvVR.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/mixpanel.hook.js",
+      "sizeBytes": 223
+    },
+    {
+      "rawChunk": "mobile-chat-header.component-BZlH-Boh.js",
+      "category": "components",
+      "extractedPath": "src/components/mobile-chat-header.component.js",
+      "sizeBytes": 16337
+    },
+    {
+      "rawChunk": "mobile-drawer.provider-D6C04T1C.js",
+      "category": "providers",
+      "extractedPath": "src/providers/mobile-drawer.provider.js",
+      "sizeBytes": 328
+    },
+    {
+      "rawChunk": "mobile-header-logo-BBTsGGx9.js",
+      "category": "modules",
+      "extractedPath": "src/modules/mobile-header-logo.js",
+      "sizeBytes": 738
+    },
+    {
+      "rawChunk": "mobile-page-header-Bw-GZZb2.js",
+      "category": "modules",
+      "extractedPath": "src/modules/mobile-page-header.js",
+      "sizeBytes": 53
+    },
+    {
+      "rawChunk": "mobile-page-header.component-rYkBNUPE.js",
+      "category": "components",
+      "extractedPath": "src/components/mobile-page-header.component.js",
+      "sizeBytes": 2625
+    },
+    {
+      "rawChunk": "model-catalog.provider-C5iwWYsc.js",
+      "category": "providers",
+      "extractedPath": "src/providers/model-catalog.provider.js",
+      "sizeBytes": 2358
+    },
+    {
+      "rawChunk": "model-selector-CHLHhIlL.js",
+      "category": "modules",
+      "extractedPath": "src/modules/model-selector.js",
+      "sizeBytes": 12219
+    },
+    {
+      "rawChunk": "model-selector.util-s4hzcUFp.js",
+      "category": "utils",
+      "extractedPath": "src/utils/model-selector.util.js",
+      "sizeBytes": 1447
+    },
+    {
+      "rawChunk": "mutation-DO0ikfMC.js",
+      "category": "modules",
+      "extractedPath": "src/modules/mutation.js",
+      "sizeBytes": 9077
+    },
+    {
+      "rawChunk": "new-chat-DRFSeAfv.js",
+      "category": "modules",
+      "extractedPath": "src/modules/new-chat.js",
+      "sizeBytes": 1237
+    },
+    {
+      "rawChunk": "new-chat.service-CIiqAd78.js",
+      "category": "services",
+      "extractedPath": "src/services/new-chat.service.js",
+      "sizeBytes": 2161
+    },
+    {
+      "rawChunk": "NextIntlClientProvider-BP5AYJiO.js",
+      "category": "modules",
+      "extractedPath": "src/modules/NextIntlClientProvider.js",
+      "sizeBytes": 332
+    },
+    {
+      "rawChunk": "no-trial-initializer.component-Vwmae8A0.js",
+      "category": "components",
+      "extractedPath": "src/components/no-trial-initializer.component.js",
+      "sizeBytes": 653
+    },
+    {
+      "rawChunk": "oauth-error-recovery.component-E4xkzbUY.js",
+      "category": "components",
+      "extractedPath": "src/components/oauth-error-recovery.component.js",
+      "sizeBytes": 4180
+    },
+    {
+      "rawChunk": "open-after-viewport-settle.util-BfKU5lGX.js",
+      "category": "utils",
+      "extractedPath": "src/utils/open-after-viewport-settle.util.js",
+      "sizeBytes": 1576
+    },
+    {
+      "rawChunk": "page.model-BtgmfPnr.js",
+      "category": "models",
+      "extractedPath": "src/models/page.model.js",
+      "sizeBytes": 150
+    },
+    {
+      "rawChunk": "palette-trEm3e1X.js",
+      "category": "icons",
+      "extractedPath": "src/icons/palette.js",
+      "sizeBytes": 600
+    },
+    {
+      "rawChunk": "payment-modals.store-Ds_qXI-N.js",
+      "category": "stores",
+      "extractedPath": "src/stores/payment-modals.store.js",
+      "sizeBytes": 1815
+    },
+    {
+      "rawChunk": "paywall-intent.util-T2BKTtbQ.js",
+      "category": "utils",
+      "extractedPath": "src/utils/paywall-intent.util.js",
+      "sizeBytes": 928
+    },
+    {
+      "rawChunk": "paywall-prewarm.service-BUgoToJW.js",
+      "category": "services",
+      "extractedPath": "src/services/paywall-prewarm.service.js",
+      "sizeBytes": 94
+    },
+    {
+      "rawChunk": "paywall.service-DJtJHTep.js",
+      "category": "services",
+      "extractedPath": "src/services/paywall.service.js",
+      "sizeBytes": 6431
+    },
+    {
+      "rawChunk": "pending-free-message-query.util-C2HYAyae.js",
+      "category": "utils",
+      "extractedPath": "src/utils/pending-free-message-query.util.js",
+      "sizeBytes": 333
+    },
+    {
+      "rawChunk": "plug-2-CsRLclIi.js",
+      "category": "icons",
+      "extractedPath": "src/icons/plug-2.js",
+      "sizeBytes": 342
+    },
+    {
+      "rawChunk": "plus-goXwnRLz.js",
+      "category": "icons",
+      "extractedPath": "src/icons/plus.js",
+      "sizeBytes": 186
+    },
+    {
+      "rawChunk": "popover-C7eaNV3m.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/popover.js",
+      "sizeBytes": 6493
+    },
+    {
+      "rawChunk": "post-payment.store-jgy38Ijx.js",
+      "category": "stores",
+      "extractedPath": "src/stores/post-payment.store.js",
+      "sizeBytes": 1552
+    },
+    {
+      "rawChunk": "privacy.module-TZjAaQ17.js",
+      "category": "modules",
+      "extractedPath": "src/modules/privacy.module.js",
+      "sizeBytes": 1704
+    },
+    {
+      "rawChunk": "project-key.constant-DL2-hOys.js",
+      "category": "constants",
+      "extractedPath": "src/constants/project-key.constant.js",
+      "sizeBytes": 437
+    },
+    {
+      "rawChunk": "provider-shell.component-BT2mCKt8.js",
+      "category": "components",
+      "extractedPath": "src/components/provider-shell.component.js",
+      "sizeBytes": 7379
+    },
+    {
+      "rawChunk": "proxy-B_99oKrn.js",
+      "category": "modules",
+      "extractedPath": "src/modules/proxy.js",
+      "sizeBytes": 158854
+    },
+    {
+      "rawChunk": "pure-BxuLq9I9.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/pure.js",
+      "sizeBytes": 4104
+    },
+    {
+      "rawChunk": "query-DugiHe4Q.js",
+      "category": "modules",
+      "extractedPath": "src/modules/query.js",
+      "sizeBytes": 1274
+    },
+    {
+      "rawChunk": "QueryClientProvider-DGxN9XtP.js",
+      "category": "modules",
+      "extractedPath": "src/modules/QueryClientProvider.js",
+      "sizeBytes": 512
+    },
+    {
+      "rawChunk": "queryOptions-Dfvzj6n2.js",
+      "category": "modules",
+      "extractedPath": "src/modules/queryOptions.js",
+      "sizeBytes": 46
+    },
+    {
+      "rawChunk": "raw-history.util-43z6flYk.js",
+      "category": "utils",
+      "extractedPath": "src/utils/raw-history.util.js",
+      "sizeBytes": 269
+    },
+    {
+      "rawChunk": "react-client-CTfy1ioc.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/react-client.js",
+      "sizeBytes": 136
+    },
+    {
+      "rawChunk": "react-client-DI5BViDH.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/react-client.js",
+      "sizeBytes": 209
+    },
+    {
+      "rawChunk": "react-CWjhjU4R.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/react.js",
+      "sizeBytes": 52027
+    },
+    {
+      "rawChunk": "react-D8-vnz5K.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/react.js",
+      "sizeBytes": 914
+    },
+    {
+      "rawChunk": "recovery-marker.util-BHO296he.js",
+      "category": "utils",
+      "extractedPath": "src/utils/recovery-marker.util.js",
+      "sizeBytes": 258
+    },
+    {
+      "rawChunk": "registries-BHxkc4G_.js",
+      "category": "modules",
+      "extractedPath": "src/modules/registries.js",
+      "sizeBytes": 584
+    },
+    {
+      "rawChunk": "rename-chat-modal-CffMN_RG.js",
+      "category": "modules",
+      "extractedPath": "src/modules/rename-chat-modal.js",
+      "sizeBytes": 7540
+    },
+    {
+      "rawChunk": "rename-item-modal-2hixoasb.js",
+      "category": "modules",
+      "extractedPath": "src/modules/rename-item-modal.js",
+      "sizeBytes": 2001
+    },
+    {
+      "rawChunk": "report-client-error.util-Bq41AYxy.js",
+      "category": "utils",
+      "extractedPath": "src/utils/report-client-error.util.js",
+      "sizeBytes": 1762
+    },
+    {
+      "rawChunk": "rest-api-DNPFxXXP.js",
+      "category": "modules",
+      "extractedPath": "src/modules/rest-api.js",
+      "sizeBytes": 18539
+    },
+    {
+      "rawChunk": "rest-api.provider-DFR1ot1R.js",
+      "category": "providers",
+      "extractedPath": "src/providers/rest-api.provider.js",
+      "sizeBytes": 19026
+    },
+    {
+      "rawChunk": "retry-chat-bridge.service-UVZ4pRxm.js",
+      "category": "services",
+      "extractedPath": "src/services/retry-chat-bridge.service.js",
+      "sizeBytes": 443
+    },
+    {
+      "rawChunk": "review-trigger.store-C2KfqDZw.js",
+      "category": "stores",
+      "extractedPath": "src/stores/review-trigger.store.js",
+      "sizeBytes": 2957
+    },
+    {
+      "rawChunk": "rich-text-renderer-BOt8oZqo.js",
+      "category": "modules",
+      "extractedPath": "src/modules/rich-text-renderer.js",
+      "sizeBytes": 11944
+    },
+    {
+      "rawChunk": "rolldown-runtime-C0FnF6B9.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/rolldown-runtime.js",
+      "sizeBytes": 1630
+    },
+    {
+      "rawChunk": "safe-session-storage.util-D62mLdZm.js",
+      "category": "utils",
+      "extractedPath": "src/utils/safe-session-storage.util.js",
+      "sizeBytes": 584
+    },
+    {
+      "rawChunk": "safe-session-storage.util-DN4NSHVM.js",
+      "category": "utils",
+      "extractedPath": "src/utils/safe-session-storage.util.js",
+      "sizeBytes": 584
+    },
+    {
+      "rawChunk": "search-9wRnUxym.js",
+      "category": "icons",
+      "extractedPath": "src/icons/search.js",
+      "sizeBytes": 211
+    },
+    {
+      "rawChunk": "select-language.service-K5m-X5CX.js",
+      "category": "services",
+      "extractedPath": "src/services/select-language.service.js",
+      "sizeBytes": 1758
+    },
+    {
+      "rawChunk": "select-plan.store-BF6BLdWP.js",
+      "category": "stores",
+      "extractedPath": "src/stores/select-plan.store.js",
+      "sizeBytes": 1013
+    },
+    {
+      "rawChunk": "select-theme.service-DWChOL78.js",
+      "category": "services",
+      "extractedPath": "src/services/select-theme.service.js",
+      "sizeBytes": 1976
+    },
+    {
+      "rawChunk": "separator-DOP1Rf65.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/separator.js",
+      "sizeBytes": 1093
+    },
+    {
+      "rawChunk": "set-chat-model-DIyq3S5u.js",
+      "category": "modules",
+      "extractedPath": "src/modules/set-chat-model.js",
+      "sizeBytes": 418
+    },
+    {
+      "rawChunk": "settings-CbTfeM3V.js",
+      "category": "icons",
+      "extractedPath": "src/icons/settings.js",
+      "sizeBytes": 530
+    },
+    {
+      "rawChunk": "settings-cookie.util-C5vl4muy.js",
+      "category": "utils",
+      "extractedPath": "src/utils/settings-cookie.util.js",
+      "sizeBytes": 507
+    },
+    {
+      "rawChunk": "shallow-CKWb1b-W.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/shallow.js",
+      "sizeBytes": 1160
+    },
+    {
+      "rawChunk": "share-chat-invite.api-kdUDCneo.js",
+      "category": "api",
+      "extractedPath": "src/api/share-chat-invite.api.js",
+      "sizeBytes": 960
+    },
+    {
+      "rawChunk": "share-chat-modal.store-x6SY0kzg.js",
+      "category": "stores",
+      "extractedPath": "src/stores/share-chat-modal.store.js",
+      "sizeBytes": 710
+    },
+    {
+      "rawChunk": "share-DMOjRmYc.js",
+      "category": "icons",
+      "extractedPath": "src/icons/share.js",
+      "sizeBytes": 271
+    },
+    {
+      "rawChunk": "show-toast.service-DZQBgdNF.js",
+      "category": "services",
+      "extractedPath": "src/services/show-toast.service.js",
+      "sizeBytes": 2140
+    },
+    {
+      "rawChunk": "sidebar.store-CMHpt4Zm.js",
+      "category": "stores",
+      "extractedPath": "src/stores/sidebar.store.js",
+      "sizeBytes": 343
+    },
+    {
+      "rawChunk": "site-route.interface-DlOSDxTR.js",
+      "category": "interfaces",
+      "extractedPath": "src/interfaces/site-route.interface.js",
+      "sizeBytes": 663
+    },
+    {
+      "rawChunk": "skeleton-CQ_ju0jp.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/skeleton.js",
+      "sizeBytes": 691
+    },
+    {
+      "rawChunk": "ssr-session-heal-cooldown.util-2TKQmNmV.js",
+      "category": "utils",
+      "extractedPath": "src/utils/ssr-session-heal-cooldown.util.js",
+      "sizeBytes": 315
+    },
+    {
+      "rawChunk": "ssr-session-heal.component-DPW9j3td.js",
+      "category": "components",
+      "extractedPath": "src/components/ssr-session-heal.component.js",
+      "sizeBytes": 794
+    },
+    {
+      "rawChunk": "subscription-C_QA18f9.js",
+      "category": "modules",
+      "extractedPath": "src/modules/subscription.js",
+      "sizeBytes": 1739
+    },
+    {
+      "rawChunk": "subscription.model-Bs1FyJgo.js",
+      "category": "models",
+      "extractedPath": "src/models/subscription.model.js",
+      "sizeBytes": 667
+    },
+    {
+      "rawChunk": "tag-D5oYp8ZF.js",
+      "category": "icons",
+      "extractedPath": "src/icons/tag.js",
+      "sizeBytes": 371
+    },
+    {
+      "rawChunk": "team-chat.model-C0Jcmza6.js",
+      "category": "models",
+      "extractedPath": "src/models/team-chat.model.js",
+      "sizeBytes": 460
+    },
+    {
+      "rawChunk": "team-chats-BbJk-q5m.js",
+      "category": "modules",
+      "extractedPath": "src/modules/team-chats.js",
+      "sizeBytes": 8073
+    },
+    {
+      "rawChunk": "teams-D-JmxjA5.js",
+      "category": "modules",
+      "extractedPath": "src/modules/teams-D.js",
+      "sizeBytes": 4318
+    },
+    {
+      "rawChunk": "teams.mutation-C9duAdia.js",
+      "category": "modules",
+      "extractedPath": "src/modules/teams.mutation.js",
+      "sizeBytes": 4184
+    },
+    {
+      "rawChunk": "teams.store-BUwcijNI.js",
+      "category": "stores",
+      "extractedPath": "src/stores/teams.store.js",
+      "sizeBytes": 2569
+    },
+    {
+      "rawChunk": "terms.module-SmyIa-se.js",
+      "category": "modules",
+      "extractedPath": "src/modules/terms.module.js",
+      "sizeBytes": 10125
+    },
+    {
+      "rawChunk": "thenable-BrrDvP6E.js",
+      "category": "modules",
+      "extractedPath": "src/modules/thenable.js",
+      "sizeBytes": 4974
+    },
+    {
+      "rawChunk": "tooltip-WNS8Gl08.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/tooltip.js",
+      "sizeBytes": 12384
+    },
+    {
+      "rawChunk": "turnstile-RC_1-eVf.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/turnstile.js",
+      "sizeBytes": 2061
+    },
+    {
+      "rawChunk": "use-auth-click.hook-BHhXr5wJ.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-auth-click.hook.js",
+      "sizeBytes": 567
+    },
+    {
+      "rawChunk": "use-auth-known.hook-C1WWcve_.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-auth-known.hook.js",
+      "sizeBytes": 272
+    },
+    {
+      "rawChunk": "use-auth-redirect.hook-DywLfOjS.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-auth-redirect.hook.js",
+      "sizeBytes": 1111
+    },
+    {
+      "rawChunk": "use-chat-input.hook-BgXo6Yt2.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-chat-input.hook.js",
+      "sizeBytes": 498
+    },
+    {
+      "rawChunk": "use-display-user.hook-sY0IkKdE.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-display-user.hook.js",
+      "sizeBytes": 576
+    },
+    {
+      "rawChunk": "use-feature-flag.hook-DJz-hOWd.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-feature-flag.hook.js",
+      "sizeBytes": 223
+    },
+    {
+      "rawChunk": "use-freemium-funnel-gate.hook-sv-Z0STl.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-freemium-funnel-gate.hook.js",
+      "sizeBytes": 1430
+    },
+    {
+      "rawChunk": "use-guest-sidebar-menu.hook-D4ZKIqpw.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-guest-sidebar-menu.hook.js",
+      "sizeBytes": 2725
+    },
+    {
+      "rawChunk": "use-has-mounted.hook-BZPIYb5B.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-has-mounted.hook.js",
+      "sizeBytes": 302
+    },
+    {
+      "rawChunk": "use-help-href.hook-CLIRRwj-.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-help-href.hook.js",
+      "sizeBytes": 194
+    },
+    {
+      "rawChunk": "use-history-backed-flag.hook-C0Nr0kvF.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-history-backed-flag.hook.js",
+      "sizeBytes": 1370
+    },
+    {
+      "rawChunk": "use-image-model-label.hook-Dhr0z0rd.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-image-model-label.hook.js",
+      "sizeBytes": 508
+    },
+    {
+      "rawChunk": "use-immediate-signup.hook-6A_wzI3j.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-immediate-signup.hook.js",
+      "sizeBytes": 2403
+    },
+    {
+      "rawChunk": "use-incognito-chat.hook-Dun56_qv.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-incognito-chat.hook.js",
+      "sizeBytes": 4635
+    },
+    {
+      "rawChunk": "use-is-freemium-funnel.hook-B8Epr2up.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-is-freemium-funnel.hook.js",
+      "sizeBytes": 300
+    },
+    {
+      "rawChunk": "use-page-scroll.hook-DpmNgPID.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-page-scroll.hook.js",
+      "sizeBytes": 598
+    },
+    {
+      "rawChunk": "use-payment-session-initializer.hook-DGfCVYjX.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-payment-session-initializer.hook.js",
+      "sizeBytes": 4898
+    },
+    {
+      "rawChunk": "use-paywall-flow.hook-Co3B8FHN.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-paywall-flow.hook.js",
+      "sizeBytes": 2166
+    },
+    {
+      "rawChunk": "use-paywall-variant.experiment.hook-DCrzgpR5.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-paywall-variant.experiment.hook.js",
+      "sizeBytes": 518
+    },
+    {
+      "rawChunk": "use-post-auth-guest-hold.hook-DKAjN6Dj.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-post-auth-guest-hold.hook.js",
+      "sizeBytes": 401
+    },
+    {
+      "rawChunk": "use-pricing-config.hook-RC78R-t_.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-pricing-config.hook.js",
+      "sizeBytes": 16852
+    },
+    {
+      "rawChunk": "use-root-chat-url-sync.hook-BLskOQaA.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-root-chat-url-sync.hook.js",
+      "sizeBytes": 2466
+    },
+    {
+      "rawChunk": "use-session-recovery.hook-Cfs6gO86.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-session-recovery.hook.js",
+      "sizeBytes": 714
+    },
+    {
+      "rawChunk": "use-stream-active.hook-CJjUFxyg.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-stream-active.hook.js",
+      "sizeBytes": 771
+    },
+    {
+      "rawChunk": "use-stripe-radar-on-open.hook-DxaYWwfs.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-stripe-radar-on-open.hook.js",
+      "sizeBytes": 3018
+    },
+    {
+      "rawChunk": "use-traffic-detection.hook-CKzLJPTv.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-traffic-detection.hook.js",
+      "sizeBytes": 539
+    },
+    {
+      "rawChunk": "use-user.hook-DIvUDXD9.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-user.hook.js",
+      "sizeBytes": 155
+    },
+    {
+      "rawChunk": "use-visibility-calculator.hook-DIRo381x.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-visibility-calculator.hook.js",
+      "sizeBytes": 14788
+    },
+    {
+      "rawChunk": "useai-CiXQTOJ8.js",
+      "category": "modules",
+      "extractedPath": "src/modules/useai.js",
+      "sizeBytes": 6527
+    },
+    {
+      "rawChunk": "useai-white-BcU4k_RY.js",
+      "category": "modules",
+      "extractedPath": "src/modules/useai-white.js",
+      "sizeBytes": 6527
+    },
+    {
+      "rawChunk": "useInfiniteQuery-BZkaaFaW.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/useInfiniteQuery.js",
+      "sizeBytes": 1407
+    },
+    {
+      "rawChunk": "useMutation-DldRSjFA.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/useMutation.js",
+      "sizeBytes": 2970
+    },
+    {
+      "rawChunk": "useQuery-B3vkDNet.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/useQuery.js",
+      "sizeBytes": 11442
+    },
+    {
+      "rawChunk": "user-data.provider-fGhNbbcZ.js",
+      "category": "providers",
+      "extractedPath": "src/providers/user-data.provider.js",
+      "sizeBytes": 514
+    },
+    {
+      "rawChunk": "user-SAxAP6bK.js",
+      "category": "modules",
+      "extractedPath": "src/modules/user.js",
+      "sizeBytes": 927
+    },
+    {
+      "rawChunk": "user.model-CISYB7eF.js",
+      "category": "models",
+      "extractedPath": "src/models/user.model.js",
+      "sizeBytes": 482
+    },
+    {
+      "rawChunk": "utils-DBS9-MOh.js",
+      "category": "modules",
+      "extractedPath": "src/modules/utils.js",
+      "sizeBytes": 960
+    },
+    {
+      "rawChunk": "utm-initializer.component-DxP2ds-c.js",
+      "category": "components",
+      "extractedPath": "src/components/utm-initializer.component.js",
+      "sizeBytes": 1222
+    },
+    {
+      "rawChunk": "uuid.util-BB0yd8wz.js",
+      "category": "utils",
+      "extractedPath": "src/utils/uuid.util.js",
+      "sizeBytes": 86
+    },
+    {
+      "rawChunk": "v4-DDdyfk2q.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/v4.js",
+      "sizeBytes": 988
+    },
+    {
+      "rawChunk": "vinext-CqpRraGS.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/vinext.js",
+      "sizeBytes": 184380
+    },
+    {
+      "rawChunk": "worker-auth.service-BtTnG2J5.js",
+      "category": "services",
+      "extractedPath": "src/services/worker-auth.service.js",
+      "sizeBytes": 2909
+    },
+    {
+      "rawChunk": "workspace-scope.provider-Cm72CHah.js",
+      "category": "providers",
+      "extractedPath": "src/providers/workspace-scope.provider.js",
+      "sizeBytes": 555
+    },
+    {
+      "rawChunk": "x-DWv_kCKr.js",
+      "category": "icons",
+      "extractedPath": "src/icons/x.js",
+      "sizeBytes": 187
+    },
+    {
+      "rawChunk": "zod-C6oPiT8X.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/zod.js",
+      "sizeBytes": 41478
+    },
+    {
+      "rawChunk": "_rolldown_dynamic_import_helper-CIAwlR2T.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/_rolldown_dynamic_import_helper.js",
+      "sizeBytes": 493
+    }
+  ]
+}

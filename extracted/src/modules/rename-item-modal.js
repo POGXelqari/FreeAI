@@ -1,0 +1,30 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/rename-item-modal-2hixoasb.js
+ * Module: rename-item-modal
+ * Extracted & Beautified
+ */
+
+import { r as e } from "./framework-D-uKrMmN.js";
+import { t } from "./button-B7ERdP8H.js";
+import { c as n, l as r, r as i, t as a } from "./dialog-7Locadch.js";
+import { t as o } from "./input-Cn8pMAH2.js";
+var s = e(),
+  c = e => { let { isOpen: c, handleOpenChange: l, title: u, setTitle: d, onRenameSubmit: f, titlePlaceholder: p,
+      modalTitle: m, description: h, btnCancelCopy: g, btnSubmitCopy: _, errorLabel: v, maximumTitleLength: y = 50,
+      showCharacterCount: b = !1, isSubmitting: x = !1, isConfirmDisabled: S = !1 } = e, C = (0, s.jsxs)(s
+    .Fragment, { children: [(0, s.jsxs)(`div`, { children: [(0, s.jsx)(o, { className: `h-10 w-full`, disabled: x,
+          maxLength: y, onChange: e => d(e.target.value), onKeyDown: e => { e.key === `Enter` && u
+            .trim() && !x && f() }, placeholder: p, value: u }), v && (0, s.jsx)(
+        `span`, { className: `text-b2 mt-2 block pl-1 text-red-500`, children: v }), b && (0, s.jsxs)(
+          `span`, { className: `text-b2 text-ink-secondary mt-1 block text-right`, children: [u.length,
+              `/`, y
+            ] })] }), (0, s.jsxs)(`div`, { className: `flex justify-end gap-2`, children: [(0, s.jsx)(
+        t, { disabled: x, onClick: () => l(!1), variant: `outline`, children: g }), (0, s.jsx)(
+        t, { disabled: !u.trim() || x || S, loading: x, onClick: f, variant: `cta`, children: _ })] })] }); return (0, s
+      .jsx)(a, { onOpenChange: l, open: c, children: (0, s.jsx)(
+      i, { className: `bg-paper mx-4! my-auto w-full max-w-[440px]! gap-0 overflow-y-hidden! rounded-2xl! border-none p-0 shadow-lg dark:text-white`,
+        hideCloseButton: !0, children: (0, s.jsxs)(`div`, { className: `flex flex-col gap-4 p-4`, children: [(0,
+            s.jsx)(r, { className: `items-center`, children: (0, s.jsx)(
+            n, { className: `truncate leading-7`, children: m }) }), h && (0, s.jsx)(
+          `span`, { className: `text-b2 text-ink-secondary`, children: h }), C] }) }) }) };
+export { c as t };

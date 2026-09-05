@@ -1,0 +1,32 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/formbricks.provider-DQWvTNkK.js
+ * Module: formbricks.provider
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t } from "./framework-D-uKrMmN.js";
+import { $ as n, tt as r } from "./vinext-CqpRraGS.js";
+import { m as i } from "./freemium-funnel.util-D0KPcbFz.js";
+import { n as a } from "./user-data.provider-fGhNbbcZ.js";
+var o = e(t(), 1),
+  s = `formbricks_message_count_`,
+  c = e => `${s}${e}`,
+  l = e => (window.addEventListener(d, e), () => { window.removeEventListener(d, e) }),
+  u = () => 0,
+  d = `formbricks-message-sent`,
+  f = () => { let e = n(),
+      t = r(),
+      { session: s, userProfileWithSubscription: d } = a(),
+      f = (0, o.useRef)(!1),
+      p = (0, o.useRef)(null),
+      m = s.data?.user,
+      h = m?.id,
+      g = d.data?.data,
+      _ = g?.user?.email || m?.email,
+      v = g?.subscription?.planType,
+      y = g?.subscription?.isSubscribed,
+      b = !!h && m.type !== `guest` && !!y && !!v,
+      x = (0, o.useSyncExternalStore)(l, () => h ? Number(i.getItem(c(h)) ?? `0`) : 0, u); return (0, o.useEffect)(
+  () => {}, [b, h, _, v, x]), (0, o.useEffect)(() => { f.current && p.current?.registerRouteChange() }, [e, t]), null };
+export { f as n, c as r, d as t };

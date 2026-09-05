@@ -1,0 +1,18 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/retry-chat-bridge.service-UVZ4pRxm.js
+ * Module: retry-chat-bridge.service
+ * Extracted & Beautified
+ */
+
+var e = { hasRateLimitError: !1, hasUsageLimitError: !1, rateLimitErrorChatId: null, isWebSearchMode: !1,
+    isWebSearchSidebarOpen: !1 },
+  t = null,
+  n = e => { t = e },
+  r = () => t?.getState() ?? e,
+  i = e => t?.getMessages(e) ?? [],
+  a = e => t?.hasLimitBanner(e) ?? !1,
+  o = () => t?.closeWebSearchSidebar(),
+  s = () => {},
+  c = () => s,
+  l = e => t ? t.subscribe(e) : c();
+export { n as a, a as i, i as n, l as o, r, o as t };

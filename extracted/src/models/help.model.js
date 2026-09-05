@@ -1,0 +1,19 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/help.model-AUjRNMGX.js
+ * Module: help.model
+ * Extracted & Beautified
+ */
+
+import { r as e } from "./framework-D-uKrMmN.js";
+var t = e(),
+  n = e => { let { title: n } = e; return (0, t.jsx)(
+    `div`, { className: `dark:text-foreground text-2xl leading-tight font-medium tracking-tight text-[#3D3D3D]`,
+      children: (0, t.jsx)(`h1`, { className: `pt-10 pb-4`, children: n }) }) },
+  r = function(e) { return e.HELP_CATEGORIES_WITH_ARTICLES_QUERY = `help_categories_with_articles_query`, e
+      .HELP_ARTICLES_QUERY = `help_articles_query`, e.HELP_CATEGORIES_QUERY = `help_categories_query`, e
+      .HELP_ARTICLE_BY_SLUG_QUERY = `help_article_by_slug_query`, e.HELP_CATEGORY_BY_SLUG_QUERY =
+      `help_category_by_slug_query`, e.HELP_ARTICLES_BY_CATEGORY_QUERY = `help_articles_by_category_query`, e }({}),
+  i = function(e) { return e.API_HELP_ARTICLES = `help/articles`, e.API_HELP_CATEGORIES =
+      `help/categories-with-articles`, e.API_HELP_CATEGORY_LIST = `help/categories`, e.API_HELP_ARTICLES_BY_CATEGORY =
+      `help/articles/category`, e }({});
+export { r as n, n as r, i as t };

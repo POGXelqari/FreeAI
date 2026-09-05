@@ -1,0 +1,12 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/react-client-DI5BViDH.js
+ * Module: react-client
+ * Extracted & Beautified
+ */
+
+import { i as e, n as t } from "./react-CWjhjU4R.js";
+
+function n(e, t) { return (...e) => { try { return t(...e) } catch { throw Error(void 0) } } }
+var r = n(0, e),
+  i = n(0, t);
+export { r as n, i as t };

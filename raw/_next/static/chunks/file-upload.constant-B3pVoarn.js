@@ -1,0 +1,1 @@
+var e=3e3,t=`/v1/files`;export{e as n,t};

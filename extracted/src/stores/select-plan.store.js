@@ -1,0 +1,20 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/select-plan.store-BF6BLdWP.js
+ * Module: select-plan.store
+ * Extracted & Beautified
+ */
+
+import { n as e } from "./env-C6AULCj5.js";
+import { t } from "./react-D8-vnz5K.js";
+import { n } from "./middleware-BT98JsiD.js";
+var r = `web_onboarding`,
+  i = `upgrade`,
+  a = t()(n(e => ({ selectedPlan: void 0, selectedBilling: void 0, showCheckout: !1, paymentFlowSource: r,
+    isPlanSelectionLocked: !1, frozenPricingOptions: null, frozenPlans: null, setSelectedPlan: t =>
+  e({ selectedPlan: t }), setSelectedBilling: t => e({ selectedBilling: t }), setShowCheckout: t =>
+  e({ showCheckout: t }), setPaymentFlowSource: t => e({ paymentFlowSource: t }), resetPaymentFlowSource: () =>
+  e({ paymentFlowSource: i }), setPlanSelectionLocked: t => e({ isPlanSelectionLocked: t }),
+    freezePricingOptions: (t, n) => e({ frozenPricingOptions: t, frozenPlans: n }), clearFrozenPricing: () =>
+  e({ frozenPricingOptions: null, frozenPlans: null }), handleModuleStore: t => e(e => ({ ...e, ...
+      t })) }), { name: `SelectPlanStore`, enabled: e.NEXT_PUBLIC_ENV !== `production` && !0 }));
+export { a as t };

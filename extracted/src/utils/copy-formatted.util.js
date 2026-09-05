@@ -1,0 +1,42 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/copy-formatted.util-CTbr3TnW.js
+ * Module: copy-formatted.util
+ * Extracted & Beautified
+ */
+
+const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = ["_next/static/chunks/marked.esm-BIum_moM.js",
+  "_next/static/chunks/rolldown-runtime-C0FnF6B9.js"
+]))) => i.map(i => d[i]);
+import { nt as e, rt as t } from "./vinext-CqpRraGS.js";
+t();
+async function n(t) { try { let { marked: n } = await e(async () => { let { marked: e } = await import(
+          `./marked.esm-BIum_moM.js`).then(e => e.n); return { marked: e } }, __vite__mapDeps([0, 1])), o = await n
+      .parse(t, { gfm: !0, breaks: !0 });
+    o = r(o), o = a(o); let s = i(t),
+      c = new Blob([o], { type: `text/html` }),
+      l = new Blob([s], { type: `text/plain` }); return await navigator.clipboard.write([
+  new ClipboardItem({ "text/html": c, "text/plain": l })]), !0 } catch (e) { console.error(
+      `Failed to copy with formatting:`, e); try { return await navigator.clipboard.writeText(i(t)), !
+      0 } catch { return !1 } } }
+
+function r(e) { return e.replace(/<hr\s*\/?>/gi, ``).replace(/<p>\s*<\/p>/g, ``).replace(/(<\/h[1-6]>)\s*<br\s*\/?>/gi,
+      `$1`).replace(/<br\s*\/?>\s*(<[uo]l>)/gi, `$1`).replace(
+      /(<\/(?:h[1-6]|p|ul|ol|li|div|blockquote|pre)>)\s*<br\s*\/?>\s*(<(?:h[1-6]|p|ul|ol|li|div|blockquote|pre))/gi,
+      `$1$2`).replace(/\n{2,}/g, `
+`).replace(/<p>(<li>)/g, `$1`).replace(/(<\/li>)<\/p>/g, `$1`).replaceAll(`<ul>`,
+      `<ul style="margin: 0; padding-left: 20px;">`).replaceAll(`<ol>`, `<ol style="margin: 0; padding-left: 20px;">`)
+    .replaceAll(`<li>`, `<li style="margin: 0; padding: 0;">`).replace(/<p><\/p>\s*<ul/g, `<ul`).replace(
+      /<p><\/p>\s*<ol/g, `<ol`).replace(/<\/ul>\s*<p><\/p>/g, `</ul>`).replace(/<\/ol>\s*<p><\/p>/g, `</ol>`) }
+
+function i(e) { return e.replace(/^(#{1,6}\s+.+)\n\n+([-*+]\s+)/gm, `$1
+$2`).replace(/^(#{1,6}\s+.+)\n\n+(\d+\.\s+)/gm, `$1
+$2`).replace(/^(#{1,6}\s+.+)\n\n+(#{1,6}\s+)/gm, `$1
+$2`).replace(/^#{1,6}\s+/gm, ``).replace(/\*\*(.+?)\*\*/g, `$1`).replace(/__(.+?)__/g, `$1`).replace(/\*([^*]+)\*/g,
+      `$1`).replace(/_([^_]+)_/g, `$1`).replace(/\[([^\]]+)\]\([^)]+\)/g, `$1`).replace(/`([^`]+)`/g, `$1`).replace(
+      /```[\s\S]*?```/g, ``).replace(/^[-*+]\s+/gm, `• `).replace(/^\d+\.\s+/gm, ``).replace(/^[-*_]{3,}\s*$/gm, ``)
+    .replace(/\n{3,}/g, `
+
+`).trim() }
+
+function a(e) { return `<div dir="auto" style="unicode-bidi: plaintext; text-align: start;">${e}</div>` }
+export { n as t };

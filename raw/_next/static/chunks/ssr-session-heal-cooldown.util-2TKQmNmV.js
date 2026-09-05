@@ -1,0 +1,1 @@
+import{t as e}from"./safe-session-storage.util-DN4NSHVM.js";var t=`auth.ssrHealAt`,n=3e4;function r(){e.setItem(t,String(Date.now()))}function i(){let r=e.getItem(t);if(!r)return!1;let i=Number(r);return Number.isFinite(i)?Date.now()-i<n:!1}export{r as n,i as t};

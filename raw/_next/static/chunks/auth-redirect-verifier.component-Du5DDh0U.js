@@ -1,0 +1,1 @@
+import{n as e}from"./use-auth-redirect.hook-DywLfOjS.js";var t=()=>(e(),null);export{t as default};

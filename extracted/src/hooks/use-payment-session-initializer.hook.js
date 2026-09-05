@@ -1,0 +1,65 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/use-payment-session-initializer.hook-DGfCVYjX.js
+ * Module: use-payment-session-initializer.hook
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t } from "./framework-D-uKrMmN.js";
+import { a as n } from "./experiment-client.service-Dbg--_Jv.js";
+import { n as r } from "./env-C6AULCj5.js";
+import { f as i, h as a } from "./billing-CclPhhLo.js";
+import { n as o } from "./user-data.provider-fGhNbbcZ.js";
+import { n as s } from "./experiment.provider-CQRJZnpd.js";
+import "./client-DWC7O25X.js";
+import { t as c } from "./use-user.hook-DIvUDXD9.js";
+import { n as l } from "./geo.service-BPKKTJpo.js";
+import { n as u } from "./use-pricing-config.hook-RC78R-t_.js";
+import { s as d } from "./checkout-universal-form.service-CxHch_si.js";
+import { r as f } from "./use-stripe-radar-on-open.hook-DxaYWwfs.js";
+import { t as p } from "./use-paywall-flow.hook-Co3B8FHN.js";
+import { t as m } from "./select-plan.store-BF6BLdWP.js";
+var h = e(t(), 1),
+  g = e => { let t = s(n.POST_PURCHASE_EMAILS, `OFF`),
+      r = t === `B`; return a({ experimentName: n.POST_PURCHASE_EMAILS, experimentValue: t, shouldTrack: !
+      1 }), { variant: t, isEnabled: r, trackExperimentView: () => {} } };
+
+function _(e) { let { geo: t, ...n } = e; return { plan_name: `PRO`, billing_cycle: n.billing_cycle || `biweekly`,
+    is_trial: n.is_trial || `false`, trial_days: n.trial_days || 0, charge_period_days: n.charge_period_days || 30,
+    amount: n.amount || 0, user_id: n.user_id || ``, supabase_user_id: n.supabase_user_id || ``, account_id: n
+      .account_id || ``, email: n.email || ``, currency: n.currency || t?.currencyCode || `USD`, country: n.country || t
+      ?.country || ``, currencySymbol: n.currencySymbol || t?.currencySymbol || `$`, usdExchangeRate: n
+      .usdExchangeRate || t?.usdExchangeRate || 1, eurExchangeRate: n.eurExchangeRate || t?.eurExchangeRate || 1,
+    flow_type: n.flow_type || `web_onboarding`, one_time_payment: n.one_time_payment || `false`,
+    subscriptionType: `APP_SUBSCRIPTION`, app_version: n.app_version || `v1`, product_name: n.product_name || `able-ai`,
+    application: n.application || `use.ai`, hostname: n.hostname || ``, symbolAtStart: n.symbolAtStart || (t
+      ?.symbolAtStart ? `TRUE` : `FALSE`), is_subscribed: !0, next_billing_date: n.next_billing_date || ``,
+    subscription_status: n.subscription_status || ``, plan_type: n.plan_type || ``, mixpanel_user_id: n
+      .mixpanel_user_id || `` } }
+var v = e => e === `quarterly` ? `quarterly` : e === `half_yearly` ? `half_yearly` : `web_onboarding`,
+  y = e => { let { user: t } = c(), n = l(), { selectedBilling: a, paymentFlowSource: s } = m(), y = a ?? e
+      ?.fallbackBillingCycle, { isMarketingFlow: b } = p(), { plans: x } = u({ isMarketingFlow: b }), S = y ? x[y] :
+      null, C = n?.currencyCode || `USD`, w = S?.currencyForPay ?? i(C), { subscriptionStatus: T } = o(), { data: E } =
+      T, D = E?.data?.subscription?.isSubscribed, O = E?.data?.subscription?.subscriptionId, k = !(D || O) && S
+      ?.metadata.hasTrial, { isEnabled: A } = g(!!k), j = S ? k ? S.pricing.trial.priceForPay : S.pricing.regular
+      .priceForPay : 0, M = S ? k ? S.pricing.trial.amountUSD : S.pricing.regular.amountUSD : 0, N = Math.ceil(j), P = (
+        0, h.useMemo)(() => { let e = n && { ...n, currencyCode: w, currency: w }; if (!(n && N && y && S && e && t))
+          return; let i = v(y); return _({ geo: e, amount: N, user_id: t?.id || ``, supabase_user_id: t?.id || ``,
+          account_id: t?.email || ``, email: t?.email || ``, billing_cycle: y || `biweekly`, charge_period_days: S
+            ?.metadata.chargePeriodDays || 28, flow_type: i, subscriptionType: `APP_SUBSCRIPTION`,
+          app_version: `v1.0.0`, product_name: `able-chat`, application: `use.ai`,
+          hostname: `${r.NEXT_PUBLIC_CLIENT_WEB_URL}`, is_trial: k ? `true` : `false`, trial_days: k ? S?.metadata
+            .trialDays || 7 : 0, mixpanel_user_id: t?.mixpanelUserId || t?.id || `` }) }, [N, y, S, t?.id, t?.email, t
+        ?.mixpanelUserId, n, w, k, t
+      ]), F = (0, h.useMemo)(() => { let e = d(),
+          t = f(); if (!(P && C && w && S?.planId && e && s)) return; let n = v(y),
+          r = S?.metadata.titleTranslationKey?.replace(`select_plan_trial_modal_title_`, ``); return { ...P, ...S
+          ?.planId && { plan_id: S.planId }, ...r && { plan_label: r }, flow_type: n, flowType: s || `onboarding`,
+          display_currency: C, payment_currency: w, ...e, ...t, ...k && A && { post_purchase: `true` } } }, [P, C, w,
+        S?.planId, s, y, k, A
+      ]); return { paymentClientSession: (0, h.useMemo)(() => { if (F) return { userId: t?.id, email: t?.email,
+          countryCode: n?.country, currencyCode: w, usdExchangeRate: n?.usdExchangeRate || 1, symbolAtStart: n
+            ?.symbolAtStart || `TRUE`, amount: N, amount_usd: M, metadata: F } }, [t?.id, t?.email, n?.country, w,
+        N, M, F, n?.symbolAtStart, n?.usdExchangeRate
+      ]) } };
+export { y as t };

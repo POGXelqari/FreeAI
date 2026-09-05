@@ -1,0 +1,17 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/use-display-user.hook-sY0IkKdE.js
+ * Module: use-display-user.hook
+ * Extracted & Beautified
+ */
+
+import { n as e } from "./user-data.provider-fGhNbbcZ.js";
+
+function t() { let { session: t, userProfileWithSubscription: n } = e(), r = n.data?.data?.user, i = t.data
+  ?.user; return { name: r?.name ?? i?.name ?? null, email: r?.email ?? i?.email ?? null, image: r?.image ?? i?.image ??
+      null } }
+
+function n(e, t) { if (e) return e; if (t) { let e = t.split(`@`)[0]; return e.charAt(0).toUpperCase() + e.slice(
+    1) } return `User` }
+
+function r(e, t) { return e ? e.charAt(0).toUpperCase() : t ? t.charAt(0).toUpperCase() : `U` }
+export { r as n, t as r, n as t };

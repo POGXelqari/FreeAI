@@ -1,0 +1,11 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/chevron-down-CY8S3ZfR.js
+ * Module: chevron-down
+ * Extracted & Beautified
+ */
+
+import { t as e } from "./createLucideIcon-CVSF7wvO.js";
+var t = e(`chevron-down`, [
+  [`path`, { d: `m6 9 6 6 6-6`, key: `qrunsl` }]
+]);
+export { t };

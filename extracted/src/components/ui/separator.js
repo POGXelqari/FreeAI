@@ -1,0 +1,27 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/separator-DOP1Rf65.js
+ * Module: separator
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t, r as n } from "./framework-D-uKrMmN.js";
+import { t as r } from "./utils-DBS9-MOh.js";
+import { t as i } from "./dist-DNAaWyma.js";
+var a = e(t(), 1),
+  o = n(),
+  s = Object.defineProperty,
+  c = (e, t) => s(e, `name`, { value: t, configurable: !0 }),
+  l = `horizontal`,
+  u = [`horizontal`, `vertical`],
+  d = a.forwardRef(c(function(e, t) { let { decorative: n, orientation: r = l, ...a } = e, s = f(r) ? r : l, c = n ?
+    { role: `none` } : { "aria-orientation": s === `vertical` ? s : void 0, role: `separator` }; return (0, o.jsx)(i
+      .div, { "data-orientation": s, ...c, ...a, ref: t }) }, `Separator`));
+
+function f(e) { return u.includes(e) } c(f, `isValidOrientation`);
+var p = d,
+  m = a.forwardRef(({ className: e, orientation: t = `horizontal`, decorative: n = !0, ...i }, a) => (0, o.jsx)(
+  p, { ref: a, decorative: n, orientation: t, className: r(`bg-border shrink-0`, t === `horizontal` ?
+      `h-[1px] w-full` : `h-full w-[1px]`, e), ...i }));
+m.displayName = p.displayName;
+export { m as t };

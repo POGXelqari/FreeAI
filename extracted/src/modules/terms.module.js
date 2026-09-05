@@ -1,0 +1,130 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/terms.module-SmyIa-se.js
+ * Module: terms.module
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t, r as n } from "./framework-D-uKrMmN.js";
+import { tt as r } from "./vinext-CqpRraGS.js";
+import { t as i } from "./useQuery-B3vkDNet.js";
+import { t as a } from "./queryOptions-Dfvzj6n2.js";
+import { a as o } from "./rest-api-DNPFxXXP.js";
+import { t as s } from "./arrow-right-C1xqmvO2.js";
+import { t as c } from "./chevron-down-CY8S3ZfR.js";
+import { t as l } from "./footer.component-CiKJBwzY.js";
+import { t as u } from "./utils-DBS9-MOh.js";
+import { t as d } from "./intl-5y7Gu4iP.js";
+import { t as f } from "./skeleton-CQ_ju0jp.js";
+import "./footer-CjOVPpm1.js";
+import { n as p, t as m } from "./rich-text-renderer-BOt8oZqo.js";
+import { n as h } from "./page.model-BtgmfPnr.js";
+var g = e(t(), 1);
+
+function _({ searchText: e, isContentLoaded: t, behavior: n = `smooth` }) { let r = (0, g.useRef)(null),
+    i = (0, g.useRef)(!1); return (0, g.useEffect)(() => {!(e && t) || i.current || r.current && setTimeout(() => { let
+        t = document.createTreeWalker(r.current, NodeFilter.SHOW_TEXT, null); for (;;) { let r = t
+      .nextNode(); if (r === null) break; if (r.textContent?.includes(e)) { let e = r.parentElement; if (e) { e
+              .scrollIntoView({ behavior: n, block: `start` }), i.current = !0; break } } } }, 100) }, [e, t, n]), (0,
+    g.useEffect)(() => { i.current = !1 }, []), { containerRef: r } }
+var v = { fallbackTitle: `Terms and Conditions`,
+    subtitle: `The agreement that governs your use of Use AI — subscriptions, billing, cancellation, and your rights.`,
+    onThisPage: `On this page`, sectionsCountSuffix: `sections`, questionsTitle: `Questions?`,
+    questionsDescription: `Find answers to common questions in our Help Center.`,
+  visitHelpCenter: `Visit Help Center` },
+  y = n(),
+  b = () => (0, y.jsxs)(`div`, { className: `bg-muted/60 shrink-0 rounded-2xl p-5`, children: [(0, y.jsx)(
+    `p`, { className: `text-foreground text-sm font-semibold`, children: v.questionsTitle }), (0, y.jsx)(
+    `p`, { className: `text-default-500 mt-1 text-sm`, children: v.questionsDescription }), (0, y.jsxs)(
+    d, { className: `text-primary mt-3 inline-flex items-center gap-1 text-sm font-medium hover:underline`,
+      href: `/help`, children: [v.visitHelpCenter, (0, y.jsx)(s, { className: `h-4 w-4` })] })] }),
+  x = e => { let { items: t } = e, [n, r] = (0, g.useState)(``), i = (0, g.useRef)(null), a = (0, g.useRef)(!1), o = (0,
+      g.useRef)(!1), s = (0, g.useRef)(!1);
+    (0, g.useEffect)(() => { if (!n) return; if (o.current) { o.current = !1; return } let e = i.current,
+        t = e?.querySelector(`a[href="#${n}"]`); if (!e || !t) return; let r = !s.current;
+      s.current = !0; let a = e.getBoundingClientRect(),
+        c = t.getBoundingClientRect(),
+        l = c.height * 2,
+        u = c.bottom > a.top - l && c.top < a.bottom + l;
+      (r || u) && t.scrollIntoView({ block: `nearest` }) }, [n]), (0, g.useEffect)(() => { if (t.length === 0)
+    return; let e = () => { let e = window.innerHeight * .25,
+            n = ``; for (let r of t) { let t = document.getElementById(r.id); if (t) { if (n === `` && (n = r.id), t
+                .getBoundingClientRect().top > e) break;
+              n = r.id } } n && r(n) },
+        n = 0,
+        i, o = () => { if (a.current) { clearTimeout(i), i = setTimeout(() => { a.current = !1 },
+            150); return } cancelAnimationFrame(n), n = requestAnimationFrame(e) }; return e(), document
+        .addEventListener(`scroll`, o, { capture: !0, passive: !0 }), () => { cancelAnimationFrame(n), clearTimeout(
+            i), document.removeEventListener(`scroll`, o, { capture: !0 }) } }, [t]); let c = (e, t) => { e
+        .preventDefault(), a.current = !0, o.current = !0, r(t), document.getElementById(t)
+      ?.scrollIntoView({ behavior: `smooth`, block: `start` }), window.history.replaceState(null, ``,
+        `#${t}`) }; return (0, y.jsxs)(`nav`, { "aria-label": v.onThisPage, className: `flex min-h-0 flex-col`,
+        children: [(0, y.jsx)(
+          `p`, { className: `text-default-500 mb-3 text-[11px] font-semibold tracking-widest uppercase`,
+            children: v.onThisPage }), (0, y.jsx)(
+          `ul`, { className: `border-border flex max-h-[620px] min-h-0 flex-col overflow-y-auto border-s`, ref: i,
+            children: t.map(e => (0, y.jsx)(`li`, { children: (0, y.jsx)(`a`, { className: u(
+                  `-ms-px block border-s-2 py-1.5 ps-4 text-sm transition-colors`, n === e.id ?
+                  `border-primary text-primary font-medium` :
+                  `hover:text-foreground text-default-500 border-transparent`), href: `#${e.id}`,
+                onClick: t => c(t, e.id), children: e.label }) }, e.id)) })] }) },
+  S = e => { let { items: t } = e, [n, r] = (0, g.useState)(!1), i = (e, t) => { e.preventDefault(), document
+        .getElementById(t)?.scrollIntoView({ behavior: `smooth`, block: `start` }), window.history.replaceState(null,
+          ``, `#${t}`) }; return (0, y.jsxs)(`div`, { className: `bg-muted/60 rounded-2xl`, children: [(0, y.jsxs)(
+        `button`, { "aria-expanded": n, className: `flex w-full items-center gap-2 px-4 py-4 text-left`,
+          onClick: () => r(e => !e), type: `button`, children: [(0, y.jsx)(
+          `span`, { className: `text-foreground text-sm font-semibold`, children: v.onThisPage }), (0, y
+            .jsx)(`span`, { className: `text-default-500 mt-px text-xs`,
+            children: `${t.length} ${v.sectionsCountSuffix}` }), (0, y.jsx)(c, { className: u(
+              `text-default-500 ml-auto h-4 w-4 transition-transform`, n && `rotate-180`) })] }), n && (0, y
+        .jsx)(`ul`, { className: `px-4 pb-3`, children: t.map(e => (0, y.jsx)(`li`, { children: (0, y.jsx)(
+          `a`, { className: `text-default-600 hover:text-foreground block py-2 text-sm`,
+            href: `#${e.id}`, onClick: t => i(t, e.id), children: e.label }) }, e.id)) })] }) },
+  C = e => e?.toUpperCase() === `CY` ? `https://cms.use.ai/api/pages/${w}` : `https://cms.use.ai/api/v1/pages/terms`,
+  w = `5`,
+  T = async (e, t) => { let { locale: n, country: r } = t, i = new URLSearchParams({ depth: `2`, draft: `false`,
+      locale: n, trash: `false` }), a = `${C(r)}?${i.toString()}`, s = await o.get(a, { signal: e.signal,
+      next: { revalidate: 300 } }).json(); return s && typeof s == `object` && `error` in s ? null : s }, E = e =>
+a({ queryKey: [h.PAGES_QUERY, `terms`, e.locale, e.country], queryFn: t => T(t, e) }), D = e => i(E(e)), O =
+  e => { let { data: t, isLoading: n } = D(e); return { data: t, isLoading: n } }, k = new Set([`a`, `an`, `and`,
+    `as`, `at`, `by`, `for`, `in`, `nor`, `of`, `on`, `or`, `the`, `to`, `via`, `with`
+  ]), A = new Set([`AI`, `IQ`, `SLA`, `LLM`, `FAQ`]), j = e => e.trim().replace(/[.\s]+$/g, ``).toLowerCase().split(
+    /\s+/).map((e, t) => { let n = e.toUpperCase(); return A.has(n) ? n : t > 0 && k.has(e) ? e : e.charAt(0)
+      .toUpperCase() + e.slice(1) }).join(` `), M = e => { let t = e,
+      n = t?.root,
+      r = n?.children?.[0],
+      i = r?.children?.[0]; if (!n || !r || !i?.children) return e; let a = i.children.findIndex(e => e.type ===
+      `heading`); if (a <= 0) return e; let o = i.children.filter((e, t) => t >= a || e.type !== `text`); return o
+      .length === i.children.length ? e : { ...t, root: { ...n, children: [{ ...r, children: [{ ...i, children: o },
+              ...r.children?.slice(1) ?? []
+            ] }, ...n.children?.slice(1) ?? []] } } }, N = e => { let { country: t, locale: n } = e, i =
+  O({ country: t, locale: n }), a = r(), [o, s] = (0, g.useState)(!1), { containerRef: c } = _({ searchText: a.get(
+        `scrollTo`) || window.location.hash.slice(1), isContentLoaded: !i.isLoading && o }), d = (0, g.useMemo)(
+    () => M(i.data?.content), [i.data?.content]), h = (0, g.useMemo)(() => p(d).map((e, t) => ({ id: e.id,
+      label: `${t+1}. ${j(e.text)}` })), [d]); return (0, g.useEffect)(() => { if (!i.isLoading && i.data
+        ?.content) { let e = setTimeout(() => { s(!0) }, 200); return () => clearTimeout(e) } }, [i.isLoading, i
+      .data?.content
+    ]), (0, y.jsxs)(y.Fragment, { children: [(0, y.jsx)(
+      `div`, { className: `mx-auto max-w-[calc(64rem+1.5rem)] px-4`, children: (0, y.jsxs)(
+        `div`, { className: `border-border/60 mx-auto max-w-5xl border-b pt-8 pb-10 sm:pt-12`,
+          children: [(0, y.jsx)(`h1`, { className: `text-foreground text-4xl font-bold tracking-tight`,
+              children: i.data?.title || v.fallbackTitle }), (0, y.jsx)(
+            `p`, { className: `text-default-500 mt-3 max-w-2xl text-base`, children: i.data
+                ?.subTitle || v.subtitle })] }) }), (0, y.jsxs)(
+      `div`, { className: `mx-auto max-w-[calc(64rem+1.5rem)] px-4`, children: [h.length > 0 && (0, y.jsx)(
+          `div`, { className: `pt-6 lg:hidden`, children: (0, y.jsx)(S, { items: h }) }), (0, y.jsxs)(
+          `div`, { className: u(`mx-auto grid max-w-6xl gap-10 pt-8 pb-16`, h.length > 0 &&
+              `lg:grid-cols-[16rem_minmax(0,1fr)]`), children: [h.length > 0 && (0, y.jsx)(
+            `aside`, { className: `hidden lg:block`, children: (0, y.jsxs)(
+              `div`, { className: `sticky top-28 mb-6 flex max-h-[calc(100vh-7rem)] flex-col gap-8`,
+                children: [(0, y.jsx)(x, { items: h }), (0, y.jsx)(b, {})] }) }), i.isLoading ? (0,
+              y.jsx)(f, { className: `rounded-3xl`, children: (0, y.jsxs)(
+              `div`, { className: `flex flex-col gap-6 pb-16 lg:gap-10`, children: [(0, y.jsx)
+                  (`div`, { className: `bg-default-200 h-4 w-full rounded` }), (0, y.jsx)(
+                    `div`, { className: `bg-default-200 h-4 w-3/4 rounded` }), (0, y.jsx)(
+                    `div`, { className: `bg-default-200 h-4 w-1/2 rounded` })
+                ] }) }) : (0, y.jsx)(
+            `div`, { className: `terms-richtext flex flex-col gap-6 lg:gap-10`, ref: c,
+              children: (0, y.jsx)(m, { content: d, disableTextAlign: !0, withHeadingAnchors: !
+                    0 }) })] })] }), (0, y.jsx)(l, {})] }) };
+export { N as default };

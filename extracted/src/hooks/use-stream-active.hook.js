@@ -1,0 +1,23 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/use-stream-active.hook-CJjUFxyg.js
+ * Module: use-stream-active.hook
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t } from "./framework-D-uKrMmN.js";
+import { r as n } from "./chat.store-CVJElyGt.js";
+import { t as r } from "./global.store-DsM3x4UJ.js";
+var i = e(t(), 1);
+
+function a(e, t) { let [n, r] = (0, i.useState)(e); return e && !n && r(!0), (0, i.useEffect)(() => { if (e) return; let
+      n = setTimeout(() => r(!1), t); return () => clearTimeout(n) }, [e, t]), n }
+var o = 1600;
+
+function s(e) { let t = r(e => e.isStreaming),
+    i = n(e => e.activeChatId),
+    s = e ?? i ?? ``,
+    c = n(e => e.drainingChatIds.has(s)),
+    l = n(e => e.stoppingChatIds.has(s)),
+    u = t || c || l; return { isActive: u, isActiveStable: a(u, o), isStreaming: t, isDraining: c, isStopping: l } }
+export { s as t };

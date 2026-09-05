@@ -1,0 +1,1 @@
+var e=function(e){return e.PAGES_QUERY=`pages_query`,e}({}),t=function(e){return e.API_PAGES=`pages`,e}({});export{e as n,t};

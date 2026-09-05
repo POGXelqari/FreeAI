@@ -1,0 +1,31 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/chunk-error.util-8lmmDUxL.js
+ * Module: chunk-error.util
+ * Extracted & Beautified
+ */
+
+import { t as e } from "./safe-session-storage.util-DN4NSHVM.js";
+var t = `chunk_reload_attempts`,
+  n = 3;
+
+function r() { let n = e.getItem(t); return n && Number.parseInt(n, 10) || 0 }
+
+function i() { let n = r() + 1; return e.setItem(t, String(n)), n }
+
+function a() { e.removeItem(t) }
+
+function o() { return r() >= n }
+
+function s() { return n }
+var c = [`failed to fetch dynamically imported module`, `error loading dynamically imported module`,
+  `importing a module script failed`, `importing module `, `importing binding name `,
+  `does not provide an export named`, `is not a valid javascript mime type`, `client reference not found`,
+  `unable to preload css for`, `chunkloaderror`, `failed to load chunk`, `loading chunk`, `loading css chunk`,
+  `loading js chunk`, `chunk failed`
+];
+
+function l(e) { if (!e) return !1; let t = e.toLowerCase(); return c.some(e => t.includes(e)) }
+
+function u(e) { if (!(e instanceof Error)) return !1; let t = e.message || ``; return e.name === `ChunkLoadError` || e
+    .name === `SyntaxError` && t.toLowerCase().includes(`chunk`) ? !0 : l(t) }
+export { l as a, u as i, o as n, a as o, i as r, s as t };

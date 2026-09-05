@@ -1,0 +1,65 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/connector-icon.component-CDOi5dKA.js
+ * Module: connector-icon.component
+ * Extracted & Beautified
+ */
+
+const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = ["_next/static/chunks/icon-loaders-CFGrXfg4.js",
+  "_next/static/chunks/vinext-CqpRraGS.js", "_next/static/chunks/rolldown-runtime-C0FnF6B9.js",
+  "_next/static/chunks/framework-D-uKrMmN.js"
+]))) => i.map(i => d[i]);
+import { o as e, r as t } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as n, r } from "./framework-D-uKrMmN.js";
+import { nt as i, rt as a } from "./vinext-CqpRraGS.js";
+import { t as o } from "./utils-DBS9-MOh.js";
+import { n as s, r as c } from "./connectors-catalog.service-C2W0ZTIl.js";
+import { r as l } from "./registries-BHxkc4G_.js";
+import { t as u } from "./skeleton-CQ_ju0jp.js";
+var d = e(n(), 1);
+a();
+var f = null,
+  p = () => (f ??= i(() => import(`./icon-loaders-CFGrXfg4.js`).then(e => e.CONNECTOR_ICON_LOADERS), __vite__mapDeps([0,
+    1, 2, 3
+  ])), f),
+  m = new Map,
+  h = new Map,
+  g = 6,
+  _ = 0,
+  v = () => { let e = null; for (let t of h) t[1].started || (!e || t[1].priority < e[1].priority) && (e =
+  t); return e },
+  y = () => { for (; _ < g;) { let e = v(); if (!e) return; let [t, n] = e;
+      n.started = !0, _ += 1, p().then(e => { let n = e[t]; return n ? n().then(e => e.default) : null }).catch(() =>
+        null).then(e => { e && m.set(t, e), h.delete(t), --_, n.resolve(e), y() }) } },
+  b = (e, t) => { let n = m.get(e); if (n) return Promise.resolve(n); let r = h.get(e); if (r) return r.priority = Math
+      .min(r.priority, t), r.promise; let i, a = new Promise(e => { i = e }); return h.set(e, { priority: t, started: !
+        1, promise: a, resolve: i }), y(), a },
+  x = e => m.get(e) ?? null,
+  S = t({ ConnectorIcon: () => O }),
+  C = r(),
+  w = { xs: `h-6 w-6 p-1`, sm: `h-4 w-4`, md: `h-9 w-9`, lg: `h-11 w-11`, xl: `h-11 w-11` },
+  T = { xs: `h-4 w-4`, sm: `h-4 w-4`, md: `h-5 w-5`, lg: `h-6 w-6`, xl: `h-7 w-7` },
+  E = 200,
+  D = e => l(e) ?? x(e),
+  O = e => { let { connector: t, size: n = `md`, className: r } = e, i = (0, d.useRef)(null), [a, l] = (0, d.useState)(
+      () => ({ id: t.id, icon: D(t.id) })), [f, p] = (0, d.useState)(() => ({ id: t.id, entry: c(t.id) })), [m, h] = (0,
+        d.useState)(() => D(t.id) ? t.id : null), g = (a.id === t.id ? a.icon : null) ?? D(t.id), _ = f.id === t.id ? f
+      .entry : null, v = !g && m !== t.id; if ((0, d.useEffect)(() => { let e = t.id; if (f.id === e && f.entry)
+      return; let n = !1; return s().then(() => { n || p({ id: e, entry: c(e) }) }), () => { n = !0 } }, [t.id]), (0, d
+        .useEffect)(() => { let e = t.id; if (D(e)) return; let n = !1,
+          r = null,
+          a = () => { let t = i.current?.getBoundingClientRect().top;
+            b(e, typeof t == `number` ? Math.max(t, 0) : 2 ** 53 - 1).then(t => { n || (l({ id: e, icon: t ?? D(e) }),
+                h(e)) }) },
+          o = i.current,
+          s = o?.getBoundingClientRect(),
+          c = window.innerHeight; return s !== void 0 && s.top < c + E && s.bottom > -200 || !o ||
+          typeof IntersectionObserver > `u` ? a() : (r = new IntersectionObserver(e => { e.some(e => e
+              .isIntersecting) && (r?.disconnect(), r = null, a()) }, { rootMargin: `${E}px` }), r.observe(o)),
+        () => { n = !0, r?.disconnect() } }, [t.id]), g) { let { Component: e, iconClassName: t } = g; return (0, C.jsx)
+        (`div`, { className: o(`flex shrink-0 items-center justify-center`, w[n], r), ref: i, children: (0, C.jsx)(
+          e, { className: o(T[n], `fade-in animate-in duration-200`, t) }) }) } return v ? (0, C.jsx)(
+    `div`, { className: o(`flex shrink-0 items-center justify-center`, w[n], r), ref: i, children: (0, C.jsx)(
+      u, { className: `h-full w-full rounded-[10px]`, variant: `shimmer` }) }) : (0, C.jsx)(`div`, { className: o(
+        `flex shrink-0 items-center justify-center p-1.5 text-sm font-bold`, w[n], r), ref: i, style: { color: t
+          .color }, children: _?.initial ?? `` }) };
+export { S as n, O as t };

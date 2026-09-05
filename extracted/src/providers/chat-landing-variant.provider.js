@@ -1,0 +1,19 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/chat-landing-variant.provider-CFxvAtmo.js
+ * Module: chat-landing-variant.provider
+ * Extracted & Beautified
+ */
+
+import { o as e, r as t } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as n, r } from "./framework-D-uKrMmN.js";
+var i = t({ ChatLandingVariantProvider: () => c, useChatLandingVariant: () => l, useIsBingGuestLanding: () => u }),
+  a = e(n(), 1),
+  o = r(),
+  s = (0, a.createContext)(null);
+
+function c(e) { let { variant: t, children: n } = e; return (0, o.jsx)(s.Provider, { value: t, children: n }) }
+
+function l() { return (0, a.useContext)(s) }
+
+function u() { let e = l(); return e === `model-unlocked` || e === `auto-unlocked` }
+export { l as n, u as r, i as t };

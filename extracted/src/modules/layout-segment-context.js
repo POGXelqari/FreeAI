@@ -1,0 +1,19 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/layout-segment-context-Byr4c-Gc.js
+ * Module: layout-segment-context
+ * Extracted & Beautified
+ */
+
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t } from "./framework-D-uKrMmN.js";
+import { Bn as n } from "./vinext-CqpRraGS.js";
+var r = e(t(), 1),
+  i = new Map;
+
+function a(e, t) { return e ? { ...e, ...t } : t }
+
+function o({ providerId: e, segmentMap: t, children: o }) { let s = (0, r.useRef)(null),
+    c = n(),
+    l = a(s.current ?? (e ? i.get(e) ?? null : null), t); return (0, r.useEffect)(() => { s.current = l, e && i.set(e,
+      l) }, [l, e]), c ? (0, r.createElement)(c.Provider, { value: l }, o) : o }
+export { o as LayoutSegmentProvider, a as mergeLayoutSegmentMap };

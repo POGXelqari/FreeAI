@@ -1,0 +1,21 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/utils-DBS9-MOh.js
+ * Module: utils
+ * Extracted & Beautified
+ */
+
+import { r as e, t } from "./bundle-mjs-cJTHqqzI.js";
+var n = t({ extend: { classGroups: { "font-size": [`text-h1`, `text-h2`, `text-t1`, `text-t2`, `text-b1`, `text-b2`,
+        `text-b3`
+      ], "text-color": [`text-ink-white`, `text-ink-cta`, `text-ink-surface`, `text-ink-primary`,
+        `text-ink-secondary`, `text-ink-tertiary`
+      ], "bg-color": [`bg-surface-primary`, `bg-surface-primary-active`, `bg-surface-secondary`,
+        `bg-surface-secondary-active`, `bg-surface-tertiary`, `bg-surface-tertiary-active`, `bg-background-2`,
+        `bg-accent`, `bg-accent-active`, `bg-accent-container`, `bg-success`, `bg-success-container`,
+        `bg-warning`, `bg-warning-container`, `bg-error`, `bg-error-active`, `bg-error-container`
+      ], "border-color": [`border-border`, `border-border-active`, `border-accent`, `border-success`,
+        `border-warning`, `border-error`
+      ] } } });
+
+function r(...t) { return n(e(t)) }
+export { r as t };

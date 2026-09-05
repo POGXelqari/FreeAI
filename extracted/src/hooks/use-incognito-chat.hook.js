@@ -1,0 +1,76 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/use-incognito-chat.hook-Dun56_qv.js
+ * Module: use-incognito-chat.hook
+ * Extracted & Beautified
+ */
+
+import { o as e, r as t } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as n } from "./framework-D-uKrMmN.js";
+import { $ as r, tt as i } from "./vinext-CqpRraGS.js";
+import { n as a } from "./better-auth-client-session.service-ercwbZKT.js";
+import { t as o } from "./analytics.service-BIbiLKmC.js";
+import { a as s } from "./mixpanel-CkBALibP.js";
+import { t as c } from "./global.store-DsM3x4UJ.js";
+import { t as l } from "./locale-path.util-nU2-KrUb.js";
+var u = t({ ROOT_CHAT_URL_SYNCED_EVENT: () => h, getIsIncognitoMode: () => _, useIncognitoChat: () => v }),
+  d = e(n(), 1),
+  f = [`images`, `project`, `share`, `chat`, `help`, `pricing`, `terms`, `privacy`, `refund`, `bill`, `logout`,
+    `cookie-policy`, `subscription`, `check-email`, `error`, `subscribe`, `organization`, `deep-research`,
+    `background-removal`, `image-enhancer`, `my-organization`
+  ],
+  p = 2500,
+  m = 50,
+  h = `useai:root-chat-url-synced`;
+
+function g() { if (globalThis.window === void 0) return; let e = new URL(globalThis.location.href);
+  e.searchParams.has(`incognito-chat`) && (e.searchParams.delete(`incognito-chat`), globalThis.history.replaceState({},
+    ``, e.toString())) }
+
+function _() { return globalThis.window !== void 0 && new URL(globalThis.location.href).searchParams.get(
+    `incognito-chat`) === `true` }
+
+function v(e) { let t = i(),
+    n = r(),
+    u = c(e => e.hasIncognitoChatStarted),
+    _ = c(e => e.setHasIncognitoChatStarted),
+    { data: v, isPending: y } = a(),
+    b = v?.user?.type === `guest`,
+    x = !v?.user,
+    S = !!v?.user && v.user.type !== `guest`,
+    C = y ? e?.isAuthenticatedHint ?? !1 : S,
+    w = !y && (b || x),
+    T = t?.get(`incognito-chat`) === `true`;
+  (0, d.useEffect)(() => { w && T && g() }, [w, T]); let E = (0, d.useMemo)(() => C && T, [T, C]),
+    D = (0, d.useMemo)(() => n ? n.includes(`/project/`) : !1, [n]),
+    O = (0, d.useMemo)(() => n ? n.endsWith(`/images`) || n.endsWith(`/background-removal`) || n.endsWith(
+      `/image-enhancer`) : !1, [n]),
+    k = (0, d.useMemo)(() => n ? n.endsWith(`/deep-research`) : !1, [n]),
+    A = window.location.pathname,
+    [, j] = (0, d.useReducer)(e => e + 1, 0);
+  (0, d.useEffect)(() => { let e = () => window.location.pathname !== A && (j(), !0); if (e()) return; let t = Date
+      .now(),
+      n = window.setInterval(() => {
+        (e() || Date.now() - t >= p) && window.clearInterval(n) }, m); return () => window.clearInterval(n) }, [n, A]),
+  (0, d.useEffect)(() => (window.addEventListener(h, j), () => window.removeEventListener(h, j)), [j]); let M = (0, d
+      .useMemo)(() => { if (!A) return !1; if (/\/project\/[^/]+\/[^/]+/.exec(A)) return !0; let e = A.split(`/`)
+        .filter(Boolean); if (e.length === 1) { let t = e[0]; if (!f.includes(t) && t.length >= 10) return !0 } if (e
+        .length === 2) { let [t, n] = e; if (t.length >= 2 && t.length <= 5 && !f.includes(n) && n.length >= 10)
+          return !0 } return !1 }, [A]),
+    N = (0, d.useMemo)(() => A ? (l(A) || `/`) === `/` : !1, [A]); return { isIncognito: E, isIncognitoAvailable: C,
+    isOnExistingChat: M, isOnExistingIncognitoChat: (0, d.useMemo)(() => E && u, [E, u]), isOnMainPage: N,
+    isOnProject: D, isOnImageFunnel: O, isOnDeepResearch: k, toggleIncognito: (0, d.useCallback)(() => { if (globalThis
+        .window === void 0) return; let e = new URL(globalThis.location.href),
+        t = e.searchParams.get(`incognito-chat`) !== `true`;
+      t ? (e.searchParams.set(`incognito-chat`, `true`), e.searchParams.delete(`paywall`)) : (e.searchParams.delete(
+          `incognito-chat`), _(!1)), o.track(s.INCOGNITO_BUTTON_CLICKED, { enabled: t }), globalThis.history
+        .replaceState({}, ``, e.toString()), globalThis.dispatchEvent(new PopStateEvent(`popstate`)) }, [_]),
+    enableIncognito: (0, d.useCallback)(() => { if (globalThis.window === void 0) return; let e = new URL(globalThis
+        .location.href);
+      e.searchParams.get(`incognito-chat`) !== `true` && (e.searchParams.set(`incognito-chat`, `true`), e
+        .searchParams.delete(`paywall`), globalThis.history.replaceState({}, ``, e.toString()), globalThis
+        .dispatchEvent(new PopStateEvent(`popstate`))) }, []), disableIncognito: (0, d.useCallback)(() => { if (
+        globalThis.window === void 0) return; let e = new URL(globalThis.location.href);
+      e.searchParams.has(`incognito-chat`) && (e.searchParams.delete(`incognito-chat`), _(!1), globalThis.history
+        .replaceState({}, ``, e.toString()), globalThis.dispatchEvent(new PopStateEvent(`popstate`))) }, [_]),
+    setHasIncognitoChatStarted: _ } }
+export { v as n, u as r, _ as t };

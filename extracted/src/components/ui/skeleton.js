@@ -1,0 +1,16 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/skeleton-CQ_ju0jp.js
+ * Module: skeleton
+ * Extracted & Beautified
+ */
+
+import { r as e } from "./framework-D-uKrMmN.js";
+import { t } from "./utils-DBS9-MOh.js";
+var n = e(),
+  r = e => { let { className: r, variant: i = `pulse`, ...a } = e; return i === `shimmer` ? (0, n.jsx)(
+    `div`, { className: t(`dark:bg-default-100 relative overflow-hidden rounded-md bg-gray-300`, r), ...a,
+      children: (0, n.jsx)(`div`, { className: t(`animate-shimmer absolute inset-0`,
+            `bg-gradient-to-r from-transparent via-white/60 to-transparent`, `dark:via-white/20`),
+          style: { backgroundSize: `200% 100%` } }) }) : (0, n.jsx)(`div`, { className: t(
+        `dark:bg-default-50 animate-pulse rounded-md bg-gray-100`, r), ...a }) };
+export { r as t };

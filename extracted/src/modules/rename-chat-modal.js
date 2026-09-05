@@ -1,0 +1,99 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/rename-chat-modal-CffMN_RG.js
+ * Module: rename-chat-modal
+ * Extracted & Beautified
+ */
+
+const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = [
+  "_next/static/chunks/rename-chat-modal.component-BETeVJLp.js",
+  "_next/static/chunks/rolldown-runtime-C0FnF6B9.js", "_next/static/chunks/framework-D-uKrMmN.js",
+  "_next/static/chunks/react-client-DI5BViDH.js", "_next/static/chunks/react-CWjhjU4R.js",
+  "_next/static/chunks/team-chats-BbJk-q5m.js", "_next/static/chunks/useQuery-B3vkDNet.js",
+  "_next/static/chunks/mutation-DO0ikfMC.js", "_next/static/chunks/thenable-BrrDvP6E.js",
+  "_next/static/chunks/rest-api.provider-DFR1ot1R.js", "_next/static/chunks/hydration-BI7_jV4G.js",
+  "_next/static/chunks/QueryClientProvider-DGxN9XtP.js", "_next/static/chunks/dynamic.service-BDdZlREf.js",
+  "_next/static/chunks/dynamic-preload-chunks-C2tdlbzD.js", "_next/static/chunks/vinext-CqpRraGS.js",
+  "_next/static/chunks/useInfiniteQuery-BZkaaFaW.js", "_next/static/chunks/useMutation-DldRSjFA.js",
+  "_next/static/chunks/rest-api-DNPFxXXP.js", "_next/static/chunks/env-C6AULCj5.js",
+  "_next/static/chunks/worker-auth.service-BtTnG2J5.js",
+  "_next/static/chunks/better-auth-client.service-Ck6mOMB1.js",
+  "_next/static/chunks/report-client-error.util-Bq41AYxy.js", "_next/static/chunks/team-chat.model-C0Jcmza6.js",
+  "_next/static/chunks/analytics.service-BIbiLKmC.js", "_next/static/chunks/freemium-funnel.util-D0KPcbFz.js",
+  "_next/static/chunks/safe-session-storage.util-DN4NSHVM.js", "_next/static/chunks/gtm-DkKjcpHp.js",
+  "_next/static/chunks/mixpanel-CkBALibP.js", "_next/static/chunks/chat-auth.util-CHugSHZw.js",
+  "_next/static/chunks/teams-D-JmxjA5.js", "_next/static/chunks/teams.mutation-C9duAdia.js",
+  "_next/static/chunks/subscription.model-Bs1FyJgo.js", "_next/static/chunks/user.model-CISYB7eF.js",
+  "_next/static/chunks/better-auth-client-session.service-ercwbZKT.js",
+  "_next/static/chunks/recovery-marker.util-BHO296he.js",
+  "_next/static/chunks/use-has-mounted.hook-BZPIYb5B.js", "_next/static/chunks/user-data.provider-fGhNbbcZ.js",
+  "_next/static/chunks/workspace-scope.provider-Cm72CHah.js", "_next/static/chunks/react-D8-vnz5K.js",
+  "_next/static/chunks/middleware-BT98JsiD.js", "_next/static/chunks/settings-cookie.util-C5vl4muy.js",
+  "_next/static/chunks/js.cookie-LuQ0sRX_.js", "_next/static/chunks/cookie.interface-BM92z_O9.js",
+  "_next/static/chunks/rename-item-modal-2hixoasb.js", "_next/static/chunks/button-B7ERdP8H.js",
+  "_next/static/chunks/bundle-mjs-cJTHqqzI.js", "_next/static/chunks/loader-circle-C38mqwuC.js",
+  "_next/static/chunks/createLucideIcon-CVSF7wvO.js", "_next/static/chunks/dist-DKq-7tPa.js",
+  "_next/static/chunks/utils-DBS9-MOh.js", "_next/static/chunks/dialog-7Locadch.js",
+  "_next/static/chunks/x-DWv_kCKr.js", "_next/static/chunks/dist-V17-Ndhz.js",
+  "_next/static/chunks/dist-UOiSWAIU.js", "_next/static/chunks/dist-Bk3YTB5a.js",
+  "_next/static/chunks/dist-DHTrxFRs.js", "_next/static/chunks/dist-wURgM5if.js",
+  "_next/static/chunks/dist-DNAaWyma.js", "_next/static/chunks/dist-1ej2Hjrt.js",
+  "_next/static/chunks/dist-CEdsmZbM.js", "_next/static/chunks/es2015-fuZyN7gw.js",
+  "_next/static/chunks/dist-uRWxuiG0.js", "_next/static/chunks/input-Cn8pMAH2.js"
+]))) => i.map(i => d[i]);
+import { nt as e, rt as t } from "./vinext-CqpRraGS.js";
+import { n } from "./QueryClientProvider-DGxN9XtP.js";
+import { o as r } from "./rest-api-DNPFxXXP.js";
+import { t as i } from "./dynamic.service-BDdZlREf.js";
+import { n as a } from "./react-client-DI5BViDH.js";
+import { t as o } from "./project-key.constant-DL2-hOys.js";
+import { n as s } from "./better-auth-client-session.service-ercwbZKT.js";
+import { n as c } from "./worker-auth.service-BtTnG2J5.js";
+import { t as l } from "./team-chat.model-C0Jcmza6.js";
+import { t as u } from "./analytics.service-BIbiLKmC.js";
+import { a as d } from "./mixpanel-CkBALibP.js";
+import "./team-chats-BbJk-q5m.js";
+import { t as f } from "./chat-key.constant-DXJEa87X.js";
+import { t as p } from "./show-toast.service-DZQBgdNF.js";
+import { t as m } from "./deep-research-chats.model-Bm4CwR0q.js";
+
+function h() { if (typeof document > `u`) return null; let e = document.cookie.match(
+  /guest_user_id=([^;]+)/); return e ? `guest:${decodeURIComponent(e[1])}` : null }
+var g = () => { let e = n(),
+    t = a(`Errors`),
+    { showToast: i } = p(),
+    { data: g } = s(),
+    _ = g?.user?.id; return { renameChat: async (n, a, s) => { if (!(a.trim() && n)) return; let p = a.trim(); if (!(s
+          ?.originalTitle && p === s.originalTitle)) { e.setQueryData([f.CHAT_HISTORY_QUERY, _], e => { if (!e
+            ?.pages || e.pages.length === 0) return e; let t = null,
+            r = e.pages.map((e, r) => { if (!e.chats) return e; let i = e.chats.map(e => e.id === n ? (t = { ...
+                e, title: p, updatedAt: new Date().toISOString() }, t) : e); return { ...e, chats: i } }); if (
+            t) { let i = r.map(e => ({ ...e, chats: e.chats?.filter(e => e.id !== n) || [] })); return i
+              .length > 0 && i[0].chats && (i[0] = { ...i[0], chats: [t, ...i[0].chats] }), { ...e,
+              pages: i } } return { ...e, pages: r } }), e.setQueryData([o.PROJECTS_QUERY, _], e => e?.projects ?
+        { ...e, projects: e.projects.map(e => ({ ...e, chats: e.chats?.map(e => e.id === n ? { ...e,
+              title: a } : e) || [] })) } : e), e.setQueryData([f.SHARED_CHATS_QUERY, _], e => e?.chats ? { ...e,
+          chats: e.chats.map(e => e.id === n ? { ...e, title: p } : e) } : e), e.setQueriesData({ queryKey: [m
+            .DEEP_RESEARCH_CHATS_QUERY
+          ] }, e => e?.pages ? { ...e, pages: e.pages.map(e => ({ ...e, chats: e.chats?.map(e => e.id === n ? {
+              ...e, title: p } : e) || [] })) } : e); try { let t = await c(),
+            i = new URLSearchParams({ id: n }); if (!t.Authorization) { let e = h();
+            e && i.set(`userId`, e) } let a = `chat?${i.toString()}`;
+          console.log(`[Rename] Making PATCH request to:`, a, `with title:`, p); let m = await r.patch(
+          a, { json: { title: p }, headers: { ...t } }); if (console.log(`[Rename] Response status:`, m.status, m
+              .statusText), !m.ok) { let e = await m.text(); throw console.error(`[Rename] Error response body:`,
+              e), Error(`Failed to rename chat: ${m.status} ${e}`) } u.track(d.CHAT_RENAMED, { chat_id: n,
+            old_title: s?.originalTitle, new_title: p, team_id: s?.teamId ?? null }), e
+        .invalidateQueries({ queryKey: [f.CHAT_HISTORY_QUERY] }), s?.teamId && e.invalidateQueries({ queryKey: [l
+              .TEAM_CHATS_QUERY, s.teamId
+            ] }), e.invalidateQueries({ queryKey: [o.PROJECTS_QUERY, _] }), s?.onSuccess?.() } catch (n) { console
+            .error(`[Rename] Error during rename:`, n), e.invalidateQueries({ queryKey: [f.CHAT_HISTORY_QUERY] }), e
+            .invalidateQueries({ queryKey: [o.PROJECTS_QUERY, _] }), e.invalidateQueries({ queryKey: [m
+                .DEEP_RESEARCH_CHATS_QUERY
+              ] }), i({ description: t(`toast_description_chat_rename_failed`), variant: `error` }), s?.onError?.(
+            n) } } } } };
+t();
+var _ = i(() => e(() => import(`./rename-chat-modal.component-BETeVJLp.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8,
+  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+  37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62
+])), { loadableGenerated: { modules: [`src/app/features/rename-chat-modal/rename-chat-modal.component.tsx`] } });
+export { g as n, _ as t };

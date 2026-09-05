@@ -1,0 +1,100 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/chat-auth.util-CHugSHZw.js
+ * Module: chat-auth.util
+ * Extracted & Beautified
+ */
+
+import { i as e } from "./rest-api-DNPFxXXP.js";
+import { n as t } from "./env-C6AULCj5.js";
+import { m as n, n as r } from "./freemium-funnel.util-D0KPcbFz.js";
+var i = `guest:`,
+  a = e => `${i}${e}`,
+  o = `better-auth`;
+
+function s(e) { switch (e) {
+    case `production`:
+      return o;
+    case `staging`:
+      return `${o}-staging`;
+    case `development`:
+      return `${o}-dev`;
+    default:
+      return `${o}-local` } }
+
+function c() { return s(t.NEXT_PUBLIC_ENV) } s(`production`), s(`staging`), s(`development`), s(void 0);
+
+function l() { return `${c()}.session_data` }
+var u = `lastErrorMessages`;
+
+function d() { try { let e = n.getItem(u); return e ? JSON.parse(e) : {} } catch { return {} } }
+
+function f(e) { n.setItem(u, JSON.stringify(e)) }
+
+function p(e, t) { let n = d();
+  n[e] = t, f(n) }
+
+function m(e) { return d()[e] ?? null }
+
+function h(e) { let t = d();
+  delete t[e], f(t) }
+
+function g(e) { return e.hasPowerPlan || e.isSuperPro ? 3 : e.isSubscribed && !e.isTrialUser ? 2 : +!!e.isTrialUser }
+var _ = e => { let t = e.metadata; return t?.errorType === `usage_limit` || t?.errorType === `guest_limit` || t
+      ?.errorType === `trial_limit` },
+  v = e => e.metadata?.errorType ? !0 : e.parts?.some(e => e.type === `error`) ?? !1,
+  y = (e, t, n) => t ? !0 : e ? n ? v(e) : _(e) : !1,
+  b = `lastKnownAuthUser`,
+  x = null;
+try { { let e = localStorage.getItem(b);
+    e && (x = JSON.parse(e)) } } catch {}
+
+function S(e) { x = e; try { localStorage.setItem(b, JSON.stringify(e)) } catch {} }
+
+function C() { return x }
+
+function w() { x = null; try { localStorage.removeItem(b) } catch {} }
+var T = e => { if (!e) return; let t = new Date(e).getTime(); return Number.isNaN(t) ? void 0 : t };
+
+function E(e, t = Date.now()) { let n = T(e?.expiresAt),
+    r = T(e?.createdAt),
+    i = n === void 0 ? void 0 : n < t; return { was_expired: i, session_lifetime_days: n !== void 0 && r !== void 0 ?
+      Math.round((n - r) / 864e5) : void 0, category: i === !1 ? `system_error` : i === !0 ? `expired` : `unknown` } }
+var D = `uai_guest_attest`;
+
+function O() { if (typeof document > `u`) return null; let e = document.cookie.match(
+  /guest_user_id=([^;]+)/); return e ? a(decodeURIComponent(e[1])) : null }
+
+function k() { if (typeof document > `u`) return null; let e = l(),
+    t = document.cookie.split(`;`); for (let n of t) { let [t, r] = n.trim().split(`=`); if (t === e && r)
+    return decodeURIComponent(r) } return null }
+
+function A() { if (typeof document > `u`) return !1; let e = document.cookie.match(/promo_flow=([^;]+)/); return e ?
+    decodeURIComponent(e[1]) === `promo05` : !1 }
+
+function j() { return r() }
+
+function M() { if (typeof document > `u`) return null; let e = document.cookie.match(
+  /guest_mixpanel_id=([^;]+)/); return e ? decodeURIComponent(e[1]) : null }
+
+function N() { if (typeof document > `u`) return null; let e = document.cookie.match(/mp_device_id=([^;]+)/); return e ?
+    decodeURIComponent(e[1]) : null }
+var P = null,
+  F = null,
+  I = `uai_app_attest_cache`,
+  L = !1;
+
+function R() { if (L) return;
+  L = !0; let e = n.getItem(I); if (e) try { let t = JSON.parse(e); if (typeof t?.token != `string` || typeof t
+      ?.expiresAt != `number`) return;
+    P = { token: t.token, expiresAt: t.expiresAt } } catch {} }
+var z = 6e4;
+
+function B() { return R(), !P || P.expiresAt <= Date.now() + z ? null : P.token } async function V(t = !1) { if (t && (
+      P = null, L = !0, n.removeItem(I)), !B()) return F || (F = (async () => { try { let t = P?.token ?? n.getItem(
+        D) ?? void 0,
+        r = await e.post(`auth/app-attestation`, { json: { priorToken: t } }); if (!r.ok) return; let i =
+        await r.json();
+      i.token && i.expiresIn && (P = { token: i.token, expiresAt: Date.now() + i.expiresIn * 1e3 }, n
+        .setItem(D, i.token), n.setItem(I, JSON.stringify(P))) } catch {} finally { F = null } })(), F) }
+export { S as _, V as a, j as c, m as d, C as f, p as g, y as h, E as i, O as l, k as m, w as n, B as o, M as p, g as r,
+  N as s, h as t, A as u };

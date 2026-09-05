@@ -1,0 +1,44 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/mobile-page-header.component-rYkBNUPE.js
+ * Module: mobile-page-header.component
+ * Extracted & Beautified
+ */
+
+import { r as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { r as t } from "./framework-D-uKrMmN.js";
+import { tt as n } from "./vinext-CqpRraGS.js";
+import { r } from "./react-CWjhjU4R.js";
+import { n as i } from "./react-client-DI5BViDH.js";
+import { i as a } from "./mixpanel-CkBALibP.js";
+import { t as o } from "./button-B7ERdP8H.js";
+import { t as s } from "./utils-DBS9-MOh.js";
+import { n as c } from "./intl-5y7Gu4iP.js";
+import { t as l } from "./sidebar.store-CMHpt4Zm.js";
+import { t as u } from "./global.store-DsM3x4UJ.js";
+import { t as d } from "./auth.store-CecpbI3z.js";
+import { t as f } from "./is-locale-arabic.util-B4BIdGa2.js";
+import { t as p } from "./menu-DmuxtmLj.js";
+import { t as m } from "./mobile-header-logo-BBTsGGx9.js";
+import { t as h } from "./use-user.hook-DIvUDXD9.js";
+import { t as g } from "./use-guest-sidebar-menu.hook-D4ZKIqpw.js";
+import { n as _ } from "./mobile-drawer.provider-D6C04T1C.js";
+import { t as v } from "./guest-sidebar-menu.store-D01MKXdQ.js";
+var y = e({ default: () => x }),
+  b = t(),
+  x = e => { let { endSlot: t } = e, y = l(e => e.setIsOpen), x = l(e => e.isOpen), S = v(e => e.setIsOpen), C = v(e =>
+        e.isOpen), { isEnabled: w } = g(), { user: T } = h(), E = !T || T.type === `guest`, D = u(e => e
+        .isBackgroundRemovalHeroVisible), O = c(), k = f(r()), A = i(`Header`), { openSignInModal: j } = d(), M = n()
+      .get(`embed`), N = D && !O?.includes(`background-removal`), P = _(), F = E && w && !M, I = P === `guest` ? C :
+      P === `authed` && !!x; return (0, b.jsx)(
+    `header`, { className: `user-select-none bg-paper sticky top-0 z-20 w-full [@media(min-width:650px)_and_(min-height:650px)]:hidden`,
+      children: (0, b.jsxs)(`div`, { className: `flex h-[60px] min-h-[60px] w-full items-center gap-2 px-4`,
+        children: [!N && P !== null && (0, b.jsx)(
+          o, { className: `flex h-9 w-9 [&_svg]:size-5 [@media(min-width:650px)_and_(min-height:650px)]:hidden`, "data-testid": `sidebar-toggle-button`,
+            onClick: () => P === `guest` ? S(!0) : y(!0), size: `icon`, variant: `ghost`, children: (0, b
+              .jsx)(p, { className: s(`text-secondary`, k && `[transform:scaleX(-1)]`) }) }), !I && (0, b.jsx)
+          (m, { ariaLabel: A(`home_link_label`) }), (t || F) && (0, b.jsxs)(
+          `div`, { className: `ms-auto flex items-center gap-2`, children: [t, F && (0, b.jsx)(
+            o, { "data-testid": `header-sign-in-button`, onClick: () => j(a.MOBILE_SIGNIN_BUTTON),
+              size: `chip`, variant: `cta`, children: A(`btn_sign_in`) })] })
+        ] }) }) };
+export { y as n, x as t };

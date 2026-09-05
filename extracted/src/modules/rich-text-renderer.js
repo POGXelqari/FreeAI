@@ -1,0 +1,190 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/rich-text-renderer-BOt8oZqo.js
+ * Module: rich-text-renderer
+ * Extracted & Beautified
+ */
+
+import { r as e } from "./framework-D-uKrMmN.js";
+for (var t = { quote: ({ node: e, nodesToHTML: t, providedStyleTag: n }) =>
+        `<blockquote${n}>${t({nodes:e.children}).join(`
+      `)}</blockquote>` }, n = { heading: ({ node: e, nodesToHTML: t, providedStyleTag: n }) => { let r = t({ nodes: e
+            .children }).join(``); return `<${e.tag}${n}>${r}</${e.tag}>` } }, r = { horizontalrule: `<hr />` },
+    i = { linebreak: `<br />` }, a = ({ internalDocToHref: e }) => ({ autolink: ({ node: e, nodesToHTML: t,
+        providedStyleTag: n }) => { let r = t({ nodes: e.children }).join(
+        ``); return `<a${n} href="${e.fields.url}"${e.fields.newTab?` rel="noopener noreferrer" target="_blank"`:``}>${r}</a>` },
+      link: ({ node: t, nodesToHTML: n, providedStyleTag: r }) => { let i = n({ nodes: t.children }).join(``),
+          a = t.fields.url ?? ``; return t.fields.linkType === `internal` && (e ? a = e({ linkNode: t }) : (console
+            .error(
+              `Lexical => HTML converter: Link converter: found internal link, but internalDocToHref is not provided`
+              ), a = `#`)),
+          `<a${r} href="${a}"${t.fields.newTab?` rel="noopener noreferrer" target="_blank"`:``}>${i}</a>` } }), o = [],
+    s = 0; s < 256; ++s) o.push((s + 256).toString(16).slice(1));
+
+function c(e, t = 0) { return (o[e[t + 0]] + o[e[t + 1]] + o[e[t + 2]] + o[e[t + 3]] + `-` + o[e[t + 4]] + o[e[t + 5]] +
+    `-` + o[e[t + 6]] + o[e[t + 7]] + `-` + o[e[t + 8]] + o[e[t + 9]] + `-` + o[e[t + 10]] + o[e[t + 11]] + o[e[t +
+      12]] + o[e[t + 13]] + o[e[t + 14]] + o[e[t + 15]]).toLowerCase() }
+var l, u = new Uint8Array(16);
+
+function d() { if (!l && (l = typeof crypto < `u` && crypto.getRandomValues && crypto.getRandomValues.bind(crypto), !l))
+    throw Error(
+      `crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported`
+      ); return l(u) }
+var f = { randomUUID: typeof crypto < `u` && crypto.randomUUID && crypto.randomUUID.bind(crypto) };
+
+function p(e, t, n) { if (f.randomUUID && !t && !e) return f.randomUUID();
+  e ||= {}; var r = e.random || (e.rng || d)(); if (r[6] = r[6] & 15 | 64, r[8] = r[8] & 63 | 128, t) { n ||= 0; for (
+      var i = 0; i < 16; ++i) t[n + i] = r[i]; return t } return c(r) }
+var m = { list: ({ node: e, nodesToHTML: t, providedStyleTag: n }) => { let r = t({ nodes: e.children }).join(
+      ``); return `<${e.tag}${n} class="list-${e.listType}">${r}</${e.tag}>` }, listitem: ({ node: e, nodesToHTML: t,
+      parent: n, providedCSSString: r }) => { let i = e.children.some(e => e.type === `list`),
+        a = t({ nodes: e.children }).join(``); if (`listType` in n && n?.listType === `check`) { let t = p(); return `<li
+          aria-checked="${e.checked?`true`:`false`}"
+          class="list-item-checkbox${e.checked?` list-item-checkbox-checked`:` list-item-checkbox-unchecked`}${i?` nestedListItem`:``}"
+          role="checkbox"
+          style="list-style-type: none;${r}"
+          tabIndex="-1"
+          value="${e.value}"
+        >
+          ${i?a:`<input${e.checked?` checked`:``} id="${t}" readOnly="true" type="checkbox" />
+            <label htmlFor="${t}">${a}</label>
+            <br />`}
+        </li>` } return `<li
+          class="${i?`nestedListItem`:``}"
+          style="${i?`list-style-type: none;${r}`:r}"
+          value="${e.value}"
+        >${a}</li>` } },
+  h = { paragraph: ({ node: e, nodesToHTML: t, providedStyleTag: n }) => { let r = t({ nodes: e.children }); return r
+        ?.length ? `<p${n}>${r.join(``)}</p>` : `<p${n}><br /></p>` } },
+  g = { tab: `	` },
+  _ = { table: ({ node: e, nodesToHTML: t, providedStyleTag: n }) => `<div${n} class="lexical-table-container">
+        <table class="lexical-table" style="border-collapse: collapse;">
+          <tbody>${t({nodes:e.children}).join(`
+    `)}</tbody>
+        </table>
+      </div>`, tablecell: ({ node: e, nodesToHTML: t, providedCSSString: n }) => { let r = t({ nodes: e.children })
+        .join(``),
+        i = e.headerState > 0 ? `th` : `td`,
+        a = `lexical-table-cell-header-${e.headerState}`,
+        o = `border: 1px solid #ccc; padding: 8px;` + n; return e.backgroundColor && (o +=
+        ` background-color: ${e.backgroundColor};`), `<${i}
+        class="lexical-table-cell ${a}"
+        ${e.colSpan&&e.colSpan>1?` colspan="${e.colSpan}"`:``}
+        ${e.rowSpan&&e.rowSpan>1?` rowspan="${e.rowSpan}"`:``}
+        style="${o}"
+      >
+        ${r}
+      </${i}>
+    ` }, tablerow: ({ node: e, nodesToHTML: t, providedStyleTag: n }) => `<tr${n} class="lexical-table-row">
+        ${t({nodes:e.children}).join(`
+    `)}
+      </tr>` },
+  v = { DOM_ELEMENT_TYPE: 1, DOM_TEXT_TYPE: 3, NO_DIRTY_NODES: 0, HAS_DIRTY_NODES: 1, FULL_RECONCILE: 2, IS_NORMAL: 0,
+    IS_TOKEN: 1, IS_SEGMENTED: 2, IS_INERT: 3, IS_BOLD: 1, IS_ITALIC: 2, IS_STRIKETHROUGH: 4, IS_UNDERLINE: 8,
+    IS_CODE: 16, IS_SUBSCRIPT: 32, IS_SUPERSCRIPT: 64, IS_HIGHLIGHT: 128, IS_DIRECTIONLESS: 1, IS_UNMERGEABLE: 2,
+    IS_ALIGN_LEFT: 1, IS_ALIGN_CENTER: 2, IS_ALIGN_RIGHT: 3, IS_ALIGN_JUSTIFY: 4, IS_ALIGN_START: 5, IS_ALIGN_END: 6 };
+v.IS_BOLD | v.IS_ITALIC | v.IS_STRIKETHROUGH | v.IS_UNDERLINE | v.IS_CODE | v.IS_SUBSCRIPT | v.IS_SUPERSCRIPT | v
+  .IS_HIGHLIGHT, v.IS_BOLD, v.IS_CODE, v.IS_HIGHLIGHT, v.IS_ITALIC, v.IS_STRIKETHROUGH, v.IS_SUBSCRIPT, v
+  .IS_SUPERSCRIPT, v.IS_UNDERLINE, v.IS_DIRECTIONLESS, v.IS_UNMERGEABLE, v.IS_ALIGN_CENTER, v.IS_ALIGN_END, v
+  .IS_ALIGN_JUSTIFY, v.IS_ALIGN_LEFT, v.IS_ALIGN_RIGHT, v.IS_ALIGN_START, v.IS_ALIGN_CENTER, v.IS_ALIGN_END, v
+  .IS_ALIGN_JUSTIFY, v.IS_ALIGN_LEFT, v.IS_ALIGN_RIGHT, v.IS_ALIGN_START, v.IS_NORMAL, v.IS_SEGMENTED, v.IS_TOKEN, v
+  .IS_NORMAL, v.IS_SEGMENTED, v.IS_TOKEN;
+var y = { text: ({ node: e }) => { let t = e.text; return e.format & v.IS_BOLD && (t = `<strong>${t}</strong>`), e
+        .format & v.IS_ITALIC && (t = `<em>${t}</em>`), e.format & v.IS_STRIKETHROUGH && (t =
+          `<span style="text-decoration: line-through;">${t}</span>`), e.format & v.IS_UNDERLINE && (t =
+          `<span style="text-decoration: underline;">${t}</span>`), e.format & v.IS_CODE && (t = `<code>${t}</code>`),
+        e.format & v.IS_SUBSCRIPT && (t = `<sub>${t}</sub>`), e.format & v.IS_SUPERSCRIPT && (t = `<sup>${t}</sup>`),
+        t } },
+  b = { upload: ({ node: e, providedStyleTag: t }) => { let n = e,
+        r; if (typeof n.value != `object` || (r = n.value, !r)) return ``; let i = r.url; if (!r.mimeType.startsWith(
+          `image`)) return `<a${t} href="${i}" rel="noopener noreferrer">${r.filename}</a$>`; if (!r.sizes || !Object
+        .keys(r.sizes).length) return `
+        <img${t}
+          alt="${r.filename}"
+          height="${r.height}"
+          src="${i}"
+          width="${r.width}"
+        />
+      `; let a = ``; for (let e in r.sizes) { let t = r.sizes[e];!t || !t.width || !t.height || !t.mimeType || !t
+          .filesize || !t.filename || !t.url || (a += `
+        <source
+          media="(max-width: ${t.width}px)"
+          srcset="${t.url}"
+          type="${t.mimeType}"
+        />
+      `) } return a += `
+      <img
+        alt="${r.filename}"
+        height="${r.height}"
+        src="${i}"
+        width="${r.width}"
+      />
+    `, `<picture${t}>${a}</picture>` } },
+  x = { ...h, ...y, ...i, ...t, ..._, ...n, ...r, ...m, ...a({}), ...b, ...g };
+
+function S(e) { let t = !!e?.root?.children?.length,
+    n = !1; if (e?.root?.children?.length === 1 && e?.root?.children[0]?.type === `paragraph`) { let t = e?.root
+      ?.children[0]; if (!t?.children || t?.children?.length === 0) n = !0;
+    else if (t?.children?.length === 1) { let e = t?.children[0];
+      e?.type === `text` && (e?.text?.length || (n = !0)) } } return !(!t || n) }
+
+function C({ converters: e, disableIndent: t, disableTextAlign: n, node: r, unknownConverter: i }) { let a;
+  r.type === `block` ? (a = e?.blocks?.[r?.fields?.blockType], !a && !i && console.error(
+    `Lexical => HTML converter: Blocks converter: found ${r?.fields?.blockType} block, but no converter is provided`
+    )) : r.type === `inlineBlock` ? (a = e?.inlineBlocks?.[r?.fields?.blockType], !a && !i && console.error(
+    `Lexical => HTML converter: Inline Blocks converter: found ${r?.fields?.blockType} inline block, but no converter is provided`
+    )) : a = e[r.type]; let o = {}; if (!n && (!Array.isArray(n) || !n?.includes(r.type)) && `format` in r && r.format)
+    switch (r.format) {
+      case `center`:
+        o[`text-align`] = `center`; break;
+      case `end`:
+        o[`text-align`] = `right`; break;
+      case `justify`:
+        o[`text-align`] = `justify`; break;
+      case `left`:
+        break;
+      case `right`:
+        o[`text-align`] = `right`; break;
+      case `start`:
+        o[`text-align`] = `left` }!t && (!Array.isArray(t) || !t?.includes(r.type)) && `indent` in r && r.indent && r
+    .type !== `listitem` && (o[`padding-inline-start`] = `${Number(r.indent)*40}px`); let s = ``; for (let e of Object
+      .keys(o)) s += `${e}: ${o[e]};`; let c = s?.length ? ` style="${s}"` : ``; return { converterForNode: a ?? i,
+    providedCSSString: s, providedStyleTag: c } }
+
+function w({ className: e, converters: t, data: n, disableContainer: r, disableIndent: i, disableTextAlign: a }) { if (
+    S(n)) { let o = {};
+    o = t ? typeof t == `function` ? t({ defaultConverters: x }) : t : x; let s = T({ converters: o, disableIndent: i,
+      disableTextAlign: a, nodes: n?.root?.children, parent: n?.root }).join(``); return r ? s :
+      `<div class="${e??`payload-richtext`}">${s}</div>` } return r ? `` :
+    `<div class="${e??`payload-richtext`}"></div>` }
+
+function T({ converters: e, disableIndent: t, disableTextAlign: n, nodes: r, parent: i }) { let a = e.unknown,
+    o = [],
+    s = -1; for (let c of r) { s++; let { converterForNode: r, providedCSSString: l, providedStyleTag: u } = C
+  ({ converters: e, disableIndent: t, disableTextAlign: n, node: c, unknownConverter: a }); try { let a;
+      a = r ? typeof r == `function` ? r({ childIndex: s, converters: e, node: c, nodesToHTML: r => T({ converters: r
+            .converters ?? e, disableIndent: r.disableIndent ?? t, disableTextAlign: r.disableTextAlign ?? n,
+          nodes: r.nodes, parent: r.parent ?? { ...c, parent: i } }), parent: i, providedCSSString: l,
+        providedStyleTag: u }) : r : `<span>unknown node</span>`, o.push(a) } catch (e) { console.error(
+        `Error converting lexical node to HTML:`, e, `node:`, c), o.push(``) } } return o.filter(Boolean) }
+var E = e => e.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, ``).replace(/\s+/g, `-`).replace(/-+/g, `-`).replace(
+    /^-|-$/g, ``),
+  D = e => e.type === `text` ? e.text ?? `` : (e.children ?? []).map(D).join(``),
+  O = e => { let t = e?.root; if (!t) return []; let n = [],
+      r = new Map,
+      i = e => { if (e.type === `heading`) { let t = D(e).trim(),
+            i = E(t) || `section`,
+            a = r.get(i) ?? 0;
+          r.set(i, a + 1), n.push({ id: a === 0 ? i : `${i}-${a+1}`, tag: e.tag ?? `h2`, text: t }) } for (let t of e
+            .children ?? []) i(t) }; return i(t), n },
+  k = e(),
+  A = e => { let { content: t, disableTextAlign: n = !1, withHeadingAnchors: r = !1 } = e; if (!t) return null; let
+    i; try { let e = r ? O(t).map(e => e.id) : [],
+        a = 0;
+      i = w({ data: t, converters: r ? ({ defaultConverters: t }) => { let { blocks: n, inlineBlocks: r, ...i } = t
+          ; return { ...i, heading: ({ node: t, nodesToHTML: n, providedStyleTag: r }) => { let i = n({ nodes: t
+                    .children }).join(``),
+                o = e[a] ?? ``; return a += 1, `<${t.tag} id="${o}"${r}>${i}</${t.tag}>` } } } : void 0,
+        disableTextAlign: n }) } catch { return null } return (0, k.jsx)(
+    `div`, { className: `rich-text-renderer prose prose-sm sm:prose-base dark:prose-invert max-w-none`,
+      dangerouslySetInnerHTML: { __html: i } }) };
+export { O as n, A as t };
