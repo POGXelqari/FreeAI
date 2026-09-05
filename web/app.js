@@ -1240,7 +1240,9 @@
   // --------------------------------------------------------------------------
   async function refreshPoolStatus() {
     try {
-      const response = await fetch(`${API_BASE}/`);
+      const response = await fetch(`${API_BASE}/v1/status`, {
+        headers: { 'Accept': 'application/json' },
+      });
       if (response.ok) {
         const data = await response.json();
         if (data.accounts_in_pool !== undefined) {

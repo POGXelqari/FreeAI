@@ -37,6 +37,10 @@ except ImportError:
 
 try:
     import websockets
+    try:
+        import websockets.exceptions as ws_exceptions
+    except ImportError:
+        ws_exceptions = None
 except ImportError:
     print("Error: 'websockets' package is required. Install with: pip install websockets")
     sys.exit(1)
@@ -833,12 +837,17 @@ class UseAIChatClient:
                         error_msg = frame.get("error") or "Server returned error frame"
                         break
 
-        except websockets.exceptions.InvalidStatus as e:
-            error_msg = f"WebSocket handshake rejected (HTTP {e.response.status_code})"
-            if e.response.status_code == 403:
-                is_exhausted = True
         except Exception as e:
-            error_msg = f"WebSocket error: {e}"
+            err_str = str(e)
+            resp = getattr(e, "response", None)
+            status_code = getattr(resp, "status_code", None)
+            if status_code in (401, 403) or "403" in err_str or "401" in err_str:
+                is_exhausted = True
+                error_msg = f"WebSocket handshake rejected (HTTP {status_code or '403/401'}): {e}"
+            elif "handshake" in err_str.lower() or "status code" in err_str.lower():
+                error_msg = f"WebSocket handshake rejected: {e}"
+            else:
+                error_msg = f"WebSocket error: {e}"
 
         # Append formatted markdown sources if web search yielded citations
         if sources:
@@ -1018,12 +1027,17 @@ class UseAIChatClient:
                         error_msg = frame.get("error") or "Server returned error frame"
                         break
 
-        except websockets.exceptions.InvalidStatus as e:
-            error_msg = f"WebSocket handshake rejected (HTTP {e.response.status_code})"
-            if e.response.status_code == 403:
-                is_exhausted = True
         except Exception as e:
-            error_msg = f"WebSocket error: {e}"
+            err_str = str(e)
+            resp = getattr(e, "response", None)
+            status_code = getattr(resp, "status_code", None)
+            if status_code in (401, 403) or "403" in err_str or "401" in err_str:
+                is_exhausted = True
+                error_msg = f"WebSocket handshake rejected (HTTP {status_code or '403/401'}): {e}"
+            elif "handshake" in err_str.lower() or "status code" in err_str.lower():
+                error_msg = f"WebSocket handshake rejected: {e}"
+            else:
+                error_msg = f"WebSocket error: {e}"
 
         # If sources collected, stream sources markdown to client
         if sources:

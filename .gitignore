@@ -19,6 +19,9 @@ venv/
 
 # Node.js
 node_modules/
+# Logs
+*.log
+server.log
 npm-debug.log*
 
 # Agent Configuration

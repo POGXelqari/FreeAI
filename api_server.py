@@ -20,6 +20,9 @@ import asyncio
 import argparse
 from typing import Optional, Dict, Any, List, Union, Tuple
 
+import logging
+from logging.handlers import RotatingFileHandler
+
 try:
     from fastapi import FastAPI, HTTPException, Request
     from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
@@ -31,6 +34,49 @@ except ImportError:
     print("Error: FastAPI, Uvicorn, and Pydantic are required.")
     print("Install with: pip install fastapi uvicorn pydantic sse-starlette")
     sys.exit(1)
+
+# Configure comprehensive persistent server logging to server.log & stdout
+def setup_server_logging(log_file: str = "server.log") -> logging.Logger:
+    """Configures centralized logging to file and console with automatic rotation."""
+    srv_logger = logging.getLogger("freeai_server")
+    srv_logger.setLevel(logging.INFO)
+
+    # Avoid duplicate handlers on reload
+    if not srv_logger.handlers:
+        formatter = logging.Formatter(
+            "[%(asctime)s] [%(levelname)s] [%(name)s:%(lineno)d] %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+
+        try:
+            file_handler = RotatingFileHandler(
+                log_file,
+                maxBytes=10 * 1024 * 1024,  # 10MB per log file
+                backupCount=5,
+                encoding="utf-8",
+            )
+            file_handler.setLevel(logging.INFO)
+            file_handler.setFormatter(formatter)
+            srv_logger.addHandler(file_handler)
+
+            # Route uvicorn and root logs to server.log as well
+            for u_name in ("uvicorn", "uvicorn.access", "uvicorn.error"):
+                u_log = logging.getLogger(u_name)
+                u_log.setLevel(logging.INFO)
+                if not any(isinstance(h, RotatingFileHandler) for h in u_log.handlers):
+                    u_log.addHandler(file_handler)
+
+        except Exception as e:
+            print(f"[!] Warning: Could not initialize log file handler: {e}")
+
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setLevel(logging.INFO)
+        console_handler.setFormatter(formatter)
+        srv_logger.addHandler(console_handler)
+
+    return srv_logger
+
+logger = setup_server_logging("server.log")
 
 # Ensure local imports work
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -215,6 +261,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.middleware("http")
+async def log_requests_middleware(request: Request, call_next):
+    start_time = time.time()
+    method = request.method
+    path = request.url.path
+    client_ip = request.client.host if request.client else "unknown"
+
+    if path != "/favicon.ico":
+        logger.info(f"[HTTP] -> {method} {path} from {client_ip}")
+
+    try:
+        response = await call_next(request)
+        duration_ms = (time.time() - start_time) * 1000
+        if path != "/favicon.ico":
+            logger.info(f"[HTTP] <- {method} {path} status={response.status_code} ({duration_ms:.1f}ms)")
+        return response
+    except Exception as exc:
+        duration_ms = (time.time() - start_time) * 1000
+        logger.exception(f"[HTTP] !! {method} {path} crashed after {duration_ms:.1f}ms: {exc}")
+        raise exc
+
 # Mount Web UI static assets
 web_assets_dir = os.path.join(current_dir, "web")
 if os.path.isdir(web_assets_dir):
@@ -319,37 +386,74 @@ def format_effective_prompt(current_prompt: str, system_prompt: Optional[str], h
 # Routes
 # ---------------------------------------------------------------------------
 
-@app.get("/")
-async def root(request: Request):
-    """Health check, gateway status, or Web UI Dashboard."""
-    accept = request.headers.get("accept", "")
-    web_index = os.path.join(current_dir, "web", "index.html")
-    if "text/html" in accept and os.path.isfile(web_index):
-        return FileResponse(web_index)
-
+@app.get("/v1/status")
+@app.get("/api/status")
+async def get_gateway_status():
+    """Returns JSON telemetry regarding pool accounts, cache, and service status."""
     pool = get_pool()
     cache = get_cache()
-    c_stats = cache.stats()
-
+    c_stats = cache.stats() if cache else {}
     return {
         "service": "FreeAI OpenAI-Compatible Local Gateway",
         "status": "online",
         "port": 8000,
         "accounts_in_pool": pool.count(),
         "cache": {
-            "enabled": c_stats["enabled"],
-            "total_items": c_stats["entries"],
-            "total_hits": c_stats["total_hits"],
-            "size_kb": c_stats["size_kb"],
+            "enabled": c_stats.get("enabled", False),
+            "total_items": c_stats.get("entries", 0),
+            "total_hits": c_stats.get("total_hits", 0),
+            "size_kb": c_stats.get("size_kb", 0),
         },
         "available_models_count": len(ModelCatalog.MODELS),
         "endpoints": [
             "POST /v1/chat/completions",
+            "POST /v1/images/generations",
+            "POST /v1/images/inspect",
             "GET  /v1/models",
+            "GET  /v1/status",
+            "GET  /v1/logs",
             "GET  /health",
-            "GET  /chat",
         ],
     }
+
+
+@app.get("/")
+async def root(request: Request):
+    """Health check, gateway status, or Web UI Dashboard."""
+    accept = request.headers.get("accept", "")
+    web_index = os.path.join(current_dir, "web", "index.html")
+    # Only return HTML if explicitly requested and JSON is not preferred
+    if "text/html" in accept and "application/json" not in accept and os.path.isfile(web_index):
+        return FileResponse(web_index)
+    return await get_gateway_status()
+
+
+@app.get("/favicon.ico")
+async def favicon():
+    """Prevents 404 spam in browser console."""
+    from fastapi import Response
+    return Response(status_code=204)
+
+
+@app.get("/v1/logs")
+async def get_server_logs(lines: int = 100):
+    """Inspect recent log entries from server.log."""
+    log_file = "server.log"
+    if not os.path.isfile(log_file):
+        return {"path": log_file, "total_lines": 0, "lines_returned": 0, "logs": []}
+    try:
+        with open(log_file, "r", encoding="utf-8", errors="replace") as f:
+            all_lines = f.readlines()
+        count = max(1, min(lines, 1000))
+        recent = [l.rstrip("\r\n") for l in all_lines[-count:]]
+        return {
+            "path": os.path.abspath(log_file),
+            "total_lines": len(all_lines),
+            "lines_returned": len(recent),
+            "logs": recent,
+        }
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.get("/chat")
@@ -679,96 +783,133 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                 has_sent_role_chunk = False
 
                 got_tokens = False
-                async for frame in client.stream_chat_generator(
-                    effective_prompt,
-                    model_slug,
-                    web_search=web_search,
-                    agentic=agentic,
-                    deep_research=deep_research,
-                    image_gen=image_gen,
-                    image_style=image_style,
-                    image_ratio=image_ratio,
-                ):
-                    f_type = frame.get("type")
-                    if f_type == "source":
-                        sources.append(frame.get("source", {}))
+                try:
+                    async for frame in client.stream_chat_generator(
+                        effective_prompt,
+                        model_slug,
+                        web_search=web_search,
+                        agentic=agentic,
+                        deep_research=deep_research,
+                        image_gen=image_gen,
+                        image_style=image_style,
+                        image_ratio=image_ratio,
+                    ):
+                        f_type = frame.get("type")
+                        if f_type == "source":
+                            sources.append(frame.get("source", {}))
 
-                    elif f_type == "image":
-                        img_obj = frame.get("image", {})
-                        img_url = img_obj.get("url", "")
-                        img_md = f"\n\n![Generated Image]({img_url})\n\n"
-                        accumulated.append(img_md)
-                        got_tokens = True
-                        chunk_data = {
-                            "id": completion_id,
-                            "object": "chat.completion.chunk",
-                            "created": created_timestamp,
-                            "model": req.model,
-                            "choices": [{
-                                "index": 0,
-                                "delta": {"content": img_md},
-                                "finish_reason": None,
-                            }],
-                        }
-                        yield f"data: {json.dumps(chunk_data)}\n\n"
-
-                    elif f_type == "delta":
-                        if not has_sent_role_chunk:
-                            first_chunk = {
+                        elif f_type == "image":
+                            img_obj = frame.get("image", {})
+                            img_url = img_obj.get("url", "")
+                            img_md = f"\n\n![Generated Image]({img_url})\n\n"
+                            accumulated.append(img_md)
+                            got_tokens = True
+                            chunk_data = {
                                 "id": completion_id,
                                 "object": "chat.completion.chunk",
                                 "created": created_timestamp,
                                 "model": req.model,
                                 "choices": [{
                                     "index": 0,
-                                    "delta": {"role": "assistant", "content": ""},
+                                    "delta": {"content": img_md},
                                     "finish_reason": None,
                                 }],
                             }
-                            yield f"data: {json.dumps(first_chunk)}\n\n"
-                            has_sent_role_chunk = True
+                            yield f"data: {json.dumps(chunk_data)}\n\n"
 
-                        got_tokens = True
-                        token_text = frame.get("delta", "")
-                        accumulated.append(token_text)
-                        chunk_data = {
+                        elif f_type == "delta":
+                            if not has_sent_role_chunk:
+                                first_chunk = {
+                                    "id": completion_id,
+                                    "object": "chat.completion.chunk",
+                                    "created": created_timestamp,
+                                    "model": req.model,
+                                    "choices": [{
+                                        "index": 0,
+                                        "delta": {"role": "assistant", "content": ""},
+                                        "finish_reason": None,
+                                    }],
+                                }
+                                yield f"data: {json.dumps(first_chunk)}\n\n"
+                                has_sent_role_chunk = True
+
+                            got_tokens = True
+                            token_text = frame.get("delta", "")
+                            accumulated.append(token_text)
+                            chunk_data = {
+                                "id": completion_id,
+                                "object": "chat.completion.chunk",
+                                "created": created_timestamp,
+                                "model": req.model,
+                                "choices": [{
+                                    "index": 0,
+                                    "delta": {"content": token_text},
+                                    "finish_reason": None,
+                                }],
+                            }
+                            yield f"data: {json.dumps(chunk_data)}\n\n"
+
+                        elif f_type == "done":
+                            if frame.get("exhausted"):
+                                pool.retire_account(email)
+
+                            if got_tokens or (frame.get("response") and not frame.get("error")):
+                                success = True
+                                full_resp = "".join(accumulated).strip() or frame.get("response", "").strip()
+                                if cache.enabled and full_resp and not image_gen:
+                                    cache.set(
+                                        model_slug,
+                                        cache_query,
+                                        full_resp,
+                                        web_search=web_search,
+                                        agentic=agentic,
+                                        deep_research=deep_research,
+                                        sources=sources or frame.get("sources", []),
+                                    )
+                                break
+                            else:
+                                pool.retire_account(email)
+                                logger.warning(f"[Gateway] Account {email} failed ({frame.get('error')}). Retiring and retrying...")
+                                break
+
+                except Exception as e:
+                    logger.exception(f"[Gateway] Stream generation error with account {email}: {e}")
+                    pool.retire_account(email)
+                    if got_tokens:
+                        err_chunk = {
                             "id": completion_id,
                             "object": "chat.completion.chunk",
                             "created": created_timestamp,
                             "model": req.model,
                             "choices": [{
                                 "index": 0,
-                                "delta": {"content": token_text},
-                                "finish_reason": None,
+                                "delta": {"content": f"\n\n[FreeAI Stream Interrupted: {e}]"},
+                                "finish_reason": "error",
                             }],
                         }
-                        yield f"data: {json.dumps(chunk_data)}\n\n"
-
-                    elif f_type == "done":
-                        if frame.get("exhausted"):
-                            pool.retire_account(email)
-
-                        if got_tokens or (frame.get("response") and not frame.get("error")):
-                            success = True
-                            full_resp = "".join(accumulated).strip() or frame.get("response", "").strip()
-                            if cache.enabled and full_resp and not image_gen:
-                                cache.set(
-                                    model_slug,
-                                    cache_query,
-                                    full_resp,
-                                    web_search=web_search,
-                                    agentic=agentic,
-                                    deep_research=deep_research,
-                                    sources=sources or frame.get("sources", []),
-                                )
-                            break
-                        else:
-                            pool.retire_account(email)
-                            print(f"[Gateway] Account {email} failed ({frame.get('error')}). Retiring and retrying...")
-                            break
+                        yield f"data: {json.dumps(err_chunk)}\n\n"
+                        yield "data: [DONE]\n\n"
+                        return
+                    else:
+                        logger.warning(f"[Gateway] Account {email} failed before tokens. Retrying with next account...")
+                        continue
 
                 if success:
                     break
+
+            if not success and not got_tokens:
+                err_chunk = {
+                    "id": completion_id,
+                    "object": "chat.completion.chunk",
+                    "created": created_timestamp,
+                    "model": req.model,
+                    "choices": [{
+                        "index": 0,
+                        "delta": {"content": "\n\n[FreeAI Error: All account attempts exhausted. Please replenish accounts or retry.]"},
+                        "finish_reason": "stop",
+                    }],
+                }
+                yield f"data: {json.dumps(err_chunk)}\n\n"
 
             final_chunk = {
                 "id": completion_id,
@@ -811,16 +952,21 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
 
         email = account.get("email")
         client = UseAIChatClient(account)
-        result = await client.stream_chat(
-            effective_prompt,
-            model_slug,
-            web_search=web_search,
-            agentic=agentic,
-            deep_research=deep_research,
-            image_gen=image_gen,
-            image_style=image_style,
-            image_ratio=image_ratio,
-        )
+        try:
+            result = await client.stream_chat(
+                effective_prompt,
+                model_slug,
+                web_search=web_search,
+                agentic=agentic,
+                deep_research=deep_research,
+                image_gen=image_gen,
+                image_style=image_style,
+                image_ratio=image_ratio,
+            )
+        except Exception as e:
+            logger.exception(f"[Gateway] Non-streaming chat error with account {email}: {e}")
+            pool.retire_account(email)
+            continue
 
         if result.get("exhausted") or not result.get("success"):
             pool.retire_account(email)
@@ -908,21 +1054,33 @@ async def generate_images(req: ImageGenerationRequest):
     data_list = []
     created_ts = int(time.time())
 
-    for _ in range(max_retries):
+    last_error = "Unknown error"
+    for attempt in range(max_retries):
         account = pool.get_account(auto_create=True)
         if not account:
+            logger.error("[Images] No accounts available in accounts.json and auto-create failed.")
             raise HTTPException(status_code=503, detail="No accounts available in accounts.json and auto-create failed.")
 
         email = account.get("email")
         client = UseAIChatClient(account)
-        result = await client.generate_image(
-            prompt=req.prompt,
-            style=style,
-            ratio=ratio,
-            timeout=90,
-        )
+        try:
+            logger.info(f"[Images] Attempt {attempt+1}/{max_retries}: Generating image prompt='{req.prompt[:60]}...' style={style} ratio={ratio} with {email}")
+            result = await client.generate_image(
+                prompt=req.prompt,
+                style=style,
+                ratio=ratio,
+                timeout=90,
+            )
+        except Exception as e:
+            logger.exception(f"[Images] Error generating image with account {email}: {e}")
+            last_error = str(e)
+            pool.retire_account(email)
+            continue
 
         if result.get("exhausted") or not result.get("success"):
+            err_msg = result.get("error") or "Unknown upstream failure"
+            last_error = err_msg
+            logger.warning(f"[Images] Account {email} unsuccessful: {err_msg}. Retiring account...")
             pool.retire_account(email)
 
         if result.get("success"):
@@ -941,15 +1099,17 @@ async def generate_images(req: ImageGenerationRequest):
                         data_list.append({"url": u})
 
             if data_list:
+                logger.info(f"[Images] Successfully generated {len(data_list)} image(s) for prompt '{req.prompt[:50]}'")
                 return {
                     "created": created_ts,
                     "data": data_list,
                 }
 
     if not data_list:
+        logger.error(f"[Images] All {max_retries} attempts failed: {last_error}")
         raise HTTPException(
             status_code=502,
-            detail="Failed to generate image from upstream provider after account rotation.",
+            detail=f"Failed to generate image from upstream provider: {last_error}",
         )
 
 
@@ -1032,8 +1192,18 @@ def main():
         default=50,
         help="Minimum account reserve threshold for auto-maintenance (default: 50)",
     )
+    parser.add_argument(
+        "--log-file",
+        type=str,
+        default="server.log",
+        help="Path to persistent server log output file (default: server.log)",
+    )
 
     args = parser.parse_args()
+
+    # Re-initialize logging with configured log-file
+    global logger
+    logger = setup_server_logging(args.log_file)
 
     # Initialize shared singletons
     global GLOBAL_POOL, GLOBAL_CACHE, GLOBAL_MAINTAINER
@@ -1055,6 +1225,7 @@ def main():
     print(f"Base URL         : http://{args.host}:{args.port}/v1")
     print(f"Chat Completions : http://{args.host}:{args.port}/v1/chat/completions")
     print(f"Models Endpoint  : http://{args.host}:{args.port}/v1/models")
+    print(f"Server Logs      : {os.path.abspath(args.log_file)}")
     print(f"Active Accounts  : {GLOBAL_POOL.count()}")
     print(f"Response Cache   : {'Enabled' if GLOBAL_CACHE.enabled else 'Disabled'} ({len(GLOBAL_CACHE.entries)} items)")
     print("=" * 65)
