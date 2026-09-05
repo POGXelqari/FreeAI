@@ -38,6 +38,7 @@
     sessions: {},
     isStreaming: false,
     abortController: null,
+    stagedAttachments: [],
   };
 
   // DOM Elements
@@ -67,10 +68,79 @@
     heroWelcome: document.getElementById('hero-welcome'),
     
     promptInput: document.getElementById('prompt-input'),
+    promptBox: document.getElementById('prompt-box'),
     btnSend: document.getElementById('btn-send'),
     btnStop: document.getElementById('btn-stop'),
     typingIndicator: document.getElementById('typing-indicator'),
+    btnAttachFile: document.getElementById('btn-attach-file'),
+    fileUploadInput: document.getElementById('file-upload-input'),
+    attachedFilesContainer: document.getElementById('attached-files-container'),
+    btnAuditPool: document.getElementById('btn-audit-pool'),
   };
+
+  // --------------------------------------------------------------------------
+  // Attachment Helper Functions
+  // --------------------------------------------------------------------------
+  function formatBytes(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    return (bytes / 1024).toFixed(1) + ' KB';
+  }
+
+  function renderAttachedChips() {
+    if (!elements.attachedFilesContainer) return;
+    if (state.stagedAttachments.length === 0) {
+      elements.attachedFilesContainer.style.display = 'none';
+      elements.attachedFilesContainer.innerHTML = '';
+      return;
+    }
+    elements.attachedFilesContainer.style.display = 'flex';
+    elements.attachedFilesContainer.innerHTML = state.stagedAttachments.map((att, idx) => `
+      <div class="attached-file-chip">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        <span class="chip-name" title="${att.name}">${att.name}</span>
+        <span class="chip-size">(${formatBytes(att.size)})</span>
+        <button class="btn-remove-chip" data-idx="${idx}" title="Remove attachment" aria-label="Remove">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    `).join('');
+
+    elements.attachedFilesContainer.querySelectorAll('.btn-remove-chip').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.idx, 10);
+        state.stagedAttachments.splice(idx, 1);
+        renderAttachedChips();
+      };
+    });
+  }
+
+  function handleFileSelection(files) {
+    if (!files || files.length === 0) return;
+    Array.from(files).forEach(file => {
+      if (file.size > 1_000_000) {
+        alert(`File '${file.name}' exceeds 1 MB limit.`);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target.result;
+        state.stagedAttachments.push({
+          name: file.name,
+          size: file.size,
+          content: content,
+        });
+        renderAttachedChips();
+      };
+      reader.readAsText(file);
+    });
+  }
 
   // --------------------------------------------------------------------------
   // Markdown & Highlight.js Setup
@@ -450,6 +520,22 @@
     }
     const currentSession = state.sessions[state.currentSessionId];
 
+    // Check if attachments are staged
+    let effectiveUserPrompt = trimmedPrompt;
+    if (state.stagedAttachments && state.stagedAttachments.length > 0) {
+      const fileBlocks = state.stagedAttachments.map(att => {
+        const ext = att.name.split('.').pop() || 'text';
+        return `### File: ${att.name} (${formatBytes(att.size)})\n\`\`\`${ext}\n${att.content}\n\`\`\``;
+      });
+      effectiveUserPrompt = `## Codebase / File Attachments (${state.stagedAttachments.length} files):\n\n` +
+        fileBlocks.join('\n\n') +
+        `\n\n---\n\n## User Instruction:\n${trimmedPrompt}`;
+
+      // Reset staged attachments
+      state.stagedAttachments = [];
+      renderAttachedChips();
+    }
+
     // Auto-title conversation on first message
     if (currentSession.messages.length === 0) {
       currentSession.title = trimmedPrompt.length > 30 ? trimmedPrompt.slice(0, 30) + '...' : trimmedPrompt;
@@ -457,7 +543,7 @@
     }
 
     // Add user message to state & DOM
-    currentSession.messages.push({ role: 'user', content: trimmedPrompt });
+    currentSession.messages.push({ role: 'user', content: effectiveUserPrompt, displayContent: trimmedPrompt });
     appendMessageToDOM('user', trimmedPrompt);
     saveSessions();
     scrollToBottom();
@@ -746,6 +832,65 @@
     elements.searchConvInput.addEventListener('input', (e) => {
       renderConversationList(e.target.value);
     });
+
+    // Attachment Paperclip & File Input
+    if (elements.btnAttachFile && elements.fileUploadInput) {
+      elements.btnAttachFile.addEventListener('click', () => {
+        elements.fileUploadInput.click();
+      });
+
+      elements.fileUploadInput.addEventListener('change', (e) => {
+        handleFileSelection(e.target.files);
+        elements.fileUploadInput.value = '';
+      });
+    }
+
+    // Drag and Drop Zone on Prompt Box
+    if (elements.promptBox) {
+      ['dragenter', 'dragover'].forEach(eventName => {
+        elements.promptBox.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          elements.promptBox.classList.add('drag-over');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        elements.promptBox.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          elements.promptBox.classList.remove('drag-over');
+        });
+      });
+
+      elements.promptBox.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          handleFileSelection(dt.files);
+        }
+      });
+    }
+
+    // Audit Pool Button
+    if (elements.btnAuditPool) {
+      elements.btnAuditPool.addEventListener('click', async () => {
+        elements.poolAccountsCount.textContent = 'Auditing pool...';
+        try {
+          const res = await fetch(`${API_BASE}/v1/pool/audit`, { method: 'POST' });
+          if (res.ok) {
+            const rep = await res.json();
+            elements.poolAccountsCount.textContent = `${rep.valid_count} Valid (${rep.pruned_count} pruned)`;
+            setTimeout(refreshPoolStatus, 3500);
+          } else {
+            elements.poolAccountsCount.textContent = 'Audit error';
+            setTimeout(refreshPoolStatus, 2000);
+          }
+        } catch (e) {
+          console.warn('Audit request failed:', e);
+          refreshPoolStatus();
+        }
+      });
+    }
 
     // Refresh Pool Button
     elements.btnRefreshPool.addEventListener('click', refreshPoolStatus);

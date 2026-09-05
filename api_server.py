@@ -52,6 +52,8 @@ from chat_streamer import (
     ResponseCache,
     ConversationMemory,
 )
+from attachment_pipeline import AttachmentIngestor
+from pool_maintainer import AccountAuditor, PoolMaintainer
 
 # ---------------------------------------------------------------------------
 # Pydantic Request Models (OpenAI Standard Schema)
@@ -76,6 +78,10 @@ class ChatCompletionRequest(BaseModel):
     search: Optional[bool] = None
     agentic: Optional[bool] = None
     deep_research: Optional[bool] = None
+    # Attachments
+    attachments: Optional[List[str]] = None
+    files: Optional[List[str]] = None
+    dirs: Optional[List[str]] = None
 
     model_config = ConfigDict(extra="allow")
 
@@ -168,6 +174,7 @@ if os.path.isdir(web_assets_dir):
 # Global State
 GLOBAL_POOL: Optional[AccountPool] = None
 GLOBAL_CACHE: Optional[ResponseCache] = None
+GLOBAL_MAINTAINER: Optional[PoolMaintainer] = None
 
 
 def get_pool() -> AccountPool:
@@ -182,6 +189,13 @@ def get_cache() -> ResponseCache:
     if GLOBAL_CACHE is None:
         GLOBAL_CACHE = ResponseCache("chat_cache.json", enabled=True)
     return GLOBAL_CACHE
+
+
+def get_maintainer() -> PoolMaintainer:
+    global GLOBAL_MAINTAINER
+    if GLOBAL_MAINTAINER is None:
+        GLOBAL_MAINTAINER = PoolMaintainer("accounts.json", min_reserve=50, target_reserve=60)
+    return GLOBAL_MAINTAINER
 
 
 # ---------------------------------------------------------------------------
@@ -303,6 +317,74 @@ async def health():
     return {"status": "healthy", "timestamp": time.time()}
 
 
+@app.get("/v1/pool/status")
+async def pool_status():
+    """Returns real-time account pool health and audit telemetry."""
+    pool = get_pool()
+    maintainer = get_maintainer()
+    return {
+        "status": "healthy",
+        "accounts_count": pool.count(),
+        "min_reserve": maintainer.min_reserve,
+        "target_reserve": maintainer.target_reserve,
+        "last_audit": maintainer.last_audit_report,
+        "last_replenish": maintainer.last_replenish_time,
+    }
+
+
+@app.post("/v1/pool/audit")
+async def trigger_pool_audit(prune: bool = True):
+    """Runs a non-intrusive session validity audit across all pool accounts."""
+    auditor = AccountAuditor()
+    report = auditor.audit_pool(prune_dead=prune, verbose=False)
+    maintainer = get_maintainer()
+    maintainer.last_audit_report = report
+    return report
+
+
+class ReplenishBody(BaseModel):
+    target: Optional[int] = None
+    count: Optional[int] = None
+
+
+@app.post("/v1/pool/replenish")
+async def trigger_pool_replenish(body: Optional[ReplenishBody] = None):
+    """Triggers account replenishment to the target reserve."""
+    maintainer = get_maintainer()
+    target = body.target if body and body.target else maintainer.target_reserve
+    if body and body.count:
+        target = get_pool().count() + body.count
+    res = maintainer.replenish(target_count=target, verbose=False)
+    return res
+
+
+class AttachInspectBody(BaseModel):
+    paths: List[str]
+
+
+@app.post("/v1/attachments/inspect")
+async def inspect_attachments(body: AttachInspectBody):
+    """Inspects files or directories and returns syntax metadata or directory trees."""
+    ingestor = AttachmentIngestor()
+    results = []
+    for p in body.paths:
+        if os.path.isfile(p):
+            results.append(ingestor.read_file(p))
+        elif os.path.isdir(p):
+            files, tree, warns = ingestor.crawl_directory(p)
+            results.append({
+                "success": True,
+                "type": "directory",
+                "path": p,
+                "files_count": len(files),
+                "tree": tree,
+                "warnings": warns,
+            })
+        else:
+            results.append({"success": False, "path": p, "error": f"Path not found: {p}"})
+    return {"results": results}
+
+
 @app.get("/v1/models")
 async def list_models():
     """OpenAI standard GET /v1/models endpoint."""
@@ -388,6 +470,19 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
     cache = get_cache()
 
     current_prompt, system_prompt, history = extract_prompt_and_context(req.messages)
+
+    # Ingest file attachments / directories and expand in-prompt @path mentions
+    raw_files = (req.attachments or []) + (req.files or [])
+    raw_dirs = req.dirs or []
+    if AttachmentIngestor is not None and (raw_files or raw_dirs or "@" in current_prompt):
+        ingestor = AttachmentIngestor()
+        bundled_prompt, _, _ = ingestor.bundle_context(
+            current_prompt,
+            files=raw_files if raw_files else None,
+            dirs=raw_dirs if raw_dirs else None,
+        )
+        current_prompt = bundled_prompt
+
     effective_prompt = format_effective_prompt(current_prompt, system_prompt, history)
 
     created_timestamp = int(time.time())
@@ -731,13 +826,33 @@ def main():
         action="store_true",
         help="Disable response read/write cache",
     )
+    parser.add_argument(
+        "--auto-maintain",
+        action="store_true",
+        help="Start autonomous background maintainer thread to monitor and replenish account pool",
+    )
+    parser.add_argument(
+        "--min-reserve",
+        type=int,
+        default=50,
+        help="Minimum account reserve threshold for auto-maintenance (default: 50)",
+    )
 
     args = parser.parse_args()
 
     # Initialize shared singletons
-    global GLOBAL_POOL, GLOBAL_CACHE
+    global GLOBAL_POOL, GLOBAL_CACHE, GLOBAL_MAINTAINER
     GLOBAL_POOL = AccountPool(args.accounts)
     GLOBAL_CACHE = ResponseCache(args.cache_file, enabled=not args.no_cache)
+    GLOBAL_MAINTAINER = PoolMaintainer(
+        accounts_file=args.accounts,
+        min_reserve=args.min_reserve,
+        target_reserve=max(args.min_reserve + 10, 60),
+    )
+
+    if args.auto_maintain:
+        GLOBAL_MAINTAINER.start_background_thread(check_interval=60)
+        print("[+] Autonomous account pool maintainer started in background thread.")
 
     print("\n" + "=" * 65)
     print("        FreeAI OpenAI-Compatible Local API Gateway")

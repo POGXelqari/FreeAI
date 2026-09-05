@@ -59,6 +59,11 @@ try:
 except ImportError:
     UseAIAuthClient = None
 
+try:
+    from attachment_pipeline import AttachmentIngestor
+except ImportError:
+    AttachmentIngestor = None
+
 
 class ModelCatalog:
     """Catalog of available AI models and friendly aliases."""
@@ -978,24 +983,40 @@ def run_prompt_workflow(
     web_search: bool = False,
     agentic: bool = False,
     deep_research: bool = False,
+    files: Optional[List[str]] = None,
+    dirs: Optional[List[str]] = None,
 ) -> Tuple[bool, Optional[str]]:
     """
     Executes a prompt workflow:
-    1. Checks response cache. If hit, outputs instantly with 0 accounts consumed.
-    2. Injects conversation memory context (if active).
-    3. Pops account from pool.
-    4. Streams response from backend AI model with optional web search / agentic reasoning.
-    5. Saves output & sources to cache & conversation memory.
-    6. Automatically deletes exhausted account from accounts.json.
+    1. Ingests and bundles attached files / directories and expands in-prompt @path mentions.
+    2. Checks response cache. If hit, outputs instantly with 0 accounts consumed.
+    3. Injects conversation memory context (if active).
+    4. Pops account from pool.
+    5. Streams response from backend AI model with optional web search / agentic reasoning.
+    6. Saves output & sources to cache & conversation memory.
+    7. Automatically deletes exhausted account from accounts.json.
     """
     model_slug = ModelCatalog.resolve(model_name)
     model_info = ModelCatalog.get_info(model_slug)
 
+    # 0. Bundle file attachments and expand in-prompt @path mentions
+    actual_prompt = prompt
+    if AttachmentIngestor is not None:
+        ingestor = AttachmentIngestor()
+        bundled_prompt, attached_files, warns = ingestor.bundle_context(
+            prompt, files=files, dirs=dirs
+        )
+        for w in warns:
+            print(f"[Attachment Warning] {w}")
+        if attached_files:
+            print(f"[Attachment] Injected {len(attached_files)} file(s) into context ({', '.join(f['path'] for f in attached_files)})")
+        actual_prompt = bundled_prompt
+
     # 1. Build contextual prompt with conversation history (if active)
     if memory:
-        effective_prompt = memory.build_prompt(prompt)
+        effective_prompt = memory.build_prompt(actual_prompt)
     else:
-        effective_prompt = prompt
+        effective_prompt = actual_prompt
 
     # 2. Check Read Cache
     if cache and cache.enabled:
@@ -1094,6 +1115,8 @@ def run_prompt_workflow(
                 web_search=web_search,
                 agentic=agentic,
                 deep_research=deep_research,
+                files=files,
+                dirs=dirs,
             )
         else:
             print(f"[!] Stream ended with error: {result.get('error')}")
@@ -1154,6 +1177,10 @@ def interactive_repl(
     print("  /web [on|off]   - Toggle or set live web search")
     print("  /agent [on|off] - Toggle or set agentic multi-step reasoning")
     print("  /deep [on|off]  - Toggle or set deep research mode")
+    print("  /attach <path>  - Attach local file or directory to context")
+    print("  /detach <path>  - Detach a staged file or directory")
+    print("  /files          - List all currently staged attachments")
+    print("  /clear-files    - Clear all staged attachments")
     print("  /status         - Show current model, memory, and modes status")
     print("  /history        - Show conversation history turns")
     print("  /clear          - Clear conversation memory for current session")
@@ -1170,6 +1197,9 @@ def interactive_repl(
     print("  /help           - Display available commands")
     print("  /quit or /exit  - Exit chat")
     print("=" * 65 + "\n")
+
+    staged_files: List[str] = []
+    staged_dirs: List[str] = []
 
     while True:
         try:
@@ -1400,6 +1430,63 @@ def interactive_repl(
                 print("[!] 'account_creator.py' not available.")
             continue
 
+        # Attachment commands
+        if user_input.startswith("/attach"):
+            parts = user_input.split(" ", 1)
+            if len(parts) > 1 and parts[1].strip():
+                target = parts[1].strip()
+                if os.path.isfile(target):
+                    if target not in staged_files:
+                        staged_files.append(target)
+                        print(f"[*] Attached file: {target} (Total: {len(staged_files)} file(s))")
+                    else:
+                        print(f"[*] File already attached: {target}")
+                elif os.path.isdir(target):
+                    if target not in staged_dirs:
+                        staged_dirs.append(target)
+                        print(f"[*] Attached directory: {target} (Total: {len(staged_dirs)} dir(s))")
+                    else:
+                        print(f"[*] Directory already attached: {target}")
+                else:
+                    print(f"[!] Path not found: {target}")
+            else:
+                print("Usage: /attach <path/to/file_or_dir>")
+            continue
+
+        if user_input.startswith("/detach"):
+            parts = user_input.split(" ", 1)
+            if len(parts) > 1 and parts[1].strip():
+                target = parts[1].strip()
+                if target in staged_files:
+                    staged_files.remove(target)
+                    print(f"[*] Detached file: {target}")
+                elif target in staged_dirs:
+                    staged_dirs.remove(target)
+                    print(f"[*] Detached directory: {target}")
+                else:
+                    print(f"[!] '{target}' is not in staged attachments.")
+            else:
+                print("Usage: /detach <path>")
+            continue
+
+        if user_input.lower() in ("/files", "/attachments"):
+            print("\n=== Staged Attachments ===")
+            if not staged_files and not staged_dirs:
+                print("  No files or directories currently attached.")
+                print("  Tip: Use '/attach <path>' or type '@filename' directly in your prompt.")
+            else:
+                for f in staged_files:
+                    print(f"  📄 File: {f}")
+                for d in staged_dirs:
+                    print(f"  📂 Dir : {d}")
+            continue
+
+        if user_input.lower() in ("/clear-files", "/clearfiles"):
+            staged_files.clear()
+            staged_dirs.clear()
+            print("[*] Cleared all staged file attachments.")
+            continue
+
         # Execute prompt workflow
         run_prompt_workflow(
             prompt=user_input,
@@ -1412,6 +1499,8 @@ def interactive_repl(
             web_search=web_search_active,
             agentic=agentic_active,
             deep_research=deep_research_active,
+            files=staged_files if staged_files else None,
+            dirs=staged_dirs if staged_dirs else None,
         )
 
 
@@ -1465,6 +1554,21 @@ def main():
         dest="deep_research",
         action="store_true",
         help="Enable autonomous deep research mode",
+    )
+    # File & Codebase attachments
+    parser.add_argument(
+        "--file", "-f",
+        dest="files",
+        action="append",
+        default=[],
+        help="Attach local file(s) to the conversation context (repeatable)",
+    )
+    parser.add_argument(
+        "--dir", "-d",
+        dest="dirs",
+        action="append",
+        default=[],
+        help="Attach directory tree and source files to the conversation context (repeatable)",
     )
     # Cache arguments
     parser.add_argument(
@@ -1592,6 +1696,8 @@ def main():
             web_search=args.web_search,
             agentic=args.agentic,
             deep_research=args.deep_research,
+            files=args.files,
+            dirs=args.dirs,
         )
     else:
         interactive_repl(

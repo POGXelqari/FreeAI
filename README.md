@@ -79,6 +79,15 @@ g:\FreeAI\
 │   │   └── vendor/                      # Frameworks (React, Vinext, Rolldown, Zod, etc.)
 │   └── manifest.json                    # Detailed mapping of chunks to extracted files
 │
+├── web/                                 # FreeAI Studio Web UI Dashboard
+│   ├── index.html                       # Modern glassmorphism web interface
+│   ├── style.css                        # Obsidian/indigo responsive design system
+│   └── app.js                           # SSE token streaming & attachment state engine
+├── api_server.py                        # OpenAI-compatible REST API Gateway & Web Server
+├── chat_streamer.py                     # CLI real-time token streamer & REPL
+├── attachment_pipeline.py               # File & codebase attachment bundle engine
+├── pool_maintainer.py                   # Autonomous zero-quota session auditor & pool daemon
+├── account_creator.py                   # Automated registration & session extraction
 ├── extract.js                           # Node.js extraction & beautification script
 └── package.json                         # Tooling configuration
 ```
@@ -344,8 +353,78 @@ A modern, dark-themed browser interface inspired by Claude and ChatGPT with glas
   - `Ctrl + K` / `Cmd + K` : Start new chat session
   - `Esc` : Stop active response stream
 
-### 9. Re-running the Asset Extraction
+### 9. File & Codebase Attachment Pipeline (`attachment_pipeline.py`)
+
+A full-spectrum attachment bundling engine enabling file and directory ingestion directly into LLM prompts across CLI, API Gateway, and Web UI.
+
+#### Key Features:
+- **In-Prompt `@path` Expansion**: Auto-expands path mentions directly in user prompts (e.g. `@package.json`, `@web/app.js`) into language-fenced markdown code blocks.
+- **Repository-Wide Directory Crawling**: Recursively traverses directory trees (`--dir` / `-d`), filters ignored files via `.gitignore`, excludes binaries, and builds an ASCII directory hierarchy.
+- **Multi-Encoding Resilience**: Robust text decoding across UTF-8, Latin-1, and CP1252 with automatic binary detection (filtering null bytes and compiled formats).
+- **Context Budget Controls**: Enforces token and byte caps (`--max-tokens`, `--max-bytes`) to prevent model context overflows.
+
+#### Usage Examples:
+```bash
+# 1. Single-shot prompt with file attachment
+python chat_streamer.py --model gemini --file package.json --prompt "Analyze the dependencies."
+
+# 2. Single-shot prompt with full directory attachment
+python chat_streamer.py --model claude --dir web --prompt "Review the UI implementation."
+
+# 3. In-prompt @path mention syntax
+python chat_streamer.py --model gpt --prompt "Inspect @package.json and list all scripts."
+
+# 4. Interactive REPL attachment management
+python chat_streamer.py
+# Inside REPL:
+#   /attach web/app.js
+#   /files
+#   How does token streaming work?
+#   /detach web/app.js
+#   /clear-files
+```
+
+#### API Gateway Attachment Endpoints:
+- `POST /v1/attachments/inspect`: Analyze file paths and sizes before sending prompts.
+- `POST /v1/chat/completions`: Accepts `attachments`, `files`, and `dirs` arrays in the JSON request body.
+
+---
+
+### 10. Background Account Pool Maintainer & Auditor (`pool_maintainer.py`)
+
+An autonomous, zero-quota account auditor and pool daemon ensuring high availability of authenticated sessions without expending free message quotas.
+
+#### Key Features:
+- **Zero-Quota Non-Intrusive Auditing**: Verifies account validity by querying `GET https://use.ai/v1/auth/get-session` using stored session cookies. Accounts returning `200 OK` remain in the pool; expired or revoked sessions (`401` or `403`) are pruned.
+- **Atomic Disk Pruning**: Cleans stale accounts safely using atomic file replacement without race conditions.
+- **Autonomous Replenishment**: Continuously tracks pool reserves against configurable thresholds (`--min` and `--target`), automatically launching `account_creator.py` with jitter and exponential backoff when reserves drop.
+- **Gateway Daemon Mode**: API Gateway can run the maintainer as an asynchronous background worker using `--auto-maintain`.
+
+#### Usage Examples:
+```bash
+# 1. Zero-quota session audit of accounts.json (prunes expired/dead accounts)
+python pool_maintainer.py --audit
+
+# 2. Replenish pool to ensure at least 10 valid accounts
+python pool_maintainer.py --replenish --target 10
+
+# 3. Run autonomous background maintainer daemon (checks every 300s, maintains 10-20 accounts)
+python pool_maintainer.py --daemon --min 10 --target 20 --interval 300
+
+# 4. Run API Gateway with integrated background maintainer
+python api_server.py --auto-maintain
+```
+
+#### Pool Management Endpoints:
+- `GET /v1/pool/status` : Current active accounts count and audit health.
+- `POST /v1/pool/audit` : Trigger an immediate zero-quota session audit and prune.
+- `POST /v1/pool/replenish` : Trigger immediate account creation batch up to target count.
+
+---
+
+### 11. Re-running the Asset Extraction
 To re-run the extraction script and re-format the files:
 ```bash
 node extract.js
 ```
+
