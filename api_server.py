@@ -54,6 +54,10 @@ from chat_streamer import (
 )
 from attachment_pipeline import AttachmentIngestor
 from pool_maintainer import AccountAuditor, PoolMaintainer
+try:
+    from image_inspector import ImageInspector
+except ImportError:
+    ImageInspector = None
 
 # ---------------------------------------------------------------------------
 # Pydantic Request Models (OpenAI Standard Schema)
@@ -82,6 +86,29 @@ class ChatCompletionRequest(BaseModel):
     attachments: Optional[List[str]] = None
     files: Optional[List[str]] = None
     dirs: Optional[List[str]] = None
+    # Image Generation
+    image_gen: Optional[bool] = None
+    image_style: Optional[str] = "realistic"
+    image_ratio: Optional[str] = "1:1"
+
+    model_config = ConfigDict(extra="allow")
+
+
+class ImageGenerationRequest(BaseModel):
+    prompt: str
+    model: Optional[str] = "imagen-3"
+    n: Optional[int] = 1
+    size: Optional[str] = "1024x1024"
+    style: Optional[str] = "realistic"
+    response_format: Optional[str] = "url"
+
+    model_config = ConfigDict(extra="allow")
+
+
+class ImageInspectRequest(BaseModel):
+    file: Optional[str] = None
+    url: Optional[str] = None
+    b64_json: Optional[str] = None
 
     model_config = ConfigDict(extra="allow")
 
@@ -90,20 +117,30 @@ def resolve_model_and_modes(
     raw_model: str,
     req_body: Optional[ChatCompletionRequest] = None,
     headers: Optional[Dict[str, str]] = None,
-) -> Tuple[str, bool, bool, bool]:
+) -> Tuple[str, bool, bool, bool, bool, str, str]:
     """
-    Resolves base model slug and determines execution mode flags (web_search, agentic, deep_research)
+    Resolves base model slug and determines execution mode flags (web_search, agentic, deep_research, image_gen)
     from model name suffix, request body attributes, or HTTP headers.
 
     Supported model suffixes:
       - '<model>-web' or '<model>-search': Live Web Search
       - '<model>-agent' or '<model>-agentic': Agentic Mode
       - '<model>-deep' or '<model>-research': Deep Research Mode
+      - '<model>-image' or '<model>-img': AI Image Generation Mode
     """
     clean_model = raw_model.strip().lower()
     web_search = False
     agentic = False
     deep_research = False
+    image_gen = False
+    image_style = "realistic"
+    image_ratio = "1:1"
+
+    # Direct image model detection
+    if clean_model in ("imagen-3", "imagen", "dall-e-3", "dalle", "flux-1-schnell", "flux") or clean_model.endswith(("-image", "-img")):
+        image_gen = True
+        if clean_model.endswith(("-image", "-img")):
+            clean_model = clean_model.rsplit("-", 1)[0]
 
     # 1. Parse suffixes from model name
     changed = True
@@ -132,6 +169,12 @@ def resolve_model_and_modes(
             agentic = bool(req_body.agentic)
         if req_body.deep_research is not None:
             deep_research = bool(req_body.deep_research)
+        if getattr(req_body, "image_gen", None) is not None:
+            image_gen = bool(req_body.image_gen)
+        if getattr(req_body, "image_style", None):
+            image_style = str(req_body.image_style)
+        if getattr(req_body, "image_ratio", None):
+            image_ratio = str(req_body.image_ratio)
 
     # 3. Check HTTP headers overrides
     if headers:
@@ -141,9 +184,15 @@ def resolve_model_and_modes(
             agentic = True
         if headers.get("x-deep-research", "").lower() in ("true", "1", "yes"):
             deep_research = True
+        if headers.get("x-image-generation", "").lower() in ("true", "1", "yes"):
+            image_gen = True
+        if headers.get("x-image-style"):
+            image_style = headers.get("x-image-style")
+        if headers.get("x-image-ratio"):
+            image_ratio = headers.get("x-image-ratio")
 
     model_slug = ModelCatalog.resolve(clean_model)
-    return model_slug, web_search, agentic, deep_research
+    return model_slug, web_search, agentic, deep_research, image_gen, image_style, image_ratio
 
 
 
@@ -428,6 +477,9 @@ async def list_models():
         ("gpt-5", "gateway-gpt-5-4"),
         ("deepseek-chat", "gateway-deepseek-v4-pro"),
         ("gemini-flash", "gateway-gemini-3-6-flash"),
+        ("imagen-3", "instant"),
+        ("dall-e-3", "instant"),
+        ("flux-1-schnell", "instant"),
     ]
     for pop_id, target in popular_bases:
         for suffix, mode_owner in [
@@ -435,6 +487,7 @@ async def list_models():
             ("-web", "FreeAI WebSearch"),
             ("-agent", "FreeAI Agentic"),
             ("-deep", "FreeAI DeepResearch"),
+            ("-image", "FreeAI ImageGen"),
         ]:
             full_id = f"{pop_id}{suffix}"
             if full_id not in seen_ids:
@@ -460,7 +513,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
     Integrates Live Web Search (-web), Agentic Mode (-agent), and Deep Research (-deep).
     """
     header_dict = {k.lower(): v for k, v in raw_req.headers.items()}
-    model_slug, web_search, agentic, deep_research = resolve_model_and_modes(
+    model_slug, web_search, agentic, deep_research, image_gen, image_style, image_ratio = resolve_model_and_modes(
         req.model,
         req_body=req,
         headers=header_dict,
@@ -488,7 +541,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
     created_timestamp = int(time.time())
     completion_id = f"chatcmpl-{uuid.uuid4().hex[:12]}"
 
-    # 1. Check Read Cache
+    # 1. Check Read Cache (Bypassed if image generation is requested)
     cache_query = effective_prompt if history else current_prompt
     cached_response = (
         cache.get(
@@ -498,7 +551,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
             agentic=agentic,
             deep_research=deep_research,
         )
-        if cache.enabled
+        if (cache.enabled and not image_gen)
         else None
     )
 
@@ -561,6 +614,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                 "X-FreeAI-WebSearch": "true" if web_search else "false",
                 "X-FreeAI-Agentic": "true" if agentic else "false",
                 "X-FreeAI-DeepResearch": "true" if deep_research else "false",
+                "X-FreeAI-ImageGen": "true" if image_gen else "false",
             },
         )
 
@@ -589,6 +643,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
             "freeai_cache": "HIT",
             "freeai_web_search": web_search,
             "freeai_agentic": agentic,
+            "freeai_image_gen": False,
         }
 
     # -----------------------------------------------------------------------
@@ -630,10 +685,32 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                     web_search=web_search,
                     agentic=agentic,
                     deep_research=deep_research,
+                    image_gen=image_gen,
+                    image_style=image_style,
+                    image_ratio=image_ratio,
                 ):
                     f_type = frame.get("type")
                     if f_type == "source":
                         sources.append(frame.get("source", {}))
+
+                    elif f_type == "image":
+                        img_obj = frame.get("image", {})
+                        img_url = img_obj.get("url", "")
+                        img_md = f"\n\n![Generated Image]({img_url})\n\n"
+                        accumulated.append(img_md)
+                        got_tokens = True
+                        chunk_data = {
+                            "id": completion_id,
+                            "object": "chat.completion.chunk",
+                            "created": created_timestamp,
+                            "model": req.model,
+                            "choices": [{
+                                "index": 0,
+                                "delta": {"content": img_md},
+                                "finish_reason": None,
+                            }],
+                        }
+                        yield f"data: {json.dumps(chunk_data)}\n\n"
 
                     elif f_type == "delta":
                         if not has_sent_role_chunk:
@@ -674,7 +751,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                         if got_tokens or (frame.get("response") and not frame.get("error")):
                             success = True
                             full_resp = "".join(accumulated).strip() or frame.get("response", "").strip()
-                            if cache.enabled and full_resp:
+                            if cache.enabled and full_resp and not image_gen:
                                 cache.set(
                                     model_slug,
                                     cache_query,
@@ -717,6 +794,7 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
                 "X-FreeAI-WebSearch": "true" if web_search else "false",
                 "X-FreeAI-Agentic": "true" if agentic else "false",
                 "X-FreeAI-DeepResearch": "true" if deep_research else "false",
+                "X-FreeAI-ImageGen": "true" if image_gen else "false",
             },
         )
 
@@ -739,15 +817,21 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
             web_search=web_search,
             agentic=agentic,
             deep_research=deep_research,
+            image_gen=image_gen,
+            image_style=image_style,
+            image_ratio=image_ratio,
         )
 
         if result.get("exhausted") or not result.get("success"):
             pool.retire_account(email)
 
-        if result.get("success") and result.get("response"):
-            final_text = result["response"]
+        if result.get("success") and (result.get("response") or result.get("images")):
+            final_text = result.get("response", "")
+            if not final_text and result.get("images"):
+                img_urls = [im.get("url") for im in result["images"] if im.get("url")]
+                final_text = "\n\n".join([f"![Generated Image]({u})" for u in img_urls])
             result_sources = result.get("sources", [])
-            if cache.enabled:
+            if cache.enabled and not image_gen:
                 cache.set(
                     model_slug,
                     cache_query,
@@ -785,7 +869,118 @@ async def chat_completions(req: ChatCompletionRequest, raw_req: Request):
         "freeai_cache": "MISS",
         "freeai_web_search": web_search,
         "freeai_agentic": agentic,
+        "freeai_image_gen": image_gen,
         "freeai_sources": result_sources,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Image Generation Endpoint (/v1/images/generations)
+# ---------------------------------------------------------------------------
+
+@app.post("/v1/images/generations")
+async def generate_images(req: ImageGenerationRequest):
+    """
+    OpenAI-compatible Image Generation Endpoint (/v1/images/generations).
+    Dispatches generation requests through Use.ai's native isImageGenerationMode pipeline.
+    """
+    pool = get_pool()
+
+    size_map = {
+        "1024x1024": "1:1",
+        "512x512": "1:1",
+        "1:1": "1:1",
+        "1792x1024": "16:9",
+        "1024x576": "16:9",
+        "16:9": "16:9",
+        "1024x1792": "9:16",
+        "576x1024": "9:16",
+        "9:16": "9:16",
+        "1024x768": "4:3",
+        "4:3": "4:3",
+        "768x1024": "3:4",
+        "3:4": "3:4",
+    }
+    ratio = size_map.get(req.size or "1024x1024", "1:1")
+    style = req.style or "realistic"
+
+    max_retries = 3
+    data_list = []
+    created_ts = int(time.time())
+
+    for _ in range(max_retries):
+        account = pool.get_account(auto_create=True)
+        if not account:
+            raise HTTPException(status_code=503, detail="No accounts available in accounts.json and auto-create failed.")
+
+        email = account.get("email")
+        client = UseAIChatClient(account)
+        result = await client.generate_image(
+            prompt=req.prompt,
+            style=style,
+            ratio=ratio,
+            timeout=90,
+        )
+
+        if result.get("exhausted") or not result.get("success"):
+            pool.retire_account(email)
+
+        if result.get("success"):
+            imgs = result.get("images", [])
+            for im in imgs:
+                url = im.get("url")
+                if url:
+                    data_list.append({"url": url})
+
+            # Fallback markdown image url extraction
+            if not data_list and result.get("response"):
+                import re
+                urls = re.findall(r'https?://[^\s\)\"\']+', result["response"])
+                for u in urls:
+                    if any(ext in u.lower() for ext in [".png", ".jpg", ".jpeg", ".webp", "image", "googleusercontent"]):
+                        data_list.append({"url": u})
+
+            if data_list:
+                return {
+                    "created": created_ts,
+                    "data": data_list,
+                }
+
+    if not data_list:
+        raise HTTPException(
+            status_code=502,
+            detail="Failed to generate image from upstream provider after account rotation.",
+        )
+
+
+# ---------------------------------------------------------------------------
+# Forensic Image Inspection Endpoint (/v1/images/inspect)
+# ---------------------------------------------------------------------------
+
+@app.post("/v1/images/inspect")
+async def inspect_image_endpoint(req: ImageInspectRequest):
+    """
+    Forensic Deep Inspection Endpoint (/v1/images/inspect).
+    Extracts container structure, IDAT zlib payload decompression, scanline filter histograms,
+    Shannon entropy, EXIF/XMP metadata, and steganography/anomaly signatures.
+    """
+    if ImageInspector is None:
+        raise HTTPException(status_code=500, detail="ImageInspector engine is not available.")
+
+    if req.file:
+        report = ImageInspector.inspect_file(req.file)
+    elif req.url:
+        report = ImageInspector.inspect_url(req.url)
+    elif req.b64_json:
+        report = ImageInspector.inspect_base64(req.b64_json)
+    else:
+        raise HTTPException(status_code=400, detail="Must provide 'file' path, 'url', or 'b64_json' string.")
+
+    markdown_summary = ImageInspector.format_markdown_summary(report)
+    return {
+        "success": bool(report.get("valid", False) or report.get("status") == "success"),
+        "report": report,
+        "markdown": markdown_summary,
     }
 
 

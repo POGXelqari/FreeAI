@@ -27,14 +27,23 @@ if sys.platform == "win32":
         pass
 
 # Binary file signatures & common binary extensions to reject
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".ico", ".tiff"}
+
 BINARY_EXTENSIONS = {
-    ".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".ico", ".tiff",
     ".mp3", ".wav", ".ogg", ".mp4", ".mov", ".avi", ".mkv", ".webm",
     ".zip", ".tar", ".gz", ".bz2", ".7z", ".rar", ".iso",
     ".exe", ".dll", ".so", ".dylib", ".bin", ".obj", ".o", ".a",
     ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx",
     ".pyc", ".pyd", ".class", ".wasm", ".db", ".sqlite", ".sqlite3"
 }
+
+try:
+    from image_inspector import ImageInspector
+except ImportError:
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from image_inspector import ImageInspector
+
 
 # Default directory & file patterns to ignore during codebase crawls
 DEFAULT_IGNORE_PATTERNS = [
@@ -143,6 +152,9 @@ class AttachmentIngestor:
     def is_binary_file(filepath: str) -> bool:
         """Determine if a file is binary by extension and byte inspection."""
         _, ext = os.path.splitext(filepath.lower())
+        if ext in IMAGE_EXTENSIONS:
+            return False  # Handled natively by ImageInspector
+
         if ext in BINARY_EXTENSIONS:
             return True
 
@@ -168,7 +180,7 @@ class AttachmentIngestor:
 
     def read_file(self, filepath: str) -> Dict[str, Any]:
         """
-        Safely read a file's text content with size limits and encoding fallbacks.
+        Safely read a file's text or image content with size limits and encoding fallbacks.
         Returns a dict with 'success', 'path', 'content', 'size', 'lang', 'error'.
         """
         abs_path = os.path.abspath(os.path.join(self.base_dir, filepath)) if not os.path.isabs(filepath) else filepath
@@ -181,6 +193,40 @@ class AttachmentIngestor:
                 "error": f"File not found: {rel_path}",
             }
 
+        _, ext = os.path.splitext(abs_path.lower())
+        size = os.path.getsize(abs_path)
+
+        # Handle images via ImageInspector
+        if ext in IMAGE_EXTENSIONS:
+            if size > self.max_file_bytes * 10:  # Allow up to 5 MB for images
+                return {
+                    "success": False,
+                    "path": rel_path,
+                    "error": f"Image exceeds maximum size ({round(size / (1024*1024), 1)} MB): {rel_path}",
+                }
+            rep = ImageInspector.inspect_file(abs_path)
+            if rep.get("valid"):
+                summary_md = ImageInspector.format_markdown_summary(rep)
+                return {
+                    "success": True,
+                    "path": rel_path,
+                    "is_image": True,
+                    "image_format": rep.get("format"),
+                    "dimensions": rep.get("dimensions"),
+                    "size": size,
+                    "lines": 1,
+                    "content": summary_md,
+                    "lang": "markdown",
+                    "base64_data_uri": rep.get("base64_thumbnail"),
+                    "report": rep,
+                }
+            else:
+                return {
+                    "success": False,
+                    "path": rel_path,
+                    "error": f"Invalid or corrupted image ({rep.get('error')}): {rel_path}",
+                }
+
         if self.is_binary_file(abs_path):
             return {
                 "success": False,
@@ -188,7 +234,6 @@ class AttachmentIngestor:
                 "error": f"Skipped binary file: {rel_path}",
             }
 
-        size = os.path.getsize(abs_path)
         if size > self.max_file_bytes:
             return {
                 "success": False,
@@ -360,13 +405,19 @@ class AttachmentIngestor:
         # Bundle attached files at bottom of prompt
         attachment_blocks = []
         for f in attached_files:
-            lang = f["lang"]
-            attachment_blocks.append(
-                f"[Attached File: {f['path']} ({f['lines']} lines)]\n"
-                f"```{lang}\n"
-                f"{f['content']}\n"
-                f"```"
-            )
+            if f.get("is_image"):
+                attachment_blocks.append(
+                    f"[Attached Image: {f['path']} ({f.get('image_format')}, {f.get('dimensions')}, {round(f.get('size', 0) / 1024, 1)} KB)]\n"
+                    f"{f['content']}"
+                )
+            else:
+                lang = f["lang"]
+                attachment_blocks.append(
+                    f"[Attached File: {f['path']} ({f.get('lines', 0)} lines)]\n"
+                    f"```{lang}\n"
+                    f"{f['content']}\n"
+                    f"```"
+                )
 
         expanded_prompt = (
             f"{prompt.strip()}\n\n"
@@ -440,13 +491,19 @@ class AttachmentIngestor:
         if all_files:
             file_blocks = []
             for f in all_files:
-                file_blocks.append(
-                    f"### File: {f['path']} ({f['lines']} lines, {round(f['size'] / 1024, 1)} KB)\n"
-                    f"```{f['lang']}\n"
-                    f"{f['content']}\n"
-                    f"```"
-                )
-            sections.append(f"## Codebase Context ({len(all_files)} files):\n" + "\n\n".join(file_blocks))
+                if f.get("is_image"):
+                    file_blocks.append(
+                        f"### Attached Image: {f['path']} ({f.get('image_format')}, {f.get('dimensions')}, {round(f.get('size', 0) / 1024, 1)} KB)\n"
+                        f"{f['content']}"
+                    )
+                else:
+                    file_blocks.append(
+                        f"### File: {f['path']} ({f.get('lines', 0)} lines, {round(f.get('size', 0) / 1024, 1)} KB)\n"
+                        f"```{f['lang']}\n"
+                        f"{f['content']}\n"
+                        f"```"
+                    )
+            sections.append(f"## Codebase & Attachment Context ({len(all_files)} files):\n" + "\n\n".join(file_blocks))
 
         sections.append(f"## User Instruction:\n{prompt.strip()}")
 

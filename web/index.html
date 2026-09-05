@@ -139,6 +139,15 @@
               </svg>
               <span>Deep Research</span>
             </div>
+
+            <div class="mode-pill" id="pill-image" data-mode="image" title="Toggle AI Image Generation & Synthesis">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <span>Image Gen</span>
+            </div>
           </div>
 
           <button class="btn-icon" id="btn-clear-chat" title="Clear current view" aria-label="Clear chat">
@@ -194,6 +203,14 @@
                 </div>
                 <div class="hero-card-desc">Clean, production-ready code with syntax highlighting.</div>
               </div>
+
+              <div class="hero-card" data-prompt="A hyperrealistic cybernetic quantum computer core floating in a dark bioluminescent laboratory, volumetric lighting, 8k resolution, octane render." data-image="true">
+                <div class="hero-card-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  Image Synthesis & Analysis
+                </div>
+                <div class="hero-card-desc">Generate vivid AI imagery with instant IDAT forensic inspection.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -211,6 +228,30 @@
             aria-label="Message prompt input"
           ></textarea>
 
+          <div class="image-controls-bar" id="image-controls-bar" style="display:none;">
+            <div class="image-control-pill">
+              <span class="control-label">Style:</span>
+              <select id="image-style-select" class="image-select-input" aria-label="Image Style">
+                <option value="realistic" selected>Realistic Photo</option>
+                <option value="digital-art">Digital Art</option>
+                <option value="anime">Anime / Manga</option>
+                <option value="cinematic">Cinematic 8K</option>
+                <option value="cyberpunk">Cyberpunk Neon</option>
+                <option value="3d">3D Octane Render</option>
+              </select>
+            </div>
+            <div class="image-control-pill">
+              <span class="control-label">Ratio:</span>
+              <select id="image-ratio-select" class="image-select-input" aria-label="Aspect Ratio">
+                <option value="1:1" selected>Square 1:1 (1024x1024)</option>
+                <option value="16:9">Landscape 16:9 (1024x576)</option>
+                <option value="9:16">Portrait 9:16 (576x1024)</option>
+                <option value="4:3">Standard 4:3 (1024x768)</option>
+                <option value="3:4">Tall 3:4 (768x1024)</option>
+              </select>
+            </div>
+          </div>
+
           <div class="prompt-toolbar">
             <div class="toolbar-left">
               <button class="btn-icon" id="btn-attach-file" title="Attach file or code snippet" aria-label="Attach File">
@@ -219,6 +260,15 @@
                 </svg>
               </button>
               <input type="file" id="file-upload-input" multiple style="display:none;">
+
+              <button class="btn-icon" id="btn-open-inspector" title="Open Forensic Image Inspector (PNG IDAT zlib Decompressor)" aria-label="Forensic Inspector">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  <line x1="11" y1="8" x2="11" y2="14"></line>
+                  <line x1="8" y1="11" x2="14" y2="11"></line>
+                </svg>
+              </button>
 
               <span id="typing-indicator" style="display:none; font-size:12px; color:var(--text-muted); align-items:center; gap:6px;">
                 <span class="status-dot" style="background:#6366f1;"></span>
@@ -248,6 +298,74 @@
         </div>
       </footer>
     </main>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div class="modal-backdrop" id="lightbox-modal" style="display:none;" role="dialog" aria-modal="true" aria-label="Image Lightbox">
+    <div class="lightbox-container">
+      <button class="modal-close-btn" id="lightbox-close-btn" title="Close Lightbox" aria-label="Close">&times;</button>
+      <div class="lightbox-img-wrapper">
+        <img id="lightbox-img" src="" alt="Fullscreen Image Preview">
+      </div>
+      <div class="lightbox-actions">
+        <button class="btn-lightbox-action" id="lightbox-inspect-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          Forensic Inspect
+        </button>
+        <a class="btn-lightbox-primary" id="lightbox-download-btn" href="#" download="freeai-image.png" target="_blank" rel="noopener">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Image
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forensic Image Inspector Modal / Drawer -->
+  <div class="modal-backdrop" id="inspector-modal" style="display:none;" role="dialog" aria-modal="true" aria-label="Forensic Image Inspector">
+    <div class="inspector-drawer">
+      <div class="inspector-header">
+        <div class="inspector-title-group">
+          <span class="inspector-badge">FORENSIC ENGINE</span>
+          <h2 class="inspector-title">Deep Image & PNG IDAT Inspector</h2>
+        </div>
+        <button class="modal-close-btn" id="inspector-close-btn" title="Close Inspector" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="inspector-body">
+        <div class="inspector-dropzone" id="inspector-dropzone">
+          <div class="dropzone-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+          </div>
+          <div class="dropzone-text">
+            <strong>Drop image here</strong> or <label for="inspector-file-input" class="file-link">browse local files</label>
+          </div>
+          <div class="dropzone-sub">
+            PNG (continuous zlib IDAT decompression & scanline unfiltering), JPEG, WEBP, and GIF
+          </div>
+          <input type="file" id="inspector-file-input" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none;">
+        </div>
+
+        <div class="inspector-loading" id="inspector-loading" style="display:none;">
+          <div class="spinner"></div>
+          <span>Decompressing IDAT blocks & reversing scanline filters...</span>
+        </div>
+
+        <div class="inspector-results" id="inspector-results" style="display:none;">
+          <!-- Dynamically populated forensic report -->
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="/static/app.js"></script>

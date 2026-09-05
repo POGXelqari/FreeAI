@@ -25,6 +25,9 @@
     'kimi': { name: 'Kimi K3 Dynamic', provider: 'Moonshot', class: 'provider-moonshot' },
     'glm': { name: 'GLM 5.2 Enterprise', provider: 'Z.AI', class: 'provider-other' },
     'auto': { name: 'Auto Fast Route', provider: 'FreeAI', class: 'provider-other' },
+    'imagen-3': { name: 'Imagen 3 Studio', provider: 'Google', class: 'provider-google' },
+    'dall-e-3': { name: 'DALL-E 3 Ultra', provider: 'OpenAI', class: 'provider-openai' },
+    'flux-1-schnell': { name: 'FLUX.1 Schnell', provider: 'Black Forest', class: 'provider-other' },
   };
 
   const state = {
@@ -33,6 +36,11 @@
       web: false,
       agent: false,
       deep: false,
+      image: false,
+    },
+    imageConfig: {
+      style: 'realistic',
+      ratio: '1:1',
     },
     currentSessionId: null,
     sessions: {},
@@ -61,6 +69,7 @@
     pillWeb: document.getElementById('pill-web'),
     pillAgent: document.getElementById('pill-agent'),
     pillDeep: document.getElementById('pill-deep'),
+    pillImage: document.getElementById('pill-image'),
     btnClearChat: document.getElementById('btn-clear-chat'),
     
     chatViewport: document.getElementById('chat-viewport'),
@@ -76,6 +85,23 @@
     fileUploadInput: document.getElementById('file-upload-input'),
     attachedFilesContainer: document.getElementById('attached-files-container'),
     btnAuditPool: document.getElementById('btn-audit-pool'),
+
+    // Image Generation & Inspector Elements
+    imageControlsBar: document.getElementById('image-controls-bar'),
+    imageStyleSelect: document.getElementById('image-style-select'),
+    imageRatioSelect: document.getElementById('image-ratio-select'),
+    btnOpenInspector: document.getElementById('btn-open-inspector'),
+    lightboxModal: document.getElementById('lightbox-modal'),
+    lightboxCloseBtn: document.getElementById('lightbox-close-btn'),
+    lightboxImg: document.getElementById('lightbox-img'),
+    lightboxInspectBtn: document.getElementById('lightbox-inspect-btn'),
+    lightboxDownloadBtn: document.getElementById('lightbox-download-btn'),
+    inspectorModal: document.getElementById('inspector-modal'),
+    inspectorCloseBtn: document.getElementById('inspector-close-btn'),
+    inspectorDropzone: document.getElementById('inspector-dropzone'),
+    inspectorFileInput: document.getElementById('inspector-file-input'),
+    inspectorLoading: document.getElementById('inspector-loading'),
+    inspectorResults: document.getElementById('inspector-results'),
   };
 
   // --------------------------------------------------------------------------
@@ -95,13 +121,22 @@
     }
     elements.attachedFilesContainer.style.display = 'flex';
     elements.attachedFilesContainer.innerHTML = state.stagedAttachments.map((att, idx) => `
-      <div class="attached-file-chip">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-        </svg>
+      <div class="attached-file-chip ${att.isImage ? 'image-chip' : ''}">
+        ${att.isImage && att.dataUrl ? `
+          <img src="${att.dataUrl}" alt="${att.name}" class="chip-thumb" style="width:20px; height:20px; object-fit:cover; border-radius:4px;">
+        ` : `
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+          </svg>
+        `}
         <span class="chip-name" title="${att.name}">${att.name}</span>
         <span class="chip-size">(${formatBytes(att.size)})</span>
+        ${att.isImage ? `
+          <button class="btn-inspect-chip" data-idx="${idx}" title="Inspect PNG/Image Forensics" aria-label="Inspect">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+        ` : ''}
         <button class="btn-remove-chip" data-idx="${idx}" title="Remove attachment" aria-label="Remove">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -119,26 +154,54 @@
         renderAttachedChips();
       };
     });
+
+    elements.attachedFilesContainer.querySelectorAll('.btn-inspect-chip').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.dataset.idx, 10);
+        const att = state.stagedAttachments[idx];
+        if (att && att.dataUrl) {
+          openInspector();
+          runForensicInspection({ b64_json: att.dataUrl.split(',')[1] || att.dataUrl, filename: att.name });
+        }
+      };
+    });
   }
 
   function handleFileSelection(files) {
     if (!files || files.length === 0) return;
     Array.from(files).forEach(file => {
-      if (file.size > 1_000_000) {
-        alert(`File '${file.name}' exceeds 1 MB limit.`);
+      if (file.size > 5_000_000) {
+        alert(`File '${file.name}' exceeds 5 MB limit.`);
         return;
       }
+      const isImg = file.type.startsWith('image/') || /\.(png|jpe?g|webp|gif|bmp)$/i.test(file.name);
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target.result;
-        state.stagedAttachments.push({
-          name: file.name,
-          size: file.size,
-          content: content,
-        });
-        renderAttachedChips();
-      };
-      reader.readAsText(file);
+
+      if (isImg) {
+        reader.onload = (e) => {
+          state.stagedAttachments.push({
+            name: file.name,
+            size: file.size,
+            isImage: true,
+            dataUrl: e.target.result,
+            content: `[Attached Image: ${file.name} (${formatBytes(file.size)})]`,
+          });
+          renderAttachedChips();
+        };
+        reader.readAsDataURL(file);
+      } else {
+        reader.onload = (e) => {
+          state.stagedAttachments.push({
+            name: file.name,
+            size: file.size,
+            isImage: false,
+            content: e.target.result,
+          });
+          renderAttachedChips();
+        };
+        reader.readAsText(file);
+      }
     });
   }
 
@@ -200,6 +263,34 @@
           container.appendChild(header);
           container.appendChild(content);
           pre.parentNode.replaceChild(container, pre);
+        });
+
+        // Wrap markdown images with interactive card controls
+        const imgTags = tempDiv.querySelectorAll('img');
+        imgTags.forEach((img) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'generated-image-container';
+          wrapper.dataset.imgUrl = img.src;
+          wrapper.innerHTML = `
+            <img src="${img.src}" alt="${img.alt || 'Generated Image'}" class="generated-image-img" loading="lazy">
+            <div class="generated-image-overlay">
+              <div class="generated-image-badge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                AI Synthesis
+              </div>
+              <div class="generated-image-actions">
+                <button class="btn-image-action btn-inspect-image" data-img-url="${img.src}" title="Forensic IDAT & PNG Inspection">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  Inspect
+                </button>
+                <a class="btn-image-action" href="${img.src}" download="freeai-image.png" target="_blank" rel="noopener" title="Download">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Save
+                </a>
+              </div>
+            </div>
+          `;
+          img.parentNode.replaceChild(wrapper, img);
         });
         
         return tempDiv.innerHTML;
@@ -504,6 +595,411 @@
   }
 
   // --------------------------------------------------------------------------
+  // Image Generation & Lightbox Helpers
+  // --------------------------------------------------------------------------
+  function mapRatioToSize(ratio) {
+    const map = {
+      '1:1': '1024x1024',
+      '16:9': '1024x576',
+      '9:16': '576x1024',
+      '4:3': '1024x768',
+      '3:4': '768x1024',
+    };
+    return map[ratio] || '1024x1024';
+  }
+
+  function renderGeneratedImageCard(imgUrl, promptText) {
+    return `
+      <div class="generated-image-container" data-img-url="${imgUrl}">
+        <img src="${imgUrl}" alt="${promptText}" class="generated-image-img" loading="lazy">
+        <div class="generated-image-overlay">
+          <div class="generated-image-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            AI Synthesis
+          </div>
+          <div class="generated-image-actions">
+            <button class="btn-image-action btn-inspect-image" data-img-url="${imgUrl}" title="Forensic IDAT & PNG Inspection">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              Inspect
+            </button>
+            <a class="btn-image-action" href="${imgUrl}" download="freeai-image.png" target="_blank" rel="noopener" title="Download">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Save
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // --------------------------------------------------------------------------
+  // Lightbox Modal Controls
+  // --------------------------------------------------------------------------
+  function openLightbox(src) {
+    if (!elements.lightboxModal) return;
+    elements.lightboxImg.src = src;
+    elements.lightboxDownloadBtn.href = src;
+    elements.lightboxInspectBtn.dataset.imgUrl = src;
+    elements.lightboxModal.style.display = 'flex';
+  }
+
+  function closeLightbox() {
+    if (!elements.lightboxModal) return;
+    elements.lightboxModal.style.display = 'none';
+    elements.lightboxImg.src = '';
+  }
+
+  // --------------------------------------------------------------------------
+  // Forensic Image Inspector Engine
+  // --------------------------------------------------------------------------
+  function openInspector(options = {}) {
+    if (!elements.inspectorModal) return;
+    elements.inspectorModal.style.display = 'flex';
+    elements.inspectorResults.style.display = 'none';
+    elements.inspectorLoading.style.display = 'none';
+    elements.inspectorDropzone.style.display = 'flex';
+
+    if (options.url) {
+      runForensicInspection({ url: options.url });
+    } else if (options.b64_json) {
+      runForensicInspection({ b64_json: options.b64_json, filename: options.filename || 'image.png' });
+    }
+  }
+
+  function closeInspector() {
+    if (!elements.inspectorModal) return;
+    elements.inspectorModal.style.display = 'none';
+  }
+
+  async function runForensicInspection(payload) {
+    if (!elements.inspectorResults || !elements.inspectorLoading) return;
+    elements.inspectorLoading.style.display = 'flex';
+    elements.inspectorResults.style.display = 'none';
+
+    try {
+      const response = await fetch(`${API_BASE}/v1/images/inspect`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Inspection failed (${response.status}): ${errText}`);
+      }
+
+      const data = await response.json();
+      const rep = data.report || {};
+      const fmt = rep.format || 'PNG';
+      const idat = rep.idat_analysis || {};
+      const hdr = rep.header || {};
+      const anomalies = rep.anomalies || [];
+      const isPNG = fmt === 'PNG';
+
+      // Build Interactive Inspection View
+      let html = `
+        <!-- Top Metrics Grid -->
+        <div class="forensic-grid">
+          <div class="forensic-card">
+            <span class="forensic-label">Format</span>
+            <span class="forensic-val" style="color:#60a5fa;">${fmt}</span>
+            <span class="forensic-sub">${hdr.color_space || 'Image Container'}</span>
+          </div>
+          <div class="forensic-card">
+            <span class="forensic-label">Resolution</span>
+            <span class="forensic-val" style="color:#34d399;">${rep.dimensions || 'Unknown'}</span>
+            <span class="forensic-sub">${hdr.bit_depth ? hdr.bit_depth + '-bit per channel' : ''}</span>
+          </div>
+          <div class="forensic-card">
+            <span class="forensic-label">File Size</span>
+            <span class="forensic-val" style="color:#f59e0b;">${formatBytes(rep.file_size || 0)}</span>
+            <span class="forensic-sub">${(rep.file_size || 0).toLocaleString()} bytes</span>
+          </div>
+          <div class="forensic-card">
+            <span class="forensic-label">Integrity Check</span>
+            <span class="forensic-val" style="color:${anomalies.length > 0 ? '#ef4444' : '#10b981'};">
+              ${anomalies.length > 0 ? '⚠️ ' + anomalies.length + ' Anomaly' : '✓ Verified'}
+            </span>
+            <span class="forensic-sub">${rep.total_chunks || 0} chunks checked</span>
+          </div>
+        </div>
+      `;
+
+      // PNG IDAT zlib Decompressor & Scanline Reversal Card
+      if (isPNG) {
+        const compRatio = idat.compression_ratio ? (idat.compression_ratio).toFixed(2) + 'x' : 'N/A';
+        const compPct = idat.compression_percentage ? idat.compression_percentage + '%' : '';
+        const compEntropy = idat.compressed_entropy !== undefined ? idat.compressed_entropy : 0;
+        const decompEntropy = idat.decompressed_entropy !== undefined ? idat.decompressed_entropy : 0;
+        const filtDist = idat.filter_distribution || {};
+
+        html += `
+          <div class="idat-highlight-box">
+            <div class="idat-title-row">
+              <div class="idat-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                PNG IDAT Stream & zlib Decompressor Analysis
+              </div>
+              <span class="inspector-badge">RFC 1950 / RFC 1951</span>
+            </div>
+
+            <div class="idat-metrics-row">
+              <div class="idat-metric-item">
+                <div class="idat-metric-num">${idat.idat_chunks_count || 0}</div>
+                <div class="idat-metric-lbl">IDAT Blocks</div>
+              </div>
+              <div class="idat-metric-item">
+                <div class="idat-metric-num">${formatBytes(idat.total_compressed_bytes || 0)}</div>
+                <div class="idat-metric-lbl">Compressed Stream</div>
+              </div>
+              <div class="idat-metric-item">
+                <div class="idat-metric-num">${formatBytes(idat.total_uncompressed_bytes || 0)}</div>
+                <div class="idat-metric-lbl">Decompressed Raw</div>
+              </div>
+              <div class="idat-metric-item">
+                <div class="idat-metric-num">${compRatio} <small style="font-size:11px; color:#94a3b8;">(${compPct})</small></div>
+                <div class="idat-metric-lbl">zlib Compression</div>
+              </div>
+            </div>
+
+            <!-- Shannon Entropy Gauge -->
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; justify-content:space-between; font-size:12px;">
+                <span style="color:var(--text-secondary);">Shannon Entropy (0.0 - 8.0 bits/B):</span>
+                <span style="font-family:var(--font-mono); color:#c7d2fe;">
+                  Compressed: <strong>${compEntropy}</strong> | Decompressed: <strong>${decompEntropy}</strong>
+                </span>
+              </div>
+              <div class="entropy-meter-bar">
+                <div class="entropy-meter-fill" style="width: ${(compEntropy / 8) * 100}%;"></div>
+              </div>
+            </div>
+
+            <!-- Scanline Filter Breakdown Table -->
+            <div style="margin-top:4px;">
+              <div style="font-size:12px; font-weight:600; color:#c7d2fe; margin-bottom:8px;">
+                Scanline Filter Reversal Distribution (Row Filtering):
+              </div>
+              <div class="inspector-table-container">
+                <table class="inspector-table">
+                  <thead>
+                    <tr>
+                      <th>Filter Type</th>
+                      <th>Algorithm</th>
+                      <th>Scanline Rows</th>
+                      <th>Usage %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${Object.entries(filtDist).map(([fname, fstats]) => `
+                      <tr>
+                        <td><strong>${fname}</strong></td>
+                        <td style="font-family:var(--font-mono); font-size:11px;">${fstats.description || 'Standard Filter'}</td>
+                        <td style="font-family:var(--font-mono);">${fstats.count || 0}</td>
+                        <td>
+                          <div style="display:flex; align-items:center; gap:8px;">
+                            <div style="width:60px; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden;">
+                              <div style="height:100%; width:${fstats.percent || 0}%; background:#6366f1;"></div>
+                            </div>
+                            <span style="font-family:var(--font-mono);">${fstats.percent || 0}%</span>
+                          </div>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Security / Anomaly Alerts
+      if (anomalies.length > 0) {
+        html += `
+          <div class="anomaly-banner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <div>
+              <strong>Security & Forensic Warnings (${anomalies.length}):</strong>
+              <ul style="margin-top:4px; padding-left:16px;">
+                ${anomalies.map(a => `<li>${a.description || a.type}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+      }
+
+      // Chunk Map
+      if (rep.chunks && rep.chunks.length > 0) {
+        html += `
+          <div>
+            <div style="font-size:13px; font-weight:600; margin-bottom:8px;">Structural Chunk Hierarchy (First ${rep.chunks.length}):</div>
+            <div class="inspector-table-container">
+              <table class="inspector-table">
+                <thead>
+                  <tr>
+                    <th>Chunk</th>
+                    <th>Offset</th>
+                    <th>Length</th>
+                    <th>CRC32 Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rep.chunks.map(c => {
+                    const badgeClass = c.type === 'IDAT' ? 'idat' : (c.type === 'IHDR' ? 'ihdr' : (c.type === 'IEND' ? 'iend' : 'other'));
+                    return `
+                      <tr>
+                        <td><span class="chunk-badge ${badgeClass}">${c.type}</span></td>
+                        <td style="font-family:var(--font-mono);">0x${(c.offset || 0).toString(16).toUpperCase()}</td>
+                        <td style="font-family:var(--font-mono);">${(c.length || 0).toLocaleString()} B</td>
+                        <td style="color:${c.crc_valid ? '#10b981' : '#ef4444'};">
+                          ${c.crc_valid ? '✓ Valid' : '✗ Invalid CRC'}
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }
+
+      // Markdown Summary Box
+      if (data.markdown) {
+        html += `
+          <div>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <span style="font-size:13px; font-weight:600;">Markdown Forensic Summary:</span>
+              <button class="btn-image-action btn-copy-summary" data-summary="${encodeURIComponent(data.markdown)}">
+                Copy Summary
+              </button>
+            </div>
+            <div class="summary-codebox">${data.markdown}</div>
+          </div>
+        `;
+      }
+
+      elements.inspectorResults.innerHTML = html;
+      elements.inspectorResults.style.display = 'flex';
+      elements.inspectorResults.style.flexDirection = 'column';
+      elements.inspectorResults.style.gap = '16px';
+
+      // Attach copy summary event
+      const copySumBtn = elements.inspectorResults.querySelector('.btn-copy-summary');
+      if (copySumBtn) {
+        copySumBtn.onclick = () => {
+          const text = decodeURIComponent(copySumBtn.dataset.summary);
+          navigator.clipboard.writeText(text).then(() => {
+            copySumBtn.textContent = '✓ Copied';
+            setTimeout(() => { copySumBtn.textContent = 'Copy Summary'; }, 2000);
+          });
+        };
+      }
+
+    } catch (err) {
+      console.error('Forensic inspection error:', err);
+      elements.inspectorResults.innerHTML = `
+        <div class="anomaly-banner">
+          <div>Error analyzing image: ${err.message}</div>
+        </div>
+      `;
+      elements.inspectorResults.style.display = 'block';
+    } finally {
+      elements.inspectorLoading.style.display = 'none';
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // AI Image Generation Dispatcher
+  // --------------------------------------------------------------------------
+  async function sendImageGeneration(promptText) {
+    if (!promptText || !promptText.trim()) return;
+    if (state.isStreaming) return;
+
+    const trimmedPrompt = promptText.trim();
+    elements.promptInput.value = '';
+    elements.promptInput.style.height = 'auto';
+
+    if (!state.currentSessionId || !state.sessions[state.currentSessionId]) {
+      createNewSession();
+    }
+    const currentSession = state.sessions[state.currentSessionId];
+
+    if (currentSession.messages.length === 0) {
+      currentSession.title = '🎨 ' + (trimmedPrompt.length > 28 ? trimmedPrompt.slice(0, 28) + '...' : trimmedPrompt);
+      renderConversationList();
+    }
+
+    currentSession.messages.push({ role: 'user', content: trimmedPrompt, displayContent: trimmedPrompt });
+    appendMessageToDOM('user', trimmedPrompt);
+    saveSessions();
+    scrollToBottom();
+
+    // Show state & skeleton
+    state.isStreaming = true;
+    elements.btnSend.style.display = 'none';
+    elements.btnStop.style.display = 'flex';
+    elements.typingIndicator.style.display = 'inline-flex';
+
+    const { body: assistantBody } = appendMessageToDOM('assistant', '', [], true);
+
+    const activeModelName = MODEL_METADATA[state.activeModel]?.name || 'Imagen 3';
+    assistantBody.innerHTML = `
+      <div class="generating-image-skeleton">
+        <div class="spinner"></div>
+        <div>Synthesizing high-resolution imagery via ${activeModelName}...</div>
+        <div style="font-size:11px; color:var(--text-muted);">Aspect Ratio: ${state.imageConfig.ratio} &bull; Style: ${state.imageConfig.style}</div>
+      </div>
+    `;
+    scrollToBottom();
+
+    try {
+      const response = await fetch(`${API_BASE}/v1/images/generations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: trimmedPrompt,
+          model: state.activeModel,
+          style: state.imageConfig.style,
+          size: mapRatioToSize(state.imageConfig.ratio),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Generation failed (${response.status}): ${errorText}`);
+      }
+
+      const resData = await response.json();
+      const imgDataList = resData.data || [];
+      if (imgDataList.length === 0 || !imgDataList[0].url) {
+        throw new Error('No image URL returned by upstream generator.');
+      }
+
+      const imageUrl = imgDataList[0].url;
+      assistantBody.innerHTML = renderGeneratedImageCard(imageUrl, trimmedPrompt);
+
+      currentSession.messages.push({
+        role: 'assistant',
+        content: `![Generated Image](${imageUrl})`,
+      });
+      saveSessions();
+
+    } catch (err) {
+      console.error('Image generation error:', err);
+      assistantBody.innerHTML = `<span style="color:var(--status-error);">⚠ Image Generation Error: ${err.message}</span>`;
+    } finally {
+      state.isStreaming = false;
+      elements.btnSend.style.display = 'flex';
+      elements.btnStop.style.display = 'none';
+      elements.typingIndicator.style.display = 'none';
+      refreshPoolStatus();
+      scrollToBottom();
+    }
+  }
+
+  // --------------------------------------------------------------------------
   // Real-Time Chat Completion (SSE Streaming)
   // --------------------------------------------------------------------------
   async function sendMessage(promptText) {
@@ -511,6 +1007,13 @@
     if (state.isStreaming) return;
 
     const trimmedPrompt = promptText.trim();
+
+    // Check if Image Generation Mode is active
+    if (state.modes.image || ['imagen-3', 'dall-e-3', 'flux-1-schnell'].includes(state.activeModel)) {
+      sendImageGeneration(trimmedPrompt);
+      return;
+    }
+
     elements.promptInput.value = '';
     elements.promptInput.style.height = 'auto';
 
@@ -791,6 +1294,142 @@
       elements.pillDeep.classList.toggle('active', state.modes.deep);
     });
 
+    // Image Gen Mode Toggle
+    if (elements.pillImage) {
+      elements.pillImage.addEventListener('click', () => {
+        state.modes.image = !state.modes.image;
+        elements.pillImage.classList.toggle('active', state.modes.image);
+        if (elements.imageControlsBar) {
+          elements.imageControlsBar.style.display = state.modes.image ? 'flex' : 'none';
+        }
+        if (state.modes.image) {
+          elements.promptInput.placeholder = 'Describe the image you want to synthesize (e.g. Cyberpunk neon skyline, 8k octane render)...';
+        } else {
+          elements.promptInput.placeholder = 'Message FreeAI (Attach files, Shift+Enter for newline, Enter to send)...';
+        }
+      });
+    }
+
+    if (elements.imageStyleSelect) {
+      elements.imageStyleSelect.addEventListener('change', (e) => {
+        state.imageConfig.style = e.target.value;
+      });
+    }
+
+    if (elements.imageRatioSelect) {
+      elements.imageRatioSelect.addEventListener('change', (e) => {
+        state.imageConfig.ratio = e.target.value;
+      });
+    }
+
+    // Clipboard Paste Listener for Images (Screenshots, Copied Pixels)
+    elements.promptInput.addEventListener('paste', (e) => {
+      const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      const filesToHandle = [];
+      for (const item of items) {
+        if (item.type.indexOf('image') !== -1) {
+          const blob = item.getAsFile();
+          if (blob) {
+            const ext = item.type.split('/')[1] || 'png';
+            const file = new File([blob], `screenshot_${Date.now()}.${ext}`, { type: item.type });
+            filesToHandle.push(file);
+          }
+        }
+      }
+      if (filesToHandle.length > 0) {
+        handleFileSelection(filesToHandle);
+      }
+    });
+
+    // Lightbox Modal Bindings
+    if (elements.lightboxCloseBtn) {
+      elements.lightboxCloseBtn.addEventListener('click', closeLightbox);
+    }
+    if (elements.lightboxModal) {
+      elements.lightboxModal.addEventListener('click', (e) => {
+        if (e.target === elements.lightboxModal) closeLightbox();
+      });
+    }
+    if (elements.lightboxInspectBtn) {
+      elements.lightboxInspectBtn.addEventListener('click', () => {
+        const url = elements.lightboxInspectBtn.dataset.imgUrl;
+        closeLightbox();
+        openInspector({ url });
+      });
+    }
+
+    // Forensic Inspector Modal Bindings
+    if (elements.btnOpenInspector) {
+      elements.btnOpenInspector.addEventListener('click', () => openInspector());
+    }
+    if (elements.inspectorCloseBtn) {
+      elements.inspectorCloseBtn.addEventListener('click', closeInspector);
+    }
+    if (elements.inspectorModal) {
+      elements.inspectorModal.addEventListener('click', (e) => {
+        if (e.target === elements.inspectorModal) closeInspector();
+      });
+    }
+
+    // Inspector Dropzone & File Browse
+    if (elements.inspectorDropzone && elements.inspectorFileInput) {
+      elements.inspectorDropzone.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('file-link')) {
+          elements.inspectorFileInput.click();
+        }
+      });
+
+      const fileLink = elements.inspectorDropzone.querySelector('.file-link');
+      if (fileLink) {
+        fileLink.addEventListener('click', (e) => {
+          e.stopPropagation();
+          elements.inspectorFileInput.click();
+        });
+      }
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        elements.inspectorDropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          elements.inspectorDropzone.classList.add('dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        elements.inspectorDropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          elements.inspectorDropzone.classList.remove('dragover');
+        });
+      });
+
+      elements.inspectorDropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        if (dt && dt.files && dt.files.length > 0) {
+          const file = dt.files[0];
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const b64 = ev.target.result.split(',')[1] || ev.target.result;
+            runForensicInspection({ b64_json: b64, filename: file.name });
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      elements.inspectorFileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const b64 = ev.target.result.split(',')[1] || ev.target.result;
+            runForensicInspection({ b64_json: b64, filename: file.name });
+          };
+          reader.readAsDataURL(file);
+          elements.inspectorFileInput.value = '';
+        }
+      });
+    }
+
     // Model Picker Dropdown
     elements.modelPickerBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -907,6 +1546,12 @@
           state.modes.agent = true;
           elements.pillAgent.classList.add('active');
         }
+        if (card.dataset.image) {
+          state.modes.image = true;
+          if (elements.pillImage) elements.pillImage.classList.add('active');
+          if (elements.imageControlsBar) elements.imageControlsBar.style.display = 'flex';
+          elements.promptInput.placeholder = 'Describe the image you want to synthesize (e.g. Cyberpunk neon skyline, 8k octane render)...';
+        }
         sendMessage(prompt);
       });
     });
@@ -917,13 +1562,37 @@
         e.preventDefault();
         createNewSession();
       }
-      if (e.key === 'Escape' && state.isStreaming) {
-        stopStreaming();
+      if (e.key === 'Escape') {
+        if (elements.lightboxModal && elements.lightboxModal.style.display === 'flex') {
+          closeLightbox();
+        } else if (elements.inspectorModal && elements.inspectorModal.style.display === 'flex') {
+          closeInspector();
+        } else if (state.isStreaming) {
+          stopStreaming();
+        }
       }
     });
 
-    // Copy Code Delegation
+    // Global Click Delegation for Images, Lightbox, and Inspector
     document.addEventListener('click', (e) => {
+      // Lightbox click on image
+      const imgEl = e.target.closest('.generated-image-img');
+      if (imgEl) {
+        openLightbox(imgEl.src);
+        return;
+      }
+
+      // Inspect image button
+      const inspectBtn = e.target.closest('.btn-inspect-image');
+      if (inspectBtn) {
+        const url = inspectBtn.dataset.imgUrl;
+        if (url) {
+          openInspector({ url });
+        }
+        return;
+      }
+
+      // Copy Code Delegation
       const copyBtn = e.target.closest('.btn-copy-code');
       if (copyBtn) {
         const codeText = decodeURIComponent(copyBtn.dataset.code || '');

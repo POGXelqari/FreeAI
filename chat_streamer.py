@@ -64,6 +64,11 @@ try:
 except ImportError:
     AttachmentIngestor = None
 
+try:
+    from image_inspector import ImageInspector
+except ImportError:
+    ImageInspector = None
+
 
 class ModelCatalog:
     """Catalog of available AI models and friendly aliases."""
@@ -146,6 +151,22 @@ class ModelCatalog:
             "name": "Instant (Auto Routing)",
             "provider": "Use.ai",
             "aliases": ["instant", "auto", "default"],
+        },
+        # Image Generation Models
+        "imagen-3": {
+            "name": "Imagen 3",
+            "provider": "Google",
+            "aliases": ["imagen", "imagen-3", "image-google"],
+        },
+        "dall-e-3": {
+            "name": "DALL-E 3",
+            "provider": "OpenAI",
+            "aliases": ["dalle", "dall-e", "dalle-3", "dall-e-3"],
+        },
+        "flux-1-schnell": {
+            "name": "FLUX.1 Schnell",
+            "provider": "Black Forest Labs",
+            "aliases": ["flux", "flux-1", "flux-schnell"],
         },
     }
 
@@ -650,12 +671,15 @@ class UseAIChatClient:
         web_search: bool = False,
         agentic: bool = False,
         deep_research: bool = False,
+        image_gen: bool = False,
+        image_style: str = "realistic",
+        image_ratio: str = "1:1",
         timeout: int = 50,
     ) -> Dict[str, Any]:
         """
         Sends the prompt over WebSocket and streams incoming tokens in real-time.
-        Supports web search mode (source citations), agentic mode, and deep research.
-        Returns result dict with completion status, full response text, sources list, and quota status.
+        Supports web search mode (source citations), agentic mode, deep research, and image generation.
+        Returns result dict with completion status, full response text, sources list, images, and quota status.
         """
         auth_token, app_token = self.fetch_auth_tokens()
         if not auth_token or not app_token:
@@ -712,14 +736,19 @@ class UseAIChatClient:
             "messageId": msg_id,
             "isWebSearchMode": web_search,
             "isDeepResearchMode": deep_research,
-            "isImageGenerationMode": False,
+            "isImageGenerationMode": image_gen,
             "agenticMode": agentic,
         }
         if deep_research:
             payload["deepResearchProcessor"] = "pro-fast"
+        if image_gen:
+            payload["imageGenerationStyle"] = image_style
+            payload["imageGenerationRatio"] = image_ratio
+            payload["imageGenerationProvider"] = "openrouter"
 
         accumulated_text: List[str] = []
         sources: List[Dict[str, str]] = []
+        generated_images: List[Dict[str, Any]] = []
         is_exhausted = False
         error_msg = None
 
@@ -752,12 +781,31 @@ class UseAIChatClient:
                         if st_title:
                             print(f"\n[WebSearch] {st_title}", flush=True)
 
+                    # Tool start notification (Image synthesis, etc.)
+                    elif chunk_type == "tool-input-start":
+                        t_name = chunk.get("toolName")
+                        if t_name == "image-google":
+                            print("\n[ImageGen] Synthesizing image via native engine...", flush=True)
+
                     # Web search source citations
                     elif chunk_type == "source-url":
                         s_url = chunk.get("url")
                         s_title = chunk.get("title")
                         if s_url and not any(s.get("url") == s_url for s in sources):
                             sources.append({"url": s_url, "title": s_title or s_url})
+
+                    # AI Generated Image Output
+                    elif chunk_type == "tool-image-google":
+                        img_output = chunk.get("output", {})
+                        imgs = img_output.get("images", [])
+                        for img in imgs:
+                            generated_images.append(img)
+                            u = img.get("url")
+                            w = img.get("width", 1024)
+                            h = img.get("height", 1024)
+                            img_md = f"\n\n![Generated Image]({u})\n*Generated Image ({w}x{h})*\n"
+                            accumulated_text.append(img_md)
+                            print(f"\n[ImageGen] Synthesized Image: {u} ({w}x{h})", flush=True)
 
                     # Streaming text chunk
                     elif chunk_type == "text-delta":
@@ -802,12 +850,13 @@ class UseAIChatClient:
             accumulated_text.append(sources_md)
 
         full_response = "".join(accumulated_text).strip()
-        success = len(full_response) > 0 and error_msg is None
+        success = (len(full_response) > 0 or len(generated_images) > 0) and error_msg is None
 
         return {
             "success": success,
             "response": full_response,
             "sources": sources,
+            "images": generated_images,
             "error": error_msg,
             "exhausted": is_exhausted or (len(full_response) > 0),
         }
@@ -819,6 +868,9 @@ class UseAIChatClient:
         web_search: bool = False,
         agentic: bool = False,
         deep_research: bool = False,
+        image_gen: bool = False,
+        image_style: str = "realistic",
+        image_ratio: str = "1:1",
         timeout: int = 50,
     ):
         """
@@ -826,7 +878,8 @@ class UseAIChatClient:
         Yields dict frames:
             {"type": "delta", "delta": "word"}
             {"type": "source", "source": {"url": "...", "title": "..."}}
-            {"type": "done", "response": "full text", "sources": [...], "exhausted": bool, "error": Optional[str]}
+            {"type": "image", "image": {"url": "...", "width": 1024, "height": 1024}}
+            {"type": "done", "response": "full text", "sources": [...], "images": [...], "exhausted": bool, "error": Optional[str]}
         """
         auth_token, app_token = self.fetch_auth_tokens()
         if not auth_token or not app_token:
@@ -834,6 +887,7 @@ class UseAIChatClient:
                 "type": "done",
                 "response": "",
                 "sources": [],
+                "images": [],
                 "error": "Failed to obtain required auth tokens.",
                 "exhausted": True,
             }
@@ -883,14 +937,19 @@ class UseAIChatClient:
             "messageId": msg_id,
             "isWebSearchMode": web_search,
             "isDeepResearchMode": deep_research,
-            "isImageGenerationMode": False,
+            "isImageGenerationMode": image_gen,
             "agenticMode": agentic,
         }
         if deep_research:
             payload["deepResearchProcessor"] = "pro-fast"
+        if image_gen:
+            payload["imageGenerationStyle"] = image_style
+            payload["imageGenerationRatio"] = image_ratio
+            payload["imageGenerationProvider"] = "openrouter"
 
         accumulated_text: List[str] = []
         sources: List[Dict[str, str]] = []
+        generated_images: List[Dict[str, Any]] = []
         is_exhausted = False
         error_msg = None
 
@@ -922,6 +981,19 @@ class UseAIChatClient:
                             source_item = {"url": s_url, "title": s_title or s_url}
                             sources.append(source_item)
                             yield {"type": "source", "source": source_item}
+
+                    elif chunk_type == "tool-image-google":
+                        img_output = chunk.get("output", {})
+                        imgs = img_output.get("images", [])
+                        for img in imgs:
+                            generated_images.append(img)
+                            yield {"type": "image", "image": img}
+                            u = img.get("url")
+                            w = img.get("width", 1024)
+                            h = img.get("height", 1024)
+                            img_md = f"\n\n![Generated Image]({u})\n*Generated Image ({w}x{h})*\n"
+                            accumulated_text.append(img_md)
+                            yield {"type": "delta", "delta": img_md}
 
                     elif chunk_type == "text-delta":
                         delta = chunk.get("delta", "") or chunk.get("textDelta", "")
@@ -967,9 +1039,28 @@ class UseAIChatClient:
             "type": "done",
             "response": full_response,
             "sources": sources,
+            "images": generated_images,
             "error": error_msg,
             "exhausted": is_exhausted or (len(full_response) > 0),
         }
+
+    async def generate_image(
+        self,
+        prompt: str,
+        style: str = "realistic",
+        ratio: str = "1:1",
+        timeout: int = 60,
+    ) -> Dict[str, Any]:
+        """Synthesize image via native image-google tool pipeline."""
+        return await self.stream_chat(
+            prompt,
+            model_slug="instant",
+            image_gen=True,
+            image_style=style,
+            image_ratio=ratio,
+            timeout=timeout,
+        )
+
 
 
 def run_prompt_workflow(
@@ -983,6 +1074,9 @@ def run_prompt_workflow(
     web_search: bool = False,
     agentic: bool = False,
     deep_research: bool = False,
+    image_gen: bool = False,
+    image_style: str = "realistic",
+    image_ratio: str = "1:1",
     files: Optional[List[str]] = None,
     dirs: Optional[List[str]] = None,
 ) -> Tuple[bool, Optional[str]]:
@@ -992,7 +1086,7 @@ def run_prompt_workflow(
     2. Checks response cache. If hit, outputs instantly with 0 accounts consumed.
     3. Injects conversation memory context (if active).
     4. Pops account from pool.
-    5. Streams response from backend AI model with optional web search / agentic reasoning.
+    5. Streams response from backend AI model with optional web search, agentic reasoning, or image generation.
     6. Saves output & sources to cache & conversation memory.
     7. Automatically deletes exhausted account from accounts.json.
     """
@@ -1018,8 +1112,8 @@ def run_prompt_workflow(
     else:
         effective_prompt = actual_prompt
 
-    # 2. Check Read Cache
-    if cache and cache.enabled:
+    # 2. Check Read Cache (skip for image generation)
+    if not image_gen and cache and cache.enabled:
         cache_query = effective_prompt if (memory and memory.history) else prompt
         cached_ans = cache.get(
             model_slug,
@@ -1056,6 +1150,8 @@ def run_prompt_workflow(
         print("[Mode]     : Agentic Multi-Step Reasoning Enabled")
     if deep_research:
         print("[Mode]     : Deep Research Enabled")
+    if image_gen:
+        print(f"[Mode]     : AI Image Generation Enabled (Style: {image_style}, Ratio: {image_ratio})")
     print(f"[Account]  : {email} (Pool size: {pool.count()})")
     if memory and memory.history:
         turns_count = len(memory.history) // 2
@@ -1071,6 +1167,9 @@ def run_prompt_workflow(
             web_search=web_search,
             agentic=agentic,
             deep_research=deep_research,
+            image_gen=image_gen,
+            image_style=image_style,
+            image_ratio=image_ratio,
         )
     )
     print("\n" + "-" * 60)
@@ -1082,7 +1181,7 @@ def run_prompt_workflow(
     # 5. Handle response & cache write
     if result.get("success") and result.get("response"):
         response_text = result["response"]
-        if cache and cache.enabled:
+        if not image_gen and cache and cache.enabled:
             cache_query = effective_prompt if (memory and memory.history) else prompt
             cache.set(
                 model_slug,
@@ -1115,6 +1214,9 @@ def run_prompt_workflow(
                 web_search=web_search,
                 agentic=agentic,
                 deep_research=deep_research,
+                image_gen=image_gen,
+                image_style=image_style,
+                image_ratio=image_ratio,
                 files=files,
                 dirs=dirs,
             )
@@ -1135,10 +1237,13 @@ def interactive_repl(
     web_search: bool = False,
     agentic: bool = False,
     deep_research: bool = False,
+    image_gen: bool = False,
+    image_style: str = "realistic",
+    image_ratio: str = "1:1",
 ):
     """
     Interactive command-line chat session with multi-turn memory, response caching,
-    live web search, and agentic mode toggles. Automatically rotates through accounts.
+    live web search, agentic mode, and image generation toggles. Automatically rotates through accounts.
     """
     model_slug = ModelCatalog.resolve(model_name)
     model_info = ModelCatalog.get_info(model_slug)
@@ -1147,6 +1252,9 @@ def interactive_repl(
     web_search_active = web_search
     agentic_active = agentic
     deep_research_active = deep_research
+    image_gen_active = image_gen
+    current_image_style = image_style
+    current_image_ratio = image_ratio
 
     if cache is None:
         cache = ResponseCache()
@@ -1171,12 +1279,17 @@ def interactive_repl(
     print(f"Web Search      : {'ON' if web_search_active else 'OFF'}")
     print(f"Agentic Mode    : {'ON' if agentic_active else 'OFF'}")
     print(f"Deep Research   : {'ON' if deep_research_active else 'OFF'}")
+    print(f"Image Gen Mode  : {'ON' if image_gen_active else 'OFF'} (Style: {current_image_style}, Ratio: {current_image_ratio})")
     if memory.system_prompt:
         print(f"System Prompt   : {memory.system_prompt}")
     print("\nCommands:")
     print("  /web [on|off]   - Toggle or set live web search")
     print("  /agent [on|off] - Toggle or set agentic multi-step reasoning")
     print("  /deep [on|off]  - Toggle or set deep research mode")
+    print("  /image [prompt] - Toggle image generation mode or synthesize prompt")
+    print("  /style <style>  - Set image style (realistic, anime, digital-art, cinematic)")
+    print("  /ratio <ratio>  - Set image aspect ratio (1:1, 16:9, 9:16, 4:3, 3:4)")
+    print("  /inspect <path> - Forensically inspect image (chunks, zlib IDAT, entropy, filters)")
     print("  /attach <path>  - Attach local file or directory to context")
     print("  /detach <path>  - Detach a staged file or directory")
     print("  /files          - List all currently staged attachments")
@@ -1210,6 +1323,8 @@ def interactive_repl(
                 modes_str.append("agent")
             if deep_research_active:
                 modes_str.append("deep")
+            if image_gen_active:
+                modes_str.append(f"img:{current_image_ratio}")
             mode_tag = f" | {':'.join(modes_str)}" if modes_str else ""
 
             prompt_label = f"[{model_info['name']}"
@@ -1287,6 +1402,74 @@ def interactive_repl(
             print(f"[*] Deep Research Mode is now {status}.")
             continue
 
+        # Image Generation toggle or on-demand generation (/image)
+        if user_input.startswith("/image"):
+            parts = user_input.split(" ", 1)
+            if len(parts) > 1 and parts[1].strip():
+                # Direct generation request with prompt
+                img_prompt = parts[1].strip()
+                run_prompt_workflow(
+                    prompt=img_prompt,
+                    model_name=model_slug,
+                    accounts_file=accounts_file,
+                    auto_create=auto_create,
+                    cache=cache,
+                    memory=memory,
+                    session_name=session_name,
+                    web_search=web_search_active,
+                    agentic=agentic_active,
+                    deep_research=deep_research_active,
+                    image_gen=True,
+                    image_style=current_image_style,
+                    image_ratio=current_image_ratio,
+                    files=staged_files if staged_files else None,
+                    dirs=staged_dirs if staged_dirs else None,
+                )
+                continue
+            else:
+                image_gen_active = not image_gen_active
+                status = "ENABLED" if image_gen_active else "DISABLED"
+                print(f"[*] AI Image Generation Mode is now {status} (Style: {current_image_style}, Ratio: {current_image_ratio}).")
+                continue
+
+        # Image Style configuration (/style)
+        if user_input.startswith("/style"):
+            parts = user_input.split(" ", 1)
+            if len(parts) > 1 and parts[1].strip():
+                current_image_style = parts[1].strip().lower()
+                print(f"[*] Image style updated to: '{current_image_style}'")
+            else:
+                print(f"[*] Current image style: '{current_image_style}' (Options: realistic, anime, digital-art, cinematic)")
+            continue
+
+        # Image Aspect Ratio configuration (/ratio)
+        if user_input.startswith("/ratio"):
+            parts = user_input.split(" ", 1)
+            if len(parts) > 1 and parts[1].strip():
+                current_image_ratio = parts[1].strip()
+                print(f"[*] Image aspect ratio updated to: '{current_image_ratio}'")
+            else:
+                print(f"[*] Current image ratio: '{current_image_ratio}' (Options: 1:1, 16:9, 9:16, 4:3, 3:4)")
+            continue
+
+        # Forensic Image Inspection (/inspect)
+        if user_input.startswith("/inspect"):
+            parts = user_input.split(" ", 1)
+            if len(parts) > 1 and parts[1].strip():
+                img_target = parts[1].strip()
+                if ImageInspector is None:
+                    print("[!] ImageInspector module not available.")
+                else:
+                    print(f"[*] Running forensic image inspection on '{img_target}'...")
+                    if img_target.startswith("http://") or img_target.startswith("https://"):
+                        rep = ImageInspector.inspect_url(img_target)
+                    else:
+                        rep = ImageInspector.inspect_file(img_target)
+                    print("\n" + ImageInspector.format_markdown_summary(rep))
+            else:
+                print("Usage: /inspect <path_to_image_or_url>")
+            continue
+
         # Status command
         if user_input.lower() == "/status":
             print("\n=== Session & Mode Status ===")
@@ -1295,6 +1478,7 @@ def interactive_repl(
             print(f"  Web Search   : {'ON' if web_search_active else 'OFF'}")
             print(f"  Agentic Mode : {'ON' if agentic_active else 'OFF'}")
             print(f"  Deep Research: {'ON' if deep_research_active else 'OFF'}")
+            print(f"  Image Gen    : {'ON' if image_gen_active else 'OFF'} (Style: {current_image_style}, Ratio: {current_image_ratio})")
             print(f"  Memory Turns : {len(memory.history) // 2} ({len(memory.history)} messages)")
             print(f"  Pool Size    : {pool.count()} accounts")
             continue
@@ -1499,6 +1683,9 @@ def interactive_repl(
             web_search=web_search_active,
             agentic=agentic_active,
             deep_research=deep_research_active,
+            image_gen=image_gen_active,
+            image_style=current_image_style,
+            image_ratio=current_image_ratio,
             files=staged_files if staged_files else None,
             dirs=staged_dirs if staged_dirs else None,
         )
@@ -1554,6 +1741,30 @@ def main():
         dest="deep_research",
         action="store_true",
         help="Enable autonomous deep research mode",
+    )
+    # Image generation & forensic inspection
+    parser.add_argument(
+        "--image", "-img",
+        action="store_true",
+        help="Enable AI Image Generation mode",
+    )
+    parser.add_argument(
+        "--style",
+        type=str,
+        default="realistic",
+        help="Image generation style: realistic, anime, digital-art, cinematic (default: realistic)",
+    )
+    parser.add_argument(
+        "--ratio",
+        type=str,
+        default="1:1",
+        help="Image aspect ratio: 1:1, 16:9, 9:16, 4:3, 3:4 (default: 1:1)",
+    )
+    parser.add_argument(
+        "--inspect",
+        type=str,
+        default=None,
+        help="Execute forensic inspection (PNG chunks, IDAT zlib decompression, entropy, scanline filters) on an image",
     )
     # File & Codebase attachments
     parser.add_argument(
@@ -1636,6 +1847,19 @@ def main():
         print(ModelCatalog.list_models_text())
         return
 
+    # Direct Forensic Image Inspection CLI
+    if args.inspect:
+        if ImageInspector is None:
+            print("[!] ImageInspector module not available.")
+            return
+        print(f"[*] Running forensic image inspection on '{args.inspect}'...")
+        if args.inspect.startswith("http://") or args.inspect.startswith("https://"):
+            rep = ImageInspector.inspect_url(args.inspect)
+        else:
+            rep = ImageInspector.inspect_file(args.inspect)
+        print("\n" + ImageInspector.format_markdown_summary(rep))
+        return
+
     # Response Cache initialization
     cache = ResponseCache(cache_file=args.cache_file, enabled=not args.no_cache)
 
@@ -1696,6 +1920,9 @@ def main():
             web_search=args.web_search,
             agentic=args.agentic,
             deep_research=args.deep_research,
+            image_gen=args.image,
+            image_style=args.style,
+            image_ratio=args.ratio,
             files=args.files,
             dirs=args.dirs,
         )
@@ -1710,6 +1937,9 @@ def main():
             web_search=args.web_search,
             agentic=args.agentic,
             deep_research=args.deep_research,
+            image_gen=args.image,
+            image_style=args.style,
+            image_ratio=args.ratio,
         )
 
 
