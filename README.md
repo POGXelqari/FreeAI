@@ -1,430 +1,341 @@
-# Use.ai Extracted Codebase & Assets
+# FreeAI: Local Multi-Model Intelligence & OpenAI-Compatible Gateway
 
-This repository contains the complete frontend assets and decompiled/extracted code from [https://use.ai](https://use.ai).
+FreeAI is a high-performance local AI gateway and multi-model intelligence suite. It provides a **100% drop-in replacement for the OpenAI REST API**, allowing you to connect **Cursor, Continue.dev, Cline, Roo-Code, Aider, Open WebUI, and the official OpenAI SDKs** directly to top-tier models (Claude Sonnet 5, Gemini 3.6 Flash, GPT-5.4, DeepSeek V4 Pro, Grok 4.6, FLUX, and DALL-E 3) with zero subscription fees, native multimodal vision, automated Cloudflare R2 uploads, and autonomous account pool maintenance.
 
-## 📁 Repository Structure
+---
 
-```
-g:\FreeAI\
-├── raw/                                 # Raw scraped assets directly from https://use.ai
-│   ├── _next/static/
-│   │   ├── chunks/                      # 297 original minified JS chunks
-│   │   ├── css/                         # Original stylesheet(s)
-│   │   └── _vinext_fonts/               # Inter woff2 web fonts
-│   ├── index.html                       # Main landing page HTML
-│   ├── terms.html                       # Terms of Service page HTML
-│   ├── privacy.html                     # Privacy Policy page HTML
-│   └── help_category_*.html             # Help Center category pages
-│
-├── extracted/                           # Categorized & beautified source code
-│   ├── config/
-│   │   └── runtime-env.json             # 46 extracted environment keys & service configs
-│   ├── pages/                           # Formatted HTML pages
-│   │   ├── index.html
-│   │   ├── terms.html
-│   │   ├── privacy.html
-│   │   └── help_category_*.html
-│   ├── src/
-│   │   ├── components/                  # React application components
-│   │   │   ├── auth-modal.component.js
-│   │   │   ├── footer.component.js
-│   │   │   ├── guest-new-chat.component.js
-│   │   │   ├── guest-sidebar-menu.component.js
-│   │   │   ├── mobile-chat-header.component.js
-│   │   │   └── ui/                      # Design system UI primitives
-│   │   │       ├── button.js
-│   │   │       ├── input.js
-│   │   │       ├── dialog.js
-│   │   │       ├── drawer.js
-│   │   │       ├── dropdown-menu.js
-│   │   │       ├── popover.js
-│   │   │       ├── tooltip.js
-│   │   │       └── ...
-│   │   ├── services/                    # Business logic & API clients
-│   │   │   ├── analytics.service.js
-│   │   │   ├── better-auth-client.service.js
-│   │   │   ├── connectors.service.js
-│   │   │   ├── paywall.service.js
-│   │   │   └── ...
-│   │   ├── stores/                      # Zustand state stores
-│   │   │   ├── chat.store.js
-│   │   │   ├── auth.store.js
-│   │   │   ├── teams.store.js
-│   │   │   ├── connectors.store.js
-│   │   │   └── ...
-│   │   ├── hooks/                       # Custom React hooks
-│   │   │   ├── use-pricing-config.hook.js
-│   │   │   ├── use-incognito-chat.hook.js
-│   │   │   ├── use-chat-input.hook.js
-│   │   │   ├── useQuery.js
-│   │   │   └── ...
-│   │   ├── providers/                   # Context & State Providers
-│   │   │   ├── model-catalog.provider.js
-│   │   │   ├── user-data.provider.js
-│   │   │   ├── workspace-scope.provider.js
-│   │   │   └── ...
-│   │   ├── models/                      # Domain data contracts
-│   │   │   ├── chat.model.js
-│   │   │   ├── user.model.js
-│   │   │   ├── subscription.model.js
-│   │   │   └── ...
-│   │   ├── utils/                       # Helper functions
-│   │   │   ├── chat-uploads.util.js
-│   │   │   ├── image-compression.util.js
-│   │   │   ├── report-client-error.util.js
-│   │   │   └── ...
-│   │   ├── constants/                   # Application constants
-│   │   ├── icons/                       # Lucide and custom vector icons
-│   │   ├── styles/                      # Formatted CSS stylesheet (layout.css)
-│   │   └── vendor/                      # Frameworks (React, Vinext, Rolldown, Zod, etc.)
-│   └── manifest.json                    # Detailed mapping of chunks to extracted files
-│
-├── web/                                 # FreeAI Studio Web UI Dashboard
-│   ├── index.html                       # Modern glassmorphism web interface
-│   ├── style.css                        # Obsidian/indigo responsive design system
-│   └── app.js                           # SSE token streaming & attachment state engine
-├── api_server.py                        # OpenAI-compatible REST API Gateway & Web Server
-├── chat_streamer.py                     # CLI real-time token streamer & REPL
-├── attachment_pipeline.py               # File & codebase attachment bundle engine
-├── pool_maintainer.py                   # Autonomous zero-quota session auditor & pool daemon
-├── account_creator.py                   # Automated registration & session extraction
-├── extract.js                           # Node.js extraction & beautification script
-└── package.json                         # Tooling configuration
-```
+## ⚡ Quickstart: OpenAI-Compatible API Gateway
 
-## 🔍 Key Extracted Components & Architecture
-
-### 1. Technology Stack
-- **Framework**: Next.js running on Vite / Rolldown / Vinext runtime.
-- **Client State**: Zustand stores (`chat.store`, `auth.store`, `teams.store`, etc.) + TanStack React Query.
-- **Authentication**: `better-auth` client with OAuth providers (Google, Microsoft).
-- **Styling**: Tailwind CSS + Radix/Floating-UI primitives.
-
-### 2. Extracted Configuration (`extracted/config/runtime-env.json`)
-- **Base URL**: `https://use.ai`
-- **Client API**: `https://use.ai/v1`
-- **CMS API**: `https://cms.use.ai/api/v1`
-- **Agent URL**: `https://agent.use.ai`
-- **File Storage (Cloudflare R2)**: `https://files.use.ai`
-- **Payment Gateways**:
-  - Stripe (US, UK, EU, CA, AU live publishable keys)
-  - PayPal (`NEXT_PUBLIC_PAYPAL_MERCHANT_ID`)
-  - Braintree (`production_nfb7wm5h_9v6q2tqqyqdqvzyc`)
-  - PayNext subscription plan IDs (monthly, quarterly, half-yearly, superpro, power plan, split payments)
-- **Analytics & Tracking**: Mixpanel, GrowthBook, Google Tag Manager.
-- **Bot Protection**: Cloudflare Turnstile.
-- **Feedback & Surveys**: Formbricks.
-
-### 3. Account Creation Automation Script (`account_creator.py`)
-
-Automates instant account registration and session extraction on `use.ai`:
-- **Endpoint**: `POST https://use.ai/v1/auth/sign-in/credentials`
-- **Session Verification**: `GET https://use.ai/v1/auth/get-session`
-- **Output**: Saves full profile, JWT access token, session token, and cookies to `accounts.json`.
-
-#### Usage:
+### 1. Launch the Server
+Start the local gateway with autonomous account pool maintenance:
 ```bash
-# Create a single account with auto-generated email pattern
-python account_creator.py
-
-# Create an account with a specific email
-python account_creator.py --email gjhfujtyujgfjh@hykjghjytr.thtrrugfhgfj
-
-# Create multiple accounts in batch with custom delay
-python account_creator.py --count 5 --delay 2.0 --output accounts.json
+python api_server.py --auto-maintain
 ```
 
-### 4. AI Chat Streaming & Quota Pruner Script (`chat_streamer.py`)
+The gateway immediately starts serving on:
+- **API Base URL**: `http://localhost:8000/v1` (or `http://127.0.0.1:8000/v1`)
+- **API Key**: `sk-freeai` *(or any dummy string; no payment or proprietary key needed)*
+- **FreeAI Studio Web UI**: `http://localhost:8000/` or `http://localhost:8000/chat`
+- **Health & Telemetry**: `http://localhost:8000/v1/status`
+- **Live Logs**: `http://localhost:8000/v1/logs`
 
-Prompts and streams real-time AI responses using the 1-free-message quota from accounts in `accounts.json`, with automated account quota rotation and retirement.
+---
 
-- **WebSocket Endpoint**: `wss://use.ai/agent/agents/budget-agent/{chatId}`
-- **Authentication Handshake**: `GET /v1/auth/token` + `POST /v1/auth/app-attestation`
-- **WAF Handshake Bypass**: Emulates Chrome WebSocket fetch metadata (`Sec-Fetch-Dest: websocket`, `botd_verdict: clean`)
-- **Quota Lifecycle**: Automatically detects completion (`stream-complete`) or rate limit (`usage_limit`), retires the exhausted account from `accounts.json`, and auto-replenishes if pool is empty.
+### 2. Available Endpoints
 
-#### Supported Models & Aliases:
-| Model Name | Provider | Model Slug | Friendly Aliases |
-| :--- | :--- | :--- | :--- |
-| **Claude Sonnet 5** | Anthropic | `gateway-sonnet-5` | `claude`, `sonnet`, `sonnet-5` |
-| **Claude Fable 5** | Anthropic | `gateway-fable-5` | `fable`, `fable-5` |
-| **Claude Opus 5** | Anthropic | `gateway-opus-5` | `opus`, `opus-5` |
-| **Claude Opus 4.8** | Anthropic | `gateway-opus-4-8` | `opus-4.8` |
-| **Gemini 3.6 Flash** | Google | `gateway-gemini-3-6-flash` | `gemini`, `flash`, `gemini-3.6` |
-| **GPT-5.4** | OpenAI | `gateway-gpt-5-4` | `gpt`, `gpt-5`, `gpt-5.4` |
-| **GPT-5.5** | OpenAI | `gateway-gpt-5-5` | `gpt-5.5` |
-| **GPT-5.6 Sol** | OpenAI | `gateway-gpt-5-6` | `gpt-5.6`, `sol` |
-| **DeepSeek V4 Pro** | DeepSeek | `gateway-deepseek-v4-pro` | `deepseek`, `deepseek-v4` |
-| **Grok 4.6** | xAI | `gateway-grok-4-6` | `grok`, `grok-4.6` |
-| **Kimi K3 / K2.6** | Moonshot AI | `gateway-kimi-k3` | `kimi`, `kimi-k3` |
-| **GLM 5.2** | Z.AI | `gateway-glm-5-2` | `glm`, `glm-5.2` |
-| **Instant** | Use.ai | `instant` | `auto`, `instant`, `default` |
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/v1/chat/completions` | `POST` | OpenAI-compatible chat completions (supports SSE streaming, multimodal vision, live web search, agentic mode, and deep research). |
+| `/v1/images/generations` | `POST` | OpenAI-compatible image synthesis (`dall-e-3`, `imagen-3`, `flux-1-schnell`). |
+| `/v1/images/inspect` | `POST` | Forensic byte-level structural, hex, and pixel analysis of image files/URLs. |
+| `/v1/models` | `GET` | List of all available models, providers, and mode variants (`-web`, `-agent`, `-deep`). |
+| `/v1/status` | `GET` | Real-time gateway health, active accounts in pool, and response cache telemetry. |
+| `/v1/logs` | `GET` | Real-time rotating server logs (`?lines=100`). |
+| `/v1/pool/audit` | `POST` | Trigger instant non-intrusive session health audit across all accounts. |
+| `/v1/pool/replenish` | `POST` | Trigger automated batch creation of authenticated accounts. |
 
-#### Usage Examples:
+---
+
+## 🔌 IDE & Client Integration Guides
+
+### 1. Cursor IDE
+1. Open Cursor Settings (`Ctrl + Shift + J` or `Cmd + Shift + J`).
+2. Navigate to **Models** > **OpenAI API Key**.
+3. Toggle **Override OpenAI Base URL**:
+   - **Base URL**: `http://127.0.0.1:8000/v1`
+   - **API Key**: `sk-freeai`
+4. Add your preferred models:
+   - `claude-3-5-sonnet` (or `claude-3-5-sonnet-web` for live web search)
+   - `gpt-4o` (or `gpt-5`)
+   - `deepseek-chat`
+   - `gemini-flash`
+
+---
+
+### 2. Continue.dev (`config.json`)
+Add FreeAI to your `~/.continue/config.json`:
+```json
+{
+  "models": [
+    {
+      "title": "FreeAI - Claude Sonnet 5",
+      "provider": "openai",
+      "model": "claude-3-5-sonnet",
+      "apiBase": "http://127.0.0.1:8000/v1",
+      "apiKey": "sk-freeai"
+    },
+    {
+      "title": "FreeAI - Claude (Live Web Search)",
+      "provider": "openai",
+      "model": "claude-web",
+      "apiBase": "http://127.0.0.1:8000/v1",
+      "apiKey": "sk-freeai"
+    },
+    {
+      "title": "FreeAI - GPT-5.4",
+      "provider": "openai",
+      "model": "gpt-4o",
+      "apiBase": "http://127.0.0.1:8000/v1",
+      "apiKey": "sk-freeai"
+    },
+    {
+      "title": "FreeAI - DeepSeek V4 Pro",
+      "provider": "openai",
+      "model": "deepseek-chat",
+      "apiBase": "http://127.0.0.1:8000/v1",
+      "apiKey": "sk-freeai"
+    }
+  ]
+}
+```
+
+---
+
+### 3. Cline / Roo-Code (VS Code Extensions)
+1. Open Cline/Roo-Code Settings.
+2. Select API Provider: **OpenAI Compatible**.
+3. Configure:
+   - **Base URL**: `http://127.0.0.1:8000/v1`
+   - **API Key**: `sk-freeai`
+   - **Model ID**: `claude-3-5-sonnet` or `claude-agent`
+
+---
+
+### 4. Aider CLI
+Launch Aider paired with FreeAI:
 ```bash
-# 1. List all available models and aliases
-python chat_streamer.py --list-models
+# Using Claude Sonnet 5
+aider --openai-api-base http://127.0.0.1:8000/v1 --openai-api-key sk-freeai --model openai/claude-3-5-sonnet
 
-# 2. Single-shot prompt with Claude Sonnet 5
-python chat_streamer.py --model claude --prompt "Explain quantum entanglement in 2 sentences."
-
-# 3. Single-shot prompt with Gemini 3.6 Flash
-python chat_streamer.py --model gemini --prompt "Write a Python quicksort function."
-
-# 4. Multi-turn CLI Chat (Defaults to 'default' session automatically)
-python chat_streamer.py --model claude --prompt "Explain quantum computing in 2 sentences."
-python chat_streamer.py --model claude --prompt "Do you remember anything before this prompt?"
-python chat_streamer.py --model claude --prompt "What was that 2-sentence explanation?"
-
-# 5. Inspect or Reset Session History
-python chat_streamer.py --show-history
-python chat_streamer.py --clear-session
-
-# 6. One-off prompt without saving/loading memory
-python chat_streamer.py --no-memory --prompt "What is 2+2?"
-
-# 7. Interactive REPL Chat Session with Cache & Memory
-python chat_streamer.py
-
-# 8. Named Session with Custom Persona
-python chat_streamer.py --model claude --session security_audit --system "You are an elite offensive security researcher."
-
-# 9. Check / Clear Response Cache
-python chat_streamer.py --cache-stats
-python chat_streamer.py --clear-cache
+# Using DeepSeek V4 Pro
+aider --openai-api-base http://127.0.0.1:8000/v1 --openai-api-key sk-freeai --model openai/deepseek-chat
 ```
 
-### 5. Response Caching & Multi-Turn Memory Architecture
+---
 
-#### Read/Write Response Cache (`ResponseCache`)
-- **Zero-Quota Replay**: Caches AI responses locally to `chat_cache.json` indexed by `sha256(model_slug + normalized_prompt)`.
-- **Quota Preservation**: Identical or repeated queries are served instantly from disk cache, consuming **0 network requests** and **0 accounts** from `accounts.json`.
-- **Atomic Operations**: Cache writes use atomic `.tmp` file replacement to prevent file corruption during sudden termination.
-- **Cache Hit Tracking**: Tracks hit counts, initial creation timestamps, and last accessed timestamps per entry.
+### 5. OpenAI Python SDK
 
-#### Multi-Turn Conversation Memory (`ConversationMemory`)
-- **Rotating-Account Continuity**: Because `use.ai` allocates 1 free message per registered account, multi-turn conversation context is injected via structured prompt injection:
-  ```text
-  [System Instructions]
-  <custom persona or instructions>
-
-  [Conversation Context]
-  User: <previous question>
-  Assistant: <previous answer>
-
-  [Current User Message]
-  <new user input>
-  ```
-- **Sliding Context Window**: Configurable history window (`--max-history 10`) retains the most relevant recent turns without overflowing token context.
-- **Clean Single-Shot Bypass**: When no history or system prompt is configured, prompts are sent unadorned for zero overhead.
-
-#### Session Persistence
-- Conversations can be saved and restored across runs using named session files in `sessions/<name>.json`.
-- Sessions preserve system instructions, sliding turn limits, and full dialogue histories.
-
-#### Interactive REPL Commands:
-| Command | Action |
-| :--- | :--- |
-| `/web [on\|off]` | Toggle or configure live real-time web search |
-| `/agent [on\|off]` | Toggle or configure agentic multi-step reasoning mode |
-| `/deep [on\|off]` | Toggle or configure autonomous deep research mode |
-| `/status` | Display active model, session name, pool size, and execution modes |
-| `/history` | Show formatted history of dialogue turns in current session |
-| `/clear` | Clear conversation history turns |
-| `/system <text>` | Set, update, or view system instructions/persona |
-| `/cache` | Display response cache statistics (items, hits, file size) |
-| `/clearcache` | Purge all response cache entries from disk |
-| `/save <name>` | Save current conversation session to `sessions/<name>.json` |
-| `/load <name>` | Load existing conversation session from `sessions/<name>.json` |
-| `/sessions` | List all saved conversation sessions |
-| `/model <name>` | Switch active model (e.g. `/model claude`, `/model gpt`, `/model gemini`) |
-| `/models` | Display catalog of available AI models, providers, and aliases |
-| `/accounts` | Display remaining active accounts in `accounts.json` pool |
-| `/new <count>` | Generate fresh accounts on demand |
-| `/help` | List all available interactive commands |
-| `/quit` or `/exit` | Auto-save active session and exit |
-
-### 6. Live Web Search & Agentic Mode Integration
-
-Both the CLI Streamer and OpenAI API Gateway natively support real-time web browsing, citation retrieval, and agentic multi-step reasoning.
-
-#### CLI Usage:
-```bash
-# Live web search with Gemini 3.6 Flash
-python chat_streamer.py --model gemini --web --prompt "What is today's top tech news?"
-
-# Live web search with Claude Sonnet 5
-python chat_streamer.py --model claude --web --prompt "Who won the game last night?"
-
-# Agentic multi-step reasoning with GPT-5.4
-python chat_streamer.py --model gpt --agentic --prompt "Solve step by step: (25 * 12) + (144 / 12) - 50."
-
-# Autonomous deep research mode
-python chat_streamer.py --model claude --deep --prompt "Analyze emerging trends in post-quantum cryptography."
-```
-
-#### API Gateway Model Suffixes:
-Connect from any standard client (Cursor, Continue, Aider, Open WebUI) and simply select the corresponding model variant:
-- **Web Search**: `claude-web`, `claude-3-5-sonnet-web`, `gpt-4o-web`, `gpt-5-web`, `gemini-flash-web`, `deepseek-chat-web`
-- **Agentic Mode**: `claude-agent`, `gpt-agent`, `deepseek-chat-agent`, `gemini-flash-agent`
-- **Deep Research**: `claude-deep`, `gpt-deep`, `gemini-flash-deep`
-
-Citations are automatically extracted from the backend and appended as formatted markdown footnotes (`### Sources:\n1. [Title](url)\n...`), providing clickable links directly inside your editor or web client.
-
-### 7. OpenAI-Compatible Local API Gateway (`api_server.py`)
-
-A local FastAPI & Uvicorn server providing drop-in compatibility with the OpenAI REST API specification. Connect any third-party AI client, IDE extension, or agent framework to top-tier models with real-time SSE streaming, zero-quota response caching, and automated account rotation.
-
-#### Launching the Gateway:
-```bash
-# Start server on http://127.0.0.1:8000
-python api_server.py
-
-# Custom host/port, accounts file, or cache file
-python api_server.py --host 0.0.0.0 --port 8000 --accounts accounts.json
-```
-
-#### Endpoints:
-- `POST /v1/chat/completions` - Standard OpenAI chat completions endpoint (supports `stream: true` SSE & `stream: false` JSON, with `-web`, `-agent`, `-deep` model routing).
-- `GET /v1/models` - Lists all 14 models and their `-web`, `-agent`, and `-deep` variants with friendly aliases (`claude`, `claude-3-5-sonnet-web`, `gpt-4o-web`, `deepseek-chat-web`).
-- `GET /` - Real-time health metrics, active account pool count, and cache statistics.
-
-#### Client Configuration Examples:
-
-##### 1. Python OpenAI SDK (Live Web Search Streaming)
+#### Standard & Web Search Streaming:
 ```python
 from openai import OpenAI
 
 client = OpenAI(
     base_url="http://127.0.0.1:8000/v1",
-    api_key="not-required",  # Any string
+    api_key="sk-freeai",  # Any string works
 )
 
-# Real-time web search streaming with Claude Sonnet 5
-stream = client.chat.completions.create(
+# Stream live web search response with Claude Sonnet 5
+response = client.chat.completions.create(
     model="claude-web",
     messages=[
-        {"role": "user", "content": "What are the latest headlines today?"}
+        {"role": "user", "content": "What are the latest tech breakthroughs today?"}
     ],
     stream=True,
 )
 
-for chunk in stream:
+for chunk in response:
     if chunk.choices and chunk.choices[0].delta.content:
         print(chunk.choices[0].delta.content, end="", flush=True)
 ```
 
-##### 2. Cursor / Continue.dev / Cline / Aider
-- **Base URL / API Base**: `http://127.0.0.1:8000/v1`
-- **API Key**: `sk-freeai` (or any non-empty string)
-- **Model Options**:
-  - Standard: `claude-3-5-sonnet`, `gpt-4o`, `deepseek-chat`, `gemini-flash`
-  - Live Web Search: `claude-web`, `gpt-web`, `gemini-web`, `deepseek-web`
-  - Agentic Reasoning: `claude-agent`, `gpt-agent`
+#### Multimodal Vision (Image Inspection):
+FreeAI automatically uploads images to Cloudflare R2 and pipes native visual parts to upstream vision models (Claude, Gemini, GPT):
+```python
+import base64
+from openai import OpenAI
 
-##### 3. cURL (Streaming SSE with Web Search)
+client = OpenAI(base_url="http://127.0.0.1:8000/v1", api_key="sk-freeai")
+
+# Load local image as base64 data URI
+with open("screenshot.png", "rb") as f:
+    b64_data = base64.b64encode(f.read()).decode("utf-8")
+
+response = client.chat.completions.create(
+    model="gemini-flash",
+    messages=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": "Describe the layout and text visible in this screenshot:"},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/png;base64,{b64_data}",
+                        "filename": "screenshot.png"
+                    }
+                }
+            ]
+        }
+    ],
+)
+
+print(response.choices[0].message.content)
+```
+
+#### Image Generation (`POST /v1/images/generations`):
+```python
+from openai import OpenAI
+
+client = OpenAI(base_url="http://127.0.0.1:8000/v1", api_key="sk-freeai")
+
+image = client.images.generate(
+    model="dall-e-3",  # Or 'imagen-3', 'flux-1-schnell'
+    prompt="A neon cybernetic cat sitting on a futuristic Tokyo rooftop at night",
+    n=1,
+    size="1024x1024",
+)
+
+print("Generated Image URL:", image.data[0].url)
+```
+
+---
+
+### 6. OpenAI Node.js / TypeScript SDK
+```typescript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "http://127.0.0.1:8000/v1",
+  apiKey: "sk-freeai",
+});
+
+async function main() {
+  const stream = await client.chat.completions.create({
+    model: "claude-3-5-sonnet",
+    messages: [{ role: "user", content: "Write a high-performance LRU cache in TypeScript." }],
+    stream: true,
+  });
+
+  for await (const chunk of stream) {
+    process.stdout.write(chunk.choices[0]?.delta?.content || "");
+  }
+}
+
+main();
+```
+
+---
+
+### 7. cURL Examples
+
+#### Standard Text Completion (Streaming):
 ```bash
 curl -N http://127.0.0.1:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-freeai" \
   -d '{
-    "model": "claude-web",
-    "messages": [{"role": "user", "content": "What happened today?"}],
+    "model": "claude-3-5-sonnet",
+    "messages": [{"role": "user", "content": "Explain quantum computing in 2 sentences."}],
     "stream": true
   }'
 ```
 
-### 8. FreeAI Studio (Local Web UI Dashboard)
-
-A modern, dark-themed browser interface inspired by Claude and ChatGPT with glassmorphism aesthetics, served directly by the API Gateway at `http://127.0.0.1:8000/chat` (or `http://127.0.0.1:8000/` from any web browser).
-
-#### Key Features:
-- **Live SSE Token Streaming**: Smooth real-time token rendering with animated streaming cursor.
-- **Provider & Model Selector**: Switch seamlessly between 14 models (Claude Sonnet 5, Opus 5, GPT-5.4, GPT-5.5, Gemini 3.6 Flash, DeepSeek V4, Grok 4.6, Kimi K3, etc.) grouped by provider.
-- **One-Click Execution Toggles**:
-  - 🌐 **Web Search**: Real-time web queries with clickable citation cards and favicon previews.
-  - ⚡ **Agentic Mode**: Multi-step reasoning and problem-solving.
-  - 🔬 **Deep Research**: Comprehensive autonomous investigations.
-- **Rich Markdown & Code Studio**: Syntax-highlighted code blocks with language indicators and one-click "Copy Code" buttons.
-- **Persistent Local History**: Multi-conversation sidebar with search, delete, and rename saved in `localStorage`.
-- **Live Account Pool & Cache Status**: Real-time health badge tracking available accounts in `accounts.json` and cache hits.
-- **Keyboard Shortcuts**:
-  - `Enter` : Send prompt
-  - `Shift + Enter` : Multiline input
-  - `Ctrl + K` / `Cmd + K` : Start new chat session
-  - `Esc` : Stop active response stream
-
-### 9. File & Codebase Attachment Pipeline (`attachment_pipeline.py`)
-
-A full-spectrum attachment bundling engine enabling file and directory ingestion directly into LLM prompts across CLI, API Gateway, and Web UI.
-
-#### Key Features:
-- **In-Prompt `@path` Expansion**: Auto-expands path mentions directly in user prompts (e.g. `@package.json`, `@web/app.js`) into language-fenced markdown code blocks.
-- **Repository-Wide Directory Crawling**: Recursively traverses directory trees (`--dir` / `-d`), filters ignored files via `.gitignore`, excludes binaries, and builds an ASCII directory hierarchy.
-- **Multi-Encoding Resilience**: Robust text decoding across UTF-8, Latin-1, and CP1252 with automatic binary detection (filtering null bytes and compiled formats).
-- **Context Budget Controls**: Enforces token and byte caps (`--max-tokens`, `--max-bytes`) to prevent model context overflows.
-
-#### Usage Examples:
+#### Live Web Search with Clickable Sources:
 ```bash
-# 1. Single-shot prompt with file attachment
-python chat_streamer.py --model gemini --file package.json --prompt "Analyze the dependencies."
-
-# 2. Single-shot prompt with full directory attachment
-python chat_streamer.py --model claude --dir web --prompt "Review the UI implementation."
-
-# 3. In-prompt @path mention syntax
-python chat_streamer.py --model gpt --prompt "Inspect @package.json and list all scripts."
-
-# 4. Interactive REPL attachment management
-python chat_streamer.py
-# Inside REPL:
-#   /attach web/app.js
-#   /files
-#   How does token streaming work?
-#   /detach web/app.js
-#   /clear-files
+curl -N http://127.0.0.1:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-freeai" \
+  -d '{
+    "model": "claude-web",
+    "messages": [{"role": "user", "content": "What happened in financial markets today?"}],
+    "stream": true
+  }'
 ```
 
-#### API Gateway Attachment Endpoints:
-- `POST /v1/attachments/inspect`: Analyze file paths and sizes before sending prompts.
-- `POST /v1/chat/completions`: Accepts `attachments`, `files`, and `dirs` arrays in the JSON request body.
+#### Image Generation (`dall-e-3` / `flux-1-schnell`):
+```bash
+curl http://127.0.0.1:8000/v1/images/generations \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sk-freeai" \
+  -d '{
+    "model": "flux-1-schnell",
+    "prompt": "Cyberpunk cityscape in rain, octane render 8k",
+    "n": 1,
+    "size": "1024x1024"
+  }'
+```
 
 ---
 
-### 10. Background Account Pool Maintainer & Auditor (`pool_maintainer.py`)
+## 🌐 Model Catalog & Suffix Routing
 
-An autonomous, zero-quota account auditor and pool daemon ensuring high availability of authenticated sessions without expending free message quotas.
+The gateway dynamically maps OpenAI model identifiers to upstream models. You can append suffixes or pass HTTP headers to activate specialized modes:
 
-#### Key Features:
-- **Zero-Quota Non-Intrusive Auditing**: Verifies account validity by querying `GET https://use.ai/v1/auth/get-session` using stored session cookies. Accounts returning `200 OK` remain in the pool; expired or revoked sessions (`401` or `403`) are pruned.
-- **Atomic Disk Pruning**: Cleans stale accounts safely using atomic file replacement without race conditions.
-- **Autonomous Replenishment**: Continuously tracks pool reserves against configurable thresholds (`--min` and `--target`), automatically launching `account_creator.py` with jitter and exponential backoff when reserves drop.
-- **Gateway Daemon Mode**: API Gateway can run the maintainer as an asynchronous background worker using `--auto-maintain`.
+### Core Models & Friendly Aliases
+| Model | Provider | Primary ID | Friendly Aliases | Capabilities |
+| :--- | :--- | :--- | :--- | :--- |
+| **Claude Sonnet 5** | Anthropic | `gateway-sonnet-5` | `claude`, `sonnet`, `claude-3-5-sonnet`, `claude-3-7-sonnet` | Code, Writing, Vision, Reasoning |
+| **Claude Fable 5** | Anthropic | `gateway-fable-5` | `fable`, `fable-5` | Creative, Long Context |
+| **Claude Opus 5** | Anthropic | `gateway-opus-5` | `opus`, `opus-5` | Deep Reasoning, Complex Math |
+| **Claude Opus 4.8** | Anthropic | `gateway-opus-4-8` | `opus-4.8` | Architecture & Systems |
+| **Gemini 3.6 Flash** | Google | `gateway-gemini-3-6-flash` | `gemini`, `flash`, `gemini-flash` | Ultra-Fast, Vision, Generalist |
+| **GPT-5.4** | OpenAI | `gateway-gpt-5-4` | `gpt`, `gpt-4o`, `gpt-5`, `gpt-5.4` | Flagship OpenAI Intelligence |
+| **GPT-5.5** | OpenAI | `gateway-gpt-5-5` | `gpt-5.5` | Advanced Agentic Coding |
+| **GPT-5.6 Sol** | OpenAI | `gateway-gpt-5-6` | `gpt-5.6`, `sol` | High-Context Reasoning |
+| **DeepSeek V4 Pro** | DeepSeek | `gateway-deepseek-v4-pro` | `deepseek`, `deepseek-chat`, `deepseek-v4` | Coding, Math, Open-Weight King |
+| **Grok 4.6** | xAI | `gateway-grok-4-6` | `grok`, `grok-4.6` | Uncensored, Real-Time |
+| **Kimi K3 / K2.6** | Moonshot AI | `gateway-kimi-k3` | `kimi`, `kimi-k3`, `kimi-k2.6` | 200k+ Long Context |
+| **GLM 5.2** | Z.AI | `gateway-glm-5-2` | `glm`, `glm-5.2` | Multilingual, Chinese/English |
+| **DALL-E 3** | OpenAI | `instant` / `dall-e-3` | `dalle`, `dall-e-3` | Image Generation |
+| **Imagen 3** | Google | `instant` / `imagen-3` | `imagen`, `imagen-3` | Photorealistic Image Generation |
+| **FLUX.1 Schnell** | Black Forest | `instant` / `flux-1-schnell` | `flux`, `flux-schnell` | High-Speed Diffusion |
 
-#### Usage Examples:
-```bash
-# 1. Zero-quota session audit of accounts.json (prunes expired/dead accounts)
-python pool_maintainer.py --audit
+### Execution Mode Suffixes & Headers
+Append any of the following suffixes to your model name:
+- **`-web`** : Activates real-time web search and citation retrieval (e.g. `claude-web`, `gpt-4o-web`, `gemini-flash-web`).
+- **`-agent`** : Activates agentic multi-step reasoning (e.g. `claude-agent`, `gpt-agent`).
+- **`-deep`** : Activates autonomous deep research (e.g. `claude-deep`, `gemini-deep`).
+- **`-image`** : Activates image synthesis mode (e.g. `gpt-image`, `claude-image`).
 
-# 2. Replenish pool to ensure at least 10 valid accounts
-python pool_maintainer.py --replenish --target 10
-
-# 3. Run autonomous background maintainer daemon (checks every 300s, maintains 10-20 accounts)
-python pool_maintainer.py --daemon --min 10 --target 20 --interval 300
-
-# 4. Run API Gateway with integrated background maintainer
-python api_server.py --auto-maintain
-```
-
-#### Pool Management Endpoints:
-- `GET /v1/pool/status` : Current active accounts count and audit health.
-- `POST /v1/pool/audit` : Trigger an immediate zero-quota session audit and prune.
-- `POST /v1/pool/replenish` : Trigger immediate account creation batch up to target count.
+*Alternatively, pass custom HTTP request headers:*
+- `X-Web-Search: true`
+- `X-Agentic-Mode: true`
+- `X-Deep-Research: true`
+- `X-Image-Gen: true` (with `X-Image-Style: realistic|artistic|anime` and `X-Image-Ratio: 1:1|16:9|9:16`)
 
 ---
 
-### 11. Re-running the Asset Extraction
-To re-run the extraction script and re-format the files:
-```bash
-node extract.js
+## 🖥️ FreeAI Studio Web Dashboard
+
+In addition to serving the OpenAI REST API, `api_server.py` serves a full-featured browser interface at `http://localhost:8000/`:
+- **Glassmorphism Dark Theme**: Obsidian/indigo aesthetic with responsive mobile/desktop layouts.
+- **Provider & Model Dropdown**: Switch between 14 models on the fly.
+- **Live Search & Citation Cards**: Clickable web sources with favicon previews.
+- **Multimodal Visual Inspector**: Drag-and-drop or paste images to inspect byte metrics, chunk hierarchies, and prompt the AI visually.
+- **Image Generation Studio**: Generate images with style presets and aspect ratio controls.
+- **Full History & Session Memory**: Automatically stored in local browser storage.
+
+---
+
+## 🛡️ Autonomous Account Pool Maintainer (`pool_maintainer.py`)
+
+FreeAI manages a rotating pool of authenticated accounts in `accounts.json`:
+- **Zero-Quota Auditing**: Regularly audits accounts against `GET https://use.ai/v1/auth/get-session` using stored session cookies without consuming free message quotas. Dead/expired accounts are pruned automatically.
+- **Auto-Replenishment**: When valid accounts drop below threshold (default: 50), the maintainer automatically spins up fresh authenticated accounts via `account_creator.py`.
+- **Response Cache (`chat_cache.json`)**: Identical queries are answered in <10ms directly from disk with **0 network requests** and **0 accounts consumed**.
+
+---
+
+## 📁 Repository File Map
+
+```
+g:\FreeAI\
+├── api_server.py                        # OpenAI-Compatible REST API Gateway & Web Server
+├── chat_streamer.py                     # WebSocket token streamer & CLI interactive REPL
+├── pool_maintainer.py                   # Autonomous zero-quota session auditor & pool daemon
+├── account_creator.py                   # Automated registration & session extraction
+├── attachment_pipeline.py               # File & codebase attachment bundle engine
+├── accounts.json                        # Active authenticated account pool
+├── chat_cache.json                      # Disk response cache (atomic SHA-256)
+├── server.log                           # Rotating server log file (10MB x 5 backups)
+├── web/                                 # FreeAI Studio Web UI Dashboard
+│   ├── index.html                       # HTML5 glassmorphism interface
+│   ├── style.css                        # CSS3 design system & animations
+│   └── app.js                           # SSE token streaming & multimodal state engine
+└── raw/                                 # Scraped assets from https://use.ai
 ```
 
+---
+
+## 📜 License & Research Notice
+This project is an independent cybersecurity reverse-engineering and dual-use interoperability research project for defensive evaluation, security auditing, and local AI gateway engineering.
