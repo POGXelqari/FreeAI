@@ -73,6 +73,18 @@ try:
 except ImportError:
     ImageInspector = None
 
+try:
+    from agent_tools import AgentToolRegistry, run_command, manage_task
+except ImportError:
+    AgentToolRegistry = None
+    run_command = None
+    manage_task = None
+
+try:
+    from agent_engine import AgentEngine
+except ImportError:
+    AgentEngine = None
+
 
 class ModelCatalog:
     """Catalog of available AI models and friendly aliases."""
@@ -82,7 +94,7 @@ class ModelCatalog:
         "gateway-sonnet-5": {
             "name": "Claude Sonnet 5",
             "provider": "Anthropic",
-            "aliases": ["claude", "sonnet", "sonnet-5", "claude-sonnet"],
+            "aliases": ["claude", "sonnet", "sonnet-5", "claude-sonnet", "claude-3-5-sonnet", "claude-3-7-sonnet", "claude-3.5-sonnet", "claude-3.7-sonnet"],
         },
         "gateway-fable-5": {
             "name": "Claude Fable 5",
@@ -92,7 +104,7 @@ class ModelCatalog:
         "gateway-opus-5": {
             "name": "Claude Opus 5",
             "provider": "Anthropic",
-            "aliases": ["opus", "opus-5", "claude-opus"],
+            "aliases": ["opus", "opus-5", "claude-opus", "claude-3-opus"],
         },
         "gateway-opus-4-8": {
             "name": "Claude Opus 4.8",
@@ -103,13 +115,13 @@ class ModelCatalog:
         "gateway-gemini-3-6-flash": {
             "name": "Gemini 3.6 Flash",
             "provider": "Google",
-            "aliases": ["gemini", "flash", "gemini-3.6", "gemini-flash"],
+            "aliases": ["gemini", "flash", "gemini-3.6", "gemini-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash"],
         },
         # OpenAI
         "gateway-gpt-5-4": {
             "name": "GPT-5.4",
             "provider": "OpenAI",
-            "aliases": ["gpt", "gpt-5", "gpt-5.4", "gpt5"],
+            "aliases": ["gpt", "gpt-4o", "gpt-4", "gpt-5", "gpt-5.4", "gpt5", "gpt-4-turbo", "gpt-4o-mini"],
         },
         "gateway-gpt-5-5": {
             "name": "GPT-5.5",
@@ -119,13 +131,13 @@ class ModelCatalog:
         "gateway-gpt-5-6": {
             "name": "GPT-5.6 Sol",
             "provider": "OpenAI",
-            "aliases": ["gpt-5.6", "gpt56", "sol"],
+            "aliases": ["gpt-5.6", "gpt56", "sol", "gpt-5-sol"],
         },
         # DeepSeek
         "gateway-deepseek-v4-pro": {
             "name": "DeepSeek V4 Pro",
             "provider": "DeepSeek",
-            "aliases": ["deepseek", "deepseek-v4", "deepseek-pro"],
+            "aliases": ["deepseek", "deepseek-v4", "deepseek-pro", "deepseek-chat", "deepseek-coder", "deepseek-r1"],
         },
         # xAI
         "gateway-grok-4-6": {
@@ -176,9 +188,9 @@ class ModelCatalog:
 
     @classmethod
     def resolve(cls, model_input: Optional[str]) -> str:
-        """Resolve alias or slug to exact backend model ID."""
+        """Resolve alias or slug to exact backend model ID (defaults to GPT-5.6 Sol)."""
         if not model_input:
-            return "gateway-gemini-3-6-flash"
+            return "gateway-gpt-5-6"
 
         clean = model_input.strip().lower()
 
@@ -207,6 +219,69 @@ class ModelCatalog:
             model_id,
             {"name": model_id, "provider": "Unknown", "aliases": []}
         )
+
+    @classmethod
+    def get_ordered_models(cls) -> List[Tuple[str, Dict[str, Any]]]:
+        """Return ordered list of text chat & image models with GPT-5.6 Sol first."""
+        order = [
+            "gateway-gpt-5-6",
+            "gateway-gpt-5-5",
+            "gateway-gpt-5-4",
+            "gateway-sonnet-5",
+            "gateway-opus-5",
+            "gateway-fable-5",
+            "gateway-opus-4-8",
+            "gateway-gemini-3-6-flash",
+            "gateway-deepseek-v4-pro",
+            "gateway-grok-4-6",
+            "gateway-kimi-k3",
+            "gateway-kimi-k2-6",
+            "gateway-glm-5-2",
+            "instant",
+            "imagen-3",
+            "dall-e-3",
+            "flux-1-schnell",
+        ]
+        res = []
+        for mid in order:
+            if mid in cls.MODELS:
+                res.append((mid, cls.MODELS[mid]))
+        return res
+
+    @classmethod
+    def prompt_model_selection(cls, current_model: Optional[str] = None) -> str:
+        """Interactive numbered model selection picker."""
+        ordered = cls.get_ordered_models()
+        print("\n" + "=" * 60)
+        print("                FreeAI Model Selection")
+        print("=" * 60)
+        curr_slug = cls.resolve(current_model) if current_model else "gateway-gpt-5-6"
+        for idx, (mid, data) in enumerate(ordered, 1):
+            is_default = " [DEFAULT]" if mid == "gateway-gpt-5-6" else ""
+            is_active = " (active)" if mid == curr_slug else ""
+            print(f" [{idx:2d}] {data['name']:<20} ({data['provider']:<14}){is_default}{is_active}")
+        print("=" * 60)
+
+        try:
+            choice = input(f"\nSelect model [1-{len(ordered)}] or enter name/alias [default: 1]: ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\n")
+            return curr_slug
+
+        if not choice:
+            return "gateway-gpt-5-6"
+
+        if choice.isdigit():
+            num = int(choice)
+            if 1 <= num <= len(ordered):
+                selected_slug = ordered[num - 1][0]
+                print(f"[*] Selected: {ordered[num - 1][1]['name']} ({selected_slug})")
+                return selected_slug
+
+        resolved = cls.resolve(choice)
+        info = cls.get_info(resolved)
+        print(f"[*] Selected: {info['name']} ({resolved})")
+        return resolved
 
     @classmethod
     def list_models_text(cls) -> str:
@@ -1161,16 +1236,19 @@ def run_prompt_workflow(
     image_ratio: str = "1:1",
     files: Optional[List[str]] = None,
     dirs: Optional[List[str]] = None,
+    yolo: bool = False,
+    max_steps: int = 25,
 ) -> Tuple[bool, Optional[str]]:
     """
     Executes a prompt workflow:
     1. Ingests and bundles attached files / directories and expands in-prompt @path mentions.
-    2. Checks response cache. If hit, outputs instantly with 0 accounts consumed.
-    3. Injects conversation memory context (if active).
-    4. Pops account from pool.
-    5. Streams response from backend AI model with optional web search, agentic reasoning, or image generation.
-    6. Saves output & sources to cache & conversation memory.
-    7. Automatically deletes exhausted account from accounts.json.
+    2. If agentic mode active, hands off to Autonomous AgentEngine with local root/PowerShell tools.
+    3. Checks response cache. If hit, outputs instantly with 0 accounts consumed.
+    4. Injects conversation memory context (if active).
+    5. Pops account from pool.
+    6. Streams response from backend AI model with optional web search, agentic reasoning, or image generation.
+    7. Saves output & sources to cache & conversation memory.
+    8. Automatically deletes exhausted account from accounts.json.
     """
     model_slug = ModelCatalog.resolve(model_name)
     model_info = ModelCatalog.get_info(model_slug)
@@ -1187,6 +1265,24 @@ def run_prompt_workflow(
         if attached_files:
             print(f"[Attachment] Injected {len(attached_files)} file(s) into context ({', '.join(f['path'] for f in attached_files)})")
         actual_prompt = bundled_prompt
+
+    # 0.5. Autonomous Agentic Engine Handoff (Full Root Access, PowerShell, Files, Coding, Web, Image tools)
+    if agentic and AgentEngine is not None:
+        engine = AgentEngine(
+            accounts_file=accounts_file,
+            default_model=model_slug,
+            max_steps=max_steps,
+            yolo=yolo,
+        )
+        return engine.run_autonomous_task(
+            goal=actual_prompt,
+            model_name=model_slug,
+            auto_create=auto_create,
+            max_steps=max_steps,
+            yolo=yolo,
+            memory=memory,
+            session_name=session_name,
+        )
 
     # 1. Build contextual prompt with conversation history (if active)
     if memory:
@@ -1301,6 +1397,8 @@ def run_prompt_workflow(
                 image_ratio=image_ratio,
                 files=files,
                 dirs=dirs,
+                yolo=yolo,
+                max_steps=max_steps,
             )
         else:
             print(f"[!] Stream ended with error: {result.get('error')}")
@@ -1310,7 +1408,7 @@ def run_prompt_workflow(
 
 
 def interactive_repl(
-    model_name: str,
+    model_name: str = "gateway-gpt-5-6",
     accounts_file: str = "accounts.json",
     auto_create: bool = True,
     cache: Optional[ResponseCache] = None,
@@ -1322,10 +1420,12 @@ def interactive_repl(
     image_gen: bool = False,
     image_style: str = "realistic",
     image_ratio: str = "1:1",
+    yolo: bool = False,
+    max_steps: int = 25,
 ):
     """
     Interactive command-line chat session with multi-turn memory, response caching,
-    live web search, agentic mode, and image generation toggles. Automatically rotates through accounts.
+    live web search, autonomous agentic reasoning, local root tools, and image generation. Automatically rotates through accounts.
     """
     model_slug = ModelCatalog.resolve(model_name)
     model_info = ModelCatalog.get_info(model_slug)
@@ -1333,6 +1433,7 @@ def interactive_repl(
 
     web_search_active = web_search
     agentic_active = agentic
+    yolo_active = yolo
     deep_research_active = deep_research
     image_gen_active = image_gen
     current_image_style = image_style
@@ -1351,27 +1452,35 @@ def interactive_repl(
         else:
             print(f"[*] Started new named session '{session_name}'")
 
-    print("\n" + "=" * 65)
-    print("      Use.ai AI Interactive Multi-Model Chat & Memory REPL")
-    print("=" * 65)
+    print("\n" + "=" * 68)
+    print("       FreeAI Agentic Autonomous Multi-Model Chat & REPL")
+    print("=" * 68)
     print(f"Active Model    : {model_info['name']} ({model_slug})")
     print(f"Accounts in Pool: {pool.count()}")
     print(f"Response Cache  : {'Enabled' if cache.enabled else 'Disabled'} ({len(cache.entries)} entries)")
     print(f"Session Memory  : {len(memory.history)} messages (Max turns: {memory.max_turns})")
+    print(f"Autonomous Mode : {'ON' if agentic_active else 'OFF'}")
+    print(f"YOLO Mode       : {'ON (Hands-Free Full Access)' if yolo_active else 'OFF (Interactive Approval)'}")
     print(f"Web Search      : {'ON' if web_search_active else 'OFF'}")
-    print(f"Agentic Mode    : {'ON' if agentic_active else 'OFF'}")
     print(f"Deep Research   : {'ON' if deep_research_active else 'OFF'}")
     print(f"Image Gen Mode  : {'ON' if image_gen_active else 'OFF'} (Style: {current_image_style}, Ratio: {current_image_ratio})")
     if memory.system_prompt:
         print(f"System Prompt   : {memory.system_prompt}")
     print("\nCommands:")
+    print("  /auto [on|off]  - Toggle Autonomous Agentic AI execution mode")
+    print("  /yolo [on|off]  - Toggle hands-free tool execution without confirmation")
+    print("  /tools          - List available local Agent tools (PowerShell, file, web)")
+    print("  /tasks          - List running background tasks and daemons")
+    print("  /task <id> [act]- Manage background task: status, logs, kill")
+    print("  /run <command>  - Instantly run a local PowerShell command directly")
+    print("  /shell          - Open interactive direct shell session")
+    print("  /model [name]   - Select/change model (opens picker if name omitted)")
+    print("  /models         - List all available models table")
     print("  /web [on|off]   - Toggle or set live web search")
-    print("  /agent [on|off] - Toggle or set agentic multi-step reasoning")
-    print("  /deep [on|off]  - Toggle or set deep research mode")
-    print("  /image [prompt] - Toggle image generation mode or synthesize prompt")
+    print("  /image [prompt] - Synthesize an AI image on demand or toggle mode")
     print("  /style <style>  - Set image style (realistic, anime, digital-art, cinematic)")
     print("  /ratio <ratio>  - Set image aspect ratio (1:1, 16:9, 9:16, 4:3, 3:4)")
-    print("  /inspect <path> - Forensically inspect image (chunks, zlib IDAT, entropy, filters)")
+    print("  /inspect <path> - Forensically inspect image (chunks, zlib IDAT, entropy)")
     print("  /attach <path>  - Attach local file or directory to context")
     print("  /detach <path>  - Detach a staged file or directory")
     print("  /files          - List all currently staged attachments")
@@ -1385,13 +1494,11 @@ def interactive_repl(
     print("  /save <name>    - Save current conversation session")
     print("  /load <name>    - Load an existing session")
     print("  /sessions       - List all saved conversation sessions")
-    print("  /model <name>   - Change AI model (e.g. /model claude, /model gpt)")
-    print("  /models         - List all available models")
     print("  /accounts       - Show account pool status")
     print("  /new <count>    - Create new accounts on demand")
     print("  /help           - Display available commands")
     print("  /quit or /exit  - Exit chat")
-    print("=" * 65 + "\n")
+    print("=" * 68 + "\n")
 
     staged_files: List[str] = []
     staged_dirs: List[str] = []
@@ -1402,7 +1509,9 @@ def interactive_repl(
             if web_search_active:
                 modes_str.append("web")
             if agentic_active:
-                modes_str.append("agent")
+                modes_str.append("auto")
+            if yolo_active:
+                modes_str.append("yolo")
             if deep_research_active:
                 modes_str.append("deep")
             if image_gen_active:
@@ -1432,9 +1541,17 @@ def interactive_repl(
         # Help
         if user_input.lower() in ("/help", "?"):
             print("\nAvailable Commands:")
-            print("  /web [on|off]   - Toggle or set live web search")
-            print("  /agent [on|off] - Toggle or set agentic multi-step reasoning")
-            print("  /deep [on|off]  - Toggle or set deep research mode")
+            print("  /auto [on|off]  - Toggle Autonomous Agentic AI execution mode")
+            print("  /yolo [on|off]  - Toggle hands-free tool execution")
+            print("  /tools          - List available local Agent tools")
+            print("  /tasks          - List running background tasks and daemons")
+            print("  /task <id> [act]- Manage background task: status, logs, kill")
+            print("  /run <command>  - Instantly run a local PowerShell command directly")
+            print("  /shell          - Open interactive direct shell session")
+            print("  /model [name]   - Switch model (interactive menu if omitted)")
+            print("  /models         - List models catalog")
+            print("  /web [on|off]   - Toggle live web search")
+            print("  /image [prompt] - Synthesize AI image")
             print("  /status         - Show current model, memory, and modes status")
             print("  /history        - Show conversation history turns")
             print("  /clear          - Clear conversation memory")
@@ -1444,11 +1561,94 @@ def interactive_repl(
             print("  /save <name>    - Save session")
             print("  /load <name>    - Load session")
             print("  /sessions       - List saved sessions")
-            print("  /model <name>   - Switch model")
-            print("  /models         - List models catalog")
             print("  /accounts       - Show accounts pool")
             print("  /new <count>    - Generate fresh accounts")
             print("  /quit or /exit  - Exit REPL")
+            continue
+
+        # Autonomous Agentic mode toggle (/auto or /agent)
+        if user_input.startswith("/auto") or user_input.startswith("/agent"):
+            parts = user_input.split()
+            if len(parts) > 1:
+                agentic_active = parts[1].lower() in ("on", "true", "1", "yes")
+            else:
+                agentic_active = not agentic_active
+            status = "ENABLED" if agentic_active else "DISABLED"
+            print(f"[*] Autonomous Agentic Mode is now {status}.")
+            continue
+
+        # YOLO hands-free mode toggle (/yolo)
+        if user_input.startswith("/yolo"):
+            parts = user_input.split()
+            if len(parts) > 1:
+                yolo_active = parts[1].lower() in ("on", "true", "1", "yes")
+            else:
+                yolo_active = not yolo_active
+            status = "ENABLED" if yolo_active else "DISABLED"
+            print(f"[*] YOLO Mode (Hands-Free Full Root Execution) is now {status}.")
+            continue
+
+        # List available agent tools (/tools)
+        if user_input.lower() == "/tools":
+            print("\n" + "=" * 68)
+            print("                FreeAI Agent Tools Suite")
+            print("=" * 68)
+            if AgentToolRegistry is not None:
+                for t_name, t_meta in AgentToolRegistry.TOOLS.items():
+                    print(f"  • {t_name:<22} - {t_meta['description']}")
+            else:
+                print("  Agent tools registry not available.")
+            print("=" * 68)
+            continue
+
+        # List background tasks (/tasks)
+        if user_input.lower() == "/tasks":
+            if manage_task is not None:
+                res = manage_task(action="list")
+                print("\n=== Active Background Tasks ===")
+                print(res.to_str())
+            else:
+                print("[!] Task manager not available.")
+            continue
+
+        # Manage background task (/task <id> [status|logs|kill])
+        if user_input.startswith("/task"):
+            parts = user_input.split()
+            if len(parts) >= 3:
+                tid = parts[1]
+                act = parts[2]
+                if manage_task is not None:
+                    res = manage_task(action=act, task_id=tid)
+                    print(f"\n[Task {tid} - {act}]\n{res.to_str()}")
+            elif len(parts) == 2:
+                tid = parts[1]
+                if manage_task is not None:
+                    res = manage_task(action="status", task_id=tid)
+                    print(f"\n[Task {tid} Status]\n{res.to_str()}")
+            else:
+                print("Usage: /task <task_id> [status|logs|kill]")
+            continue
+
+        # Execute immediate local PowerShell command (/run <cmd>)
+        if user_input.startswith("/run "):
+            cmd = user_input.split(" ", 1)[1].strip()
+            print(f"[*] Executing via PowerShell: {cmd}")
+            if run_command is not None:
+                res = run_command(cmd)
+                print(res.to_str())
+            else:
+                os.system(cmd)
+            continue
+
+        # Interactive sub-shell (/shell)
+        if user_input.lower() in ("/shell", "/sh"):
+            print("\n[*] Entering local PowerShell shell (type 'exit' to return to FreeAI REPL)...")
+            shell_bin = "pwsh" if shutil.which("pwsh") else "powershell"
+            try:
+                subprocess.run([shell_bin, "-NoExit"])
+            except Exception as e:
+                print(f"[!] Shell error: {e}")
+            print("[*] Returned to FreeAI REPL.")
             continue
 
         # Web Search toggle
@@ -1460,17 +1660,6 @@ def interactive_repl(
                 web_search_active = not web_search_active
             status = "ENABLED" if web_search_active else "DISABLED"
             print(f"[*] Live Web Search is now {status}.")
-            continue
-
-        # Agentic Mode toggle
-        if user_input.startswith("/agent"):
-            parts = user_input.split()
-            if len(parts) > 1:
-                agentic_active = parts[1].lower() in ("on", "true", "1", "yes")
-            else:
-                agentic_active = not agentic_active
-            status = "ENABLED" if agentic_active else "DISABLED"
-            print(f"[*] Agentic Mode is now {status}.")
             continue
 
         # Deep Research toggle
@@ -1649,9 +1838,13 @@ def interactive_repl(
             continue
 
         # Model switch
-        if user_input.startswith("/model "):
-            new_target = user_input.split(" ", 1)[1].strip()
-            model_slug = ModelCatalog.resolve(new_target)
+        if user_input.startswith("/model"):
+            parts = user_input.split(" ", 1)
+            if len(parts) > 1 and parts[1].strip():
+                new_target = parts[1].strip()
+                model_slug = ModelCatalog.resolve(new_target)
+            else:
+                model_slug = ModelCatalog.prompt_model_selection(model_slug)
             model_info = ModelCatalog.get_info(model_slug)
             print(f"[*] Switched active model to: {model_info['name']} ({model_slug})")
             continue
@@ -1770,6 +1963,8 @@ def interactive_repl(
             image_ratio=current_image_ratio,
             files=staged_files if staged_files else None,
             dirs=staged_dirs if staged_dirs else None,
+            yolo=yolo_active,
+            max_steps=max_steps,
         )
 
 
@@ -1786,8 +1981,13 @@ def main():
     parser.add_argument(
         "--model", "-m",
         type=str,
-        default="gemini",
-        help="Model alias or ID (e.g. claude, gpt, gemini, deepseek, grok, kimi, glm)",
+        default="gateway-gpt-5-6",
+        help="Model alias or ID (default: gateway-gpt-5-6 / GPT-5.6 Sol)",
+    )
+    parser.add_argument(
+        "--select-model",
+        action="store_true",
+        help="Prompt interactive numbered model selection picker at startup",
     )
     parser.add_argument(
         "--accounts", "-a",
@@ -1805,18 +2005,30 @@ def main():
         action="store_true",
         help="List all supported models, aliases, and providers",
     )
-    # Execution modes: Web search, Agentic, Deep research
+    # Execution modes: Autonomous Agentic, YOLO, Web search, Deep research
+    parser.add_argument(
+        "--auto", "--autonomous", "--agentic", "--agent",
+        dest="agentic",
+        action="store_true",
+        help="Enable autonomous Agentic AI mode with local root PowerShell and coding tools",
+    )
+    parser.add_argument(
+        "--yolo", "--full-access",
+        dest="yolo",
+        action="store_true",
+        help="Execute agent tools hands-free without interactive confirmation",
+    )
+    parser.add_argument(
+        "--max-steps",
+        type=int,
+        default=25,
+        help="Maximum autonomous agent loop steps per task (default: 25)",
+    )
     parser.add_argument(
         "--web", "--search",
         dest="web_search",
         action="store_true",
         help="Enable live real-time web search and citation synthesis",
-    )
-    parser.add_argument(
-        "--agentic", "--agent",
-        dest="agentic",
-        action="store_true",
-        help="Enable agentic multi-step reasoning mode",
     )
     parser.add_argument(
         "--deep", "--deep-research",
@@ -1990,10 +2202,14 @@ def main():
 
     auto_create = not args.no_auto_create
 
+    chosen_model = args.model
+    if getattr(args, "select_model", False):
+        chosen_model = ModelCatalog.prompt_model_selection(args.model)
+
     if args.prompt:
         run_prompt_workflow(
             prompt=args.prompt,
-            model_name=args.model,
+            model_name=chosen_model,
             accounts_file=args.accounts,
             auto_create=auto_create,
             cache=cache,
@@ -2007,10 +2223,12 @@ def main():
             image_ratio=args.ratio,
             files=args.files,
             dirs=args.dirs,
+            yolo=getattr(args, "yolo", False),
+            max_steps=getattr(args, "max_steps", 25),
         )
     else:
         interactive_repl(
-            model_name=args.model,
+            model_name=chosen_model,
             accounts_file=args.accounts,
             auto_create=auto_create,
             cache=cache,
@@ -2022,6 +2240,8 @@ def main():
             image_gen=args.image,
             image_style=args.style,
             image_ratio=args.ratio,
+            yolo=getattr(args, "yolo", False),
+            max_steps=getattr(args, "max_steps", 25),
         )
 
 

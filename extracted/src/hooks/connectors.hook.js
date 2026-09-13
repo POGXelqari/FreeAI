@@ -1,5 +1,5 @@
 /**
- * Source: https://use.ai/_next/static/chunks/connectors.hook-BS1NEVLs.js
+ * Source: https://use.ai/_next/static/chunks/connectors.hook-yn2Q-Dup.js
  * Module: connectors.hook
  * Extracted & Beautified
  */
@@ -8,7 +8,7 @@ import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
 import { r as n } from "./react-CWjhjU4R.js";
 import { n as r } from "./react-client-DI5BViDH.js";
-import { n as i } from "./catalog-locale-C1DasskV.js";
+import { n as i } from "./catalog-locale-B-OI0E7H.js";
 var a = e(t(), 1),
   o = {},
   s = {},

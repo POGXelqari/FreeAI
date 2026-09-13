@@ -1,27 +1,27 @@
 /**
- * Source: https://use.ai/_next/static/chunks/footer.component-CiKJBwzY.js
+ * Source: https://use.ai/_next/static/chunks/footer.component-h2rkH1ca.js
  * Module: footer.component
  * Extracted & Beautified
  */
 
 import { o as e, r as t } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as n, r } from "./framework-D-uKrMmN.js";
-import { tt as i } from "./vinext-CqpRraGS.js";
+import { tt as i } from "./vinext-DaPQ-kLo.js";
 import { t as a } from "./createLucideIcon-CVSF7wvO.js";
 import { t as o } from "./check-CWA6FeXs.js";
 import { t as s } from "./chevron-down-CY8S3ZfR.js";
 import { t as c } from "./globe-D1MVs8b6.js";
-import { n as l, r as u, t as d } from "./select-language.service-K5m-X5CX.js";
+import { n as l, r as u, t as d } from "./select-language.service-CLNBPLNQ.js";
 import { n as f } from "./react-client-DI5BViDH.js";
-import { t as p } from "./use-has-mounted.hook-BZPIYb5B.js";
-import { t as m } from "./button-B7ERdP8H.js";
-import { t as h } from "./utils-DBS9-MOh.js";
-import { t as g } from "./intl-5y7Gu4iP.js";
-import { i as _, l as v, n as y, t as b } from "./dropdown-menu-D6_Lrewr.js";
-import { t as x } from "./site-route.interface-DlOSDxTR.js";
+import { t as p } from "./button-B7ERdP8H.js";
+import { t as m } from "./utils-DBS9-MOh.js";
+import { t as h } from "./intl-CED8MIZm.js";
+import { t as g } from "./use-has-mounted.hook-DsU-SnKZ.js";
+import { i as _, l as v, n as y, t as b } from "./dropdown-menu-CoJMIpYs.js";
+import { t as x } from "./site-route.interface-CnbxJHY2.js";
 import { t as S } from "./useai-CiXQTOJ8.js";
 import { n as C } from "./dist-CQDSGHYK.js";
-import { t as w } from "./use-help-href.hook-CLIRRwj-.js";
+import { t as w } from "./use-help-href.hook-vPkLpzXv.js";
 var T = a(`moon`, [
     [`path`,
     { d: `M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401`,
@@ -41,10 +41,10 @@ var T = a(`moon`, [
   D = r(),
   O = [{ value: `light`, icon: E, labelKey: `theme_light` }, { value: `system`, icon: u, labelKey: `theme_system` },
   { value: `dark`, icon: T, labelKey: `theme_dark` }],
-  k = () => { let { theme: e, setTheme: t, forcedTheme: n } = C(), r = f(`Footer`); return !p() || n ? null : (0, D.jsx)
+  k = () => { let { theme: e, setTheme: t, forcedTheme: n } = C(), r = f(`Footer`); return !g() || n ? null : (0, D.jsx)
       (`div`, { className: `border-border flex items-center gap-0.5 rounded-full border p-0.5`, children: O.map(
       ({ value: n, icon: i, labelKey: a }) => (0, D.jsx)(`button`, { "aria-label": r(a), "aria-pressed": e === n,
-          className: h(
+          className: m(
             `hover:text-ink-primary dark:hover:text-ink-primary flex size-7 items-center justify-center rounded-full text-gray-500 transition-colors dark:text-gray-400`,
             e === n && `bg-surface-tertiary text-ink-primary dark:text-ink-primary`), onClick: () => t(n),
           title: r(a), type: `button`, children: (0, D.jsx)(i, { className: `size-4` }) }, n)) }) },
@@ -60,37 +60,37 @@ var T = a(`moon`, [
         `touchmove`, n, { passive: !1 }), () => { window.removeEventListener(`wheel`, n), window
           .removeEventListener(`touchmove`, n) } }, [e, t]) },
   N = e => { let { variant: t = `select`, className: n, showLabel: r = !1, icon: i } = e, a = d(), c = f(
-      `SelectLanguage`), u = f(`UserDropdown`), p = l.find(e => e.value === a.currentLanguage)?.label || `English`, [
+      `SelectLanguage`), u = f(`UserDropdown`), h = l.find(e => e.value === a.currentLanguage)?.label || `English`, [
       g, x
     ] = (0, A.useState)(!1), S = (0, A.useRef)(null); return M(g, S), t === `compact` || t === `button` ? (0, D.jsxs)(
     b, { "aria-label": `Language selection`, "data-testid": `language-selector-menu`, onOpenChange: x, children: [(
-        0, D.jsx)(v, { asChild: !0, children: (0, D.jsx)(m, { className: h(t === `compact` &&
+        0, D.jsx)(v, { asChild: !0, children: (0, D.jsx)(p, { className: m(t === `compact` &&
             `border-border text-foreground hover:border-semidark [--heroui-hover-opacity:1]`, t ===
             `button` &&
             `border-border text-dark text-small opacity-hover hover:border-semidark dark:text-foreground bg-paper gap-2 rounded-[14px] border [--heroui-hover-opacity:1] dark:hover:border-gray-500`,
             t === `button` && `py-5`, n), size: t === `compact` ? `sm` : `default`, startIcon: i ?? (t ===
             `button` ? (0, D.jsx)(j, { className: `text-dark h-4.5 w-4.5 dark:text-gray-200` }) : (0, D
               .jsx)(j, { className: `text-foreground h-5 w-5` })), variant: t === `button` ? `ghost` :
-            `outline`, children: t === `button` ? r ? u(`page_settings_language_title`) : p : null }) }), (0, D
+            `outline`, children: t === `button` ? r ? u(`page_settings_language_title`) : h : null }) }), (0, D
         .jsx)(y, { "aria-label": `Language selection`,
         className: `max-h-[250px] overflow-y-auto overscroll-contain`,
       collisionPadding: 16, "data-testid": `language-selector-menu`, ref: S, children: l.map(e => (0, D.jsx)(
           _, { className: `text-foreground w-full py-[6px]`, "data-testid": `language-option-${e.value}`,
             onClick: () => { a.handleChangeLanguage(e.value) }, children: (0, D.jsxs)(
-            `div`, { className: h(`flex w-full items-center justify-between`, a.currentLanguage === e
+            `div`, { className: m(`flex w-full items-center justify-between`, a.currentLanguage === e
                   .value ? `text-foreground opacity-50` : ``), children: [(0, D.jsx)(
                 `span`, { className: `text-[0.84rem]`, children: e.label }), a.currentLanguage === e
                 .value && (0, D.jsx)(`span`, { "data-testid": `language-checkmark-${e.value}`,
                   children: `✓` })
               ] }) }, e.value)) })] }) : (0, D.jsxs)(b, { onOpenChange: x, children: [(0, D.jsx)(v, { asChild: !0,
-          children: (0, D.jsxs)(`button`, { "aria-label": c(`label_select_language`), className: h(
+          children: (0, D.jsxs)(`button`, { "aria-label": c(`label_select_language`), className: m(
               `border-input dark:border-default-200 dark:bg-default-100 focus:ring-ring flex h-auto w-full items-center justify-between rounded-[14px] border bg-gray-100 px-2 py-2 text-sm shadow-sm focus:ring-1 focus:outline-none`,
               n), type: `button`, children: [(0, D.jsxs)(
             `div`, { className: `flex flex-col items-start text-left`, children: [(0, D.jsx)(
               `span`, { className: `text-xs text-gray-500 dark:text-gray-400`, children: c(
                   `label_select_language`) }), (0, D.jsx)(
               `span`, { className: `dark:text-foreground text-base font-medium text-gray-900`,
-                children: p })] }), (0, D.jsx)(s, { className: `h-4 w-4 shrink-0 opacity-50` })] }) }), (0, D.jsx)
+                children: h })] }), (0, D.jsx)(s, { className: `h-4 w-4 shrink-0 opacity-50` })] }) }), (0, D.jsx)
         (y, { align: `start`,
           className: `max-h-[250px] w-[var(--radix-dropdown-menu-trigger-width)] overscroll-contain`, ref: S,
           children: l.map(e => (0, D.jsx)(_, { onClick: () => { a.handleChangeLanguage(e.value) }, children: (0,
@@ -116,23 +116,23 @@ var T = a(`moon`, [
             className: `flex list-none flex-col gap-2 pl-0 md:w-[180px]`, children: [(0, D.jsx)(
               `li`, { children: (0, D.jsx)(`h4`, { className: I, id: `footer-product-heading`,
                   children: t(`footer_product`) }) }), (0, D.jsx)(`li`, { children: (0, D.jsx)(
-                g, { className: F, href: x.PRICING, children: t(`footer_pricing`) }) })] }), (0, D
+                h, { className: F, href: x.PRICING, children: t(`footer_pricing`) }) })] }), (0, D
             .jsxs)(`ul`, { "aria-labelledby": `footer-help-heading`,
             className: `flex list-none flex-col gap-2 pl-0 md:w-[180px]`, children: [(0, D.jsx)(
               `li`, { children: (0, D.jsx)(`h4`, { className: I, id: `footer-help-heading`,
                   children: t(`footer_help`) }) }), (0, D.jsx)(`li`, { children: (0, D.jsx)(
-              g, { className: F, href: r(x.HELP), children: t(`footer_help_center`) }) }), (0, D
-              .jsx)(`li`, { children: (0, D.jsx)(g, { className: F, href: r(x
+              h, { className: F, href: r(x.HELP), children: t(`footer_help_center`) }) }), (0, D
+              .jsx)(`li`, { children: (0, D.jsx)(h, { className: F, href: r(x
                   .SUBSCRIPTION_CANCEL), children: t(`footer_cancel_subscription`) }) })] }), (0, D
             .jsxs)(`ul`, { "aria-labelledby": `footer-legal-heading`,
             className: `flex list-none flex-col gap-2 pl-0 md:w-[180px]`, children: [(0, D.jsx)(
               `li`, { children: (0, D.jsx)(`h4`, { className: I, id: `footer-legal-heading`,
                   children: t(`footer_legal`) }) }), (0, D.jsx)(`li`, { children: (0, D.jsx)(
-                g, { className: F, href: r(x.PRIVACY), children: t(
+                h, { className: F, href: r(x.PRIVACY), children: t(
                   `footer_privacy_policy`) }) }), (0, D.jsx)(`li`, { children: (0, D.jsx)(
-              g, { className: F, href: r(x.TERMS), children: t(
+              h, { className: F, href: r(x.TERMS), children: t(
                   `footer_terms_and_conditions`) }) }), (0, D.jsx)(`li`, { children: (0, D.jsx)(
-                g, { className: F, href: r(x.COOKIE_POLICY), children: t(
+                h, { className: F, href: r(x.COOKIE_POLICY), children: t(
                     `footer_cookie_policy`) }) })] })] }), (0, D.jsxs)(
         `div`, { className: `border-border mt-10 flex flex-col items-start gap-4 border-t pt-6 md:flex-row md:items-center md:justify-between`,
           children: [(0, D.jsxs)(`div`, { className: `flex flex-col gap-1`, children: [(0, D.jsx)(

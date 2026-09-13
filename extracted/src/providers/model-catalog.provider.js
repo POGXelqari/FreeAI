@@ -1,14 +1,14 @@
 /**
- * Source: https://use.ai/_next/static/chunks/model-catalog.provider-C5iwWYsc.js
+ * Source: https://use.ai/_next/static/chunks/model-catalog.provider-Cwkj1DM4.js
  * Module: model-catalog.provider
  * Extracted & Beautified
  */
 
 import { o as e, r as t } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as n, r } from "./framework-D-uKrMmN.js";
-import { i } from "./freemium-funnel.util-D0KPcbFz.js";
-import { t as a } from "./use-is-freemium-funnel.hook-B8Epr2up.js";
-import { t as o } from "./use-freemium-funnel-gate.hook-sv-Z0STl.js";
+import { i } from "./freemium-funnel.util-BsrrWeXM.js";
+import { t as a } from "./use-is-freemium-funnel.hook-CjGJwE5O.js";
+import { t as o } from "./use-freemium-funnel-gate.hook-B1o4rR0l.js";
 var s = t({ ModelCatalogProvider: () => d, useClientImageModelCatalog: () => h, useClientModelCatalog: () => p,
     useHiddenConnectorIds: () => m, useModelCatalogMeta: () => _ }),
   c = e(n(), 1),

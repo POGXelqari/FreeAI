@@ -1,10 +1,10 @@
 /**
- * Source: https://use.ai/_next/static/chunks/chat-model-cookie.util-BFNaMDUF.js
+ * Source: https://use.ai/_next/static/chunks/chat-model-cookie.util-woL9U4Ul.js
  * Module: chat-model-cookie.util
  * Extracted & Beautified
  */
 
-import { t as e } from "./js.cookie-LuQ0sRX_.js";
+import { t as e } from "./js.cookie-CuZGWQGl.js";
 import { t } from "./cookie.interface-BM92z_O9.js";
 var n = { path: `/`, expires: 365, sameSite: `lax` },
   r = () => { e.remove(t.PINNED_CHAT_MODEL, { path: `/` }) },

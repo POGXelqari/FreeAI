@@ -1,0 +1,1 @@
+import{n as e}from"./env-C6AULCj5.js";import{t}from"./react-D8-vnz5K.js";import{t as n}from"./middleware-Df3VXbEU.js";var r=t()(n(e=>({isOpen:void 0,setIsOpen:t=>e({isOpen:t}),toggleSidebar:()=>e(e=>({isOpen:!e.isOpen}))}),{enabled:e.NEXT_PUBLIC_ENV!==`production`&&!0}));export{r as t};

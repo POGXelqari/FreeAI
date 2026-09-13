@@ -1,18 +1,18 @@
 /**
- * Source: https://use.ai/_next/static/chunks/auth.store-CecpbI3z.js
+ * Source: https://use.ai/_next/static/chunks/auth.store-DeUNDeDH.js
  * Module: auth.store
  * Extracted & Beautified
  */
 
 import { n as e } from "./env-C6AULCj5.js";
-import { I as t } from "./analytics.service-BIbiLKmC.js";
-import { m as n } from "./freemium-funnel.util-D0KPcbFz.js";
-import { i as r } from "./mixpanel-CkBALibP.js";
+import { I as t } from "./analytics.service-9oUGcSKY.js";
+import { m as n } from "./freemium-funnel.util-BsrrWeXM.js";
+import { i as r } from "./mixpanel-B_WP0jc-.js";
 import { t as i } from "./react-D8-vnz5K.js";
-import { n as a } from "./middleware-BT98JsiD.js";
-import { t as o } from "./site-route.interface-DlOSDxTR.js";
+import { t as a } from "./middleware-Df3VXbEU.js";
+import { t as o } from "./site-route.interface-CnbxJHY2.js";
 import { t as s } from "./locale-path.util-nU2-KrUb.js";
-import { t as c } from "./paywall-intent.util-T2BKTtbQ.js";
+import { t as c } from "./paywall-intent.util-CFXBPX-N.js";
 var l = function(e) { return e.SIGN_IN = `sign-in`, e.SIGN_UP = `sign-up`, e }({}),
   u = [o.APPS, `/images`, `/background-removal`, `/image-enhancer`],
   d = e => { let t = s(e).replace(/\/+$/, ``) || `/`; return u.includes(t) ? e : void 0 },

@@ -4,10 +4,14 @@ accounts.json
 *.token
 *.session
 *.env
+.env
+*proxies*.txt
+proxies.txt
 
 # Local Response Cache & Interactive Sessions
 chat_cache.json
 sessions/
+scratch/
 
 # Python Build Artifacts
 __pycache__/

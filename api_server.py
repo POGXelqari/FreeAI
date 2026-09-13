@@ -100,6 +100,9 @@ from chat_streamer import (
 )
 from attachment_pipeline import AttachmentIngestor
 from pool_maintainer import AccountAuditor, PoolMaintainer
+from account_creator import load_env_file
+
+load_env_file()
 try:
     from image_inspector import ImageInspector
 except ImportError:
@@ -491,6 +494,7 @@ async def get_gateway_status():
             "POST /v1/images/generations",
             "POST /v1/images/inspect",
             "GET  /v1/models",
+            "GET  /v1/models/{model}",
             "GET  /v1/status",
             "GET  /v1/logs",
             "GET  /health",
@@ -568,10 +572,9 @@ async def pool_status():
 
 @app.post("/v1/pool/audit")
 async def trigger_pool_audit(prune: bool = True):
-    """Runs a non-intrusive session validity audit across all pool accounts."""
-    auditor = AccountAuditor()
-    report = auditor.audit_pool(prune_dead=prune, verbose=False)
+    """Runs a non-destructive session validity audit across all pool accounts."""
     maintainer = get_maintainer()
+    report = maintainer.auditor.audit_pool(prune_dead=prune, verbose=False)
     maintainer.last_audit_report = report
     return report
 
@@ -688,6 +691,22 @@ async def list_models():
                 })
 
     return {"object": "list", "data": model_entries}
+
+
+@app.get("/v1/models/{model_id:path}")
+async def retrieve_model(model_id: str):
+    """OpenAI standard GET /v1/models/{model} endpoint."""
+    slug = ModelCatalog.resolve(model_id)
+    info = ModelCatalog.get_info(slug)
+    return {
+        "id": model_id,
+        "object": "model",
+        "created": int(time.time()) - 86400,
+        "owned_by": info.get("provider", "FreeAI").lower(),
+        "permission": [],
+        "root": slug,
+        "parent": None,
+    }
 
 
 @app.post("/v1/chat/completions")
@@ -1339,14 +1358,38 @@ def main():
     parser.add_argument(
         "--min-reserve",
         type=int,
-        default=50,
-        help="Minimum account reserve threshold for auto-maintenance (default: 50)",
+        default=15,
+        help="Minimum account reserve threshold for auto-maintenance (default: 15)",
     )
     parser.add_argument(
         "--log-file",
         type=str,
         default="server.log",
         help="Path to persistent server log output file (default: server.log)",
+    )
+    parser.add_argument(
+        "--proxy",
+        type=str,
+        default=None,
+        help="Optional single proxy URL (e.g. http://user:pass@host:port)",
+    )
+    parser.add_argument(
+        "--proxy-file",
+        type=str,
+        default=None,
+        help="Optional path to proxy list file (e.g. 'Webshare 10 proxies.txt')",
+    )
+    parser.add_argument(
+        "--gmail",
+        type=str,
+        default=os.environ.get("GMAIL_ADDRESS", "your_email@gmail.com"),
+        help="Base Gmail address for autonomous replenishment (default: env GMAIL_ADDRESS or your_email@gmail.com)",
+    )
+    parser.add_argument(
+        "--gmail-password",
+        type=str,
+        default=os.environ.get("GMAIL_APP_PASSWORD", ""),
+        help="16-character Google App Password for IMAP access (default: env GMAIL_APP_PASSWORD)",
     )
 
     args = parser.parse_args()
@@ -1355,6 +1398,9 @@ def main():
     global logger
     logger = setup_server_logging(args.log_file)
 
+    # Proxy source: CLI flag -> FREEAI_PROXIES env var (Direct host connection is default)
+    proxy_source = args.proxy_file or (args.proxy if args.proxy else None) or os.environ.get("FREEAI_PROXIES")
+
     # Initialize shared singletons
     global GLOBAL_POOL, GLOBAL_CACHE, GLOBAL_MAINTAINER
     GLOBAL_POOL = AccountPool(args.accounts)
@@ -1362,12 +1408,17 @@ def main():
     GLOBAL_MAINTAINER = PoolMaintainer(
         accounts_file=args.accounts,
         min_reserve=args.min_reserve,
-        target_reserve=max(args.min_reserve + 10, 60),
+        target_reserve=max(args.min_reserve + 5, 20),
+        proxy_source=proxy_source,
+        gmail_address=args.gmail,
+        gmail_password=args.gmail_password,
     )
 
     if args.auto_maintain:
         GLOBAL_MAINTAINER.start_background_thread(check_interval=60)
         print("[+] Autonomous account pool maintainer started in background thread.")
+
+    proxy_info = f"{GLOBAL_MAINTAINER.proxy_pool.available_count()} active proxies ({proxy_source})" if GLOBAL_MAINTAINER.proxy_pool else "Direct (no proxy pool)"
 
     print("\n" + "=" * 65)
     print("        FreeAI OpenAI-Compatible Local API Gateway")
@@ -1377,6 +1428,7 @@ def main():
     print(f"Models Endpoint  : http://{args.host}:{args.port}/v1/models")
     print(f"Server Logs      : {os.path.abspath(args.log_file)}")
     print(f"Active Accounts  : {GLOBAL_POOL.count()}")
+    print(f"Proxy Pool       : {proxy_info}")
     print(f"Response Cache   : {'Enabled' if GLOBAL_CACHE.enabled else 'Disabled'} ({len(GLOBAL_CACHE.entries)} items)")
     print("=" * 65)
     print("\n[+] Gateway is ready to accept client connections.")

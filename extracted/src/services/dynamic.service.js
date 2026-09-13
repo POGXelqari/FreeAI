@@ -1,12 +1,12 @@
 /**
- * Source: https://use.ai/_next/static/chunks/dynamic.service-BDdZlREf.js
+ * Source: https://use.ai/_next/static/chunks/dynamic.service-D2nUn8U-.js
  * Module: dynamic.service
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
-import "./dynamic-preload-chunks-C2tdlbzD.js";
+import "./dynamic-preload-chunks-BkpXLrkh.js";
 var n = e(t()),
   r = () => {};
 

@@ -1,14 +1,14 @@
 /**
- * Source: https://use.ai/_next/static/chunks/global.store-DsM3x4UJ.js
+ * Source: https://use.ai/_next/static/chunks/global.store-DXaW4jb5.js
  * Module: global.store
  * Extracted & Beautified
  */
 
 import { n as e } from "./env-C6AULCj5.js";
 import { t } from "./safe-session-storage.util-DN4NSHVM.js";
-import { r as n, s as r } from "./mixpanel-CkBALibP.js";
+import { r as n, s as r } from "./mixpanel-B_WP0jc-.js";
 import { t as i } from "./react-D8-vnz5K.js";
-import { n as a } from "./middleware-BT98JsiD.js";
+import { t as a } from "./middleware-Df3VXbEU.js";
 var o = `review_response_count`,
   s = i()(a(e => ({ handleGlobalStore: t => e(e => ({ ...e, ...t })), menu: !1, isSettingsOpen: !1,
     setIsSettingsOpen: t => e({ isSettingsOpen: t }), openSelectPlan: !1, paymentSource: r.OTHER,
@@ -16,8 +16,7 @@ var o = `review_response_count`,
         paymentSource: n || r.OTHER }) }, subscription: void 0, setSubscription: t => e({ subscription: t }),
     renameChatId: null, isRenameModalOpen: !1, currentChatTitle: ``, setRenameChatId: t => e({ renameChatId: t }),
     setIsRenameModalOpen: t => e({ isRenameModalOpen: t }), setCurrentChatTitle: t => e({ currentChatTitle: t }),
-    setCurrentChatId: t => e({ currentChatId: t }), chatDisabled: !1, setChatDisabled: t =>
-  e({ chatDisabled: t }), isStreaming: !1, setIsStreaming: t => e({ isStreaming: t }),
+    setCurrentChatId: t => e({ currentChatId: t }), isStreaming: !1, setIsStreaming: t => e({ isStreaming: t }),
     successfulResponseCount: Number.parseInt(t.getItem(o) ?? `0`, 10) || 0,
   incrementSuccessfulResponseCount: () => e(e => { let n = e.successfulResponseCount + 1; return t.setItem(o,
           String(n)), { successfulResponseCount: n } }), isReviewModalOpen: !1, setIsReviewModalOpen: t =>

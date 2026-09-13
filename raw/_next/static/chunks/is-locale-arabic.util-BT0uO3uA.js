@@ -1,0 +1,1 @@
+import{s as e}from"./intl-CED8MIZm.js";var t=t=>e[t]===`ar-sa`;export{t};

@@ -1,0 +1,1 @@
+import{o as e}from"./rolldown-runtime-C0FnF6B9.js";import{i as t,r as n}from"./framework-D-uKrMmN.js";var r=e(t(),1),i=n(),a=(0,r.createContext)(null),o=()=>{let e=(0,r.useContext)(a);if(!e)throw Error(`useUserData must be used within a UserDataProvider`);return e},s=e=>{let{value:t,children:n}=e;return(0,i.jsx)(a.Provider,{value:t,children:n})};export{o as n,s as t};

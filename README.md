@@ -29,6 +29,7 @@ The gateway immediately starts serving on:
 | `/v1/images/generations` | `POST` | OpenAI-compatible image synthesis (`dall-e-3`, `imagen-3`, `flux-1-schnell`). |
 | `/v1/images/inspect` | `POST` | Forensic byte-level structural, hex, and pixel analysis of image files/URLs. |
 | `/v1/models` | `GET` | List of all available models, providers, and mode variants (`-web`, `-agent`, `-deep`). |
+| `/v1/models/{model}` | `GET` | Retrieve individual model details and provider metadata. |
 | `/v1/status` | `GET` | Real-time gateway health, active accounts in pool, and response cache telemetry. |
 | `/v1/logs` | `GET` | Real-time rotating server logs (`?lines=100`). |
 | `/v1/pool/audit` | `POST` | Trigger instant non-intrusive session health audit across all accounts. |
@@ -307,12 +308,136 @@ In addition to serving the OpenAI REST API, `api_server.py` serves a full-featur
 
 ---
 
-## 🛡️ Autonomous Account Pool Maintainer (`pool_maintainer.py`)
+## 🛡️ Autonomous Account Pool & Multi-Tier Fallback (`pool_maintainer.py` & `proxy_manager.py`)
 
-FreeAI manages a rotating pool of authenticated accounts in `accounts.json`:
-- **Zero-Quota Auditing**: Regularly audits accounts against `GET https://use.ai/v1/auth/get-session` using stored session cookies without consuming free message quotas. Dead/expired accounts are pruned automatically.
-- **Auto-Replenishment**: When valid accounts drop below threshold (default: 50), the maintainer automatically spins up fresh authenticated accounts via `account_creator.py`.
+FreeAI manages a rotating pool of authenticated accounts in `accounts.json` with multi-tier egress routing:
+- **Direct Chrome Impersonation (Default, No Proxies Required)**: Uses `curl_cffi` with authentic browser TLS/HTTP2 fingerprints (`chrome124`). Verifies account sessions directly against Cloudflare with zero challenges, zero read timeouts, and sub-second latency.
+- **Multi-Proxy Pool & Automatic Failover (`proxy_manager.py`)**: Supports standard `IP:PORT:USER:PASS`, `USER:PASS@IP:PORT`, `http://`, and `socks5://` proxy lists when passed via `--proxy-file` or `FREEAI_PROXIES`.
+- **3-Tier Automatic Fallback**: If an egress proxy fails (network timeout, connection reset, or HTTP 403 challenge), the system cascades automatically:
+  1. *Tier 1*: Preferred Healthy Proxy
+  2. *Tier 2*: Alternative Proxy from Pool
+  3. *Tier 3*: Direct Host Egress (Bypasses proxy failure completely)
+- **Autonomous Replenishment via Gmail Plus-Aliasing & IMAP (ZeroBounce Bypass)**:
+  - `use.ai` recently deployed ZeroBounce email filtering, which blacklists disposable domains (`mail.tm`, `uberip.com`).
+  - FreeAI circumvents this by utilizing **Gmail Sub-Address Aliasing (`username+ai12345@gmail.com`)** paired with an autonomous **IMAP Verification Listener (`imap.gmail.com:993`)**.
+  - ZeroBounce fully verifies Google MX records as authentic. `use.ai` treats each alias as a separate, distinct account with fresh free message quotas.
+  - The built-in `GmailImapClient` polls your Gmail inbox via SSL, automatically parses incoming magic link tokens, confirms the session, and writes authenticated credentials directly to `accounts.json`.
+- **Manual Prompt Fallback**: If an App Password is not yet configured, `account_creator.py --manual` dispatches the magic link and prompts you in the terminal to paste the verification link directly.
 - **Response Cache (`chat_cache.json`)**: Identical queries are answered in <10ms directly from disk with **0 network requests** and **0 accounts consumed**.
+
+### Setting Up Autonomous Gmail IMAP Replenishment
+1. **Create a 16-Character Google App Password**:
+   - Enable 2-Step Verification on your Google Account: https://myaccount.google.com/security
+   - Generate an App Password: https://myaccount.google.com/apppasswords
+   - Select App name: `FreeAI`
+   - Copy the generated 16-character password.
+2. **Configure `.env`**:
+   - Copy `.env.example` to `.env`:
+     ```env
+     GMAIL_ADDRESS=your_email@gmail.com
+     GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
+     ```
+3. **Verify Connection**:
+   ```bash
+   python account_creator.py --test-imap
+   ```
+
+### Running Account Management & Audits
+> [!TIP]
+> **Windows PowerShell Syntax**: Use `;` to chain commands in Windows PowerShell (e.g. `cd 'G:\FreeAI' ; python api_server.py --auto-maintain`). In PowerShell 5.1, `&&` is not supported.
+
+```bash
+# Verify IMAP connection and credentials
+python account_creator.py --test-imap
+
+# Non-destructive session audit (Checks validity of existing accounts without consuming quota)
+python pool_maintainer.py --audit
+
+# Create fresh authenticated account using autonomous Gmail IMAP verification
+python account_creator.py --count 1
+
+# Create account with manual link paste prompt (if App Password not yet configured)
+python account_creator.py --count 1 --manual
+
+# Run autonomous maintenance daemon in the background with Gmail replenishment
+python pool_maintainer.py --daemon --interval 60
+```
+
+---
+
+## 🤖 Autonomous Agentic AI CLI (`chat_streamer.py`)
+
+FreeAI transforms the CLI streamer into an **Autonomous Agentic Coding & Terminal Execution Engine**. Powered by **GPT-5.6 Sol** (`gateway-gpt-5-6`) by default, the agent has full local access to execute PowerShell commands, manage long-running background tasks, perform filesystem CRUD, run live web searches, and analyze media with forensic vision tools.
+
+### 1. Interactive Model Picker & Defaults
+- **Default Flagship Model**: **GPT-5.6 Sol** (`gateway-gpt-5-6`).
+- **Interactive Model Selection**: Launch with `--select-model` to pick any of the 17 supported models via an interactive numbered menu:
+  ```bash
+  python chat_streamer.py --select-model
+  ```
+- **In-Chat Model Switching**: Type `/model` inside the REPL to open the interactive picker on the fly, or `/model sonnet` to switch immediately.
+
+---
+
+### 2. Autonomous Agentic Execution Modes
+
+#### Supervised Mode (Interactive Tool Approval):
+The agent plans steps, formulates commands, and prompts for your approval before executing any tool on your system:
+```bash
+python chat_streamer.py --auto -p "Inspect the repository and list all modified git files"
+```
+
+#### YOLO Mode (Hands-Free Full Local Execution):
+Permits the agent to autonomously run commands, read/write files, and chain multi-step workflows without pausing for interactive confirmation:
+```bash
+python chat_streamer.py --auto --yolo -p "Count how many .py files exist in the current directory"
+```
+
+---
+
+### 3. Agent Tool Suite
+
+The autonomous engine is equipped with an extensible suite of local tools:
+
+| Tool Category | Tool Name | Description |
+| :--- | :--- | :--- |
+| **Terminal / Root** | `run_command` | Execute PowerShell, pwsh, cmd, or bash commands directly on the host system with output truncation safeguards. |
+| **Task Daemon** | `manage_task` | Launch and supervise background processes (`start`, `list`, `status`, `logs`, `send_input`, `kill`). |
+| **Filesystem CRUD** | `read_file` | Read files with line numbering, byte offsets, and range slicing (`start_line`, `end_line`). |
+| | `write_file` | Create or overwrite files atomically with directory creation. |
+| | `replace_file_content` | Perform targeted, verified surgical block replacements. |
+| | `list_dir` | List files and folders with size metrics, file counts, and optional recursive walking. |
+| | `grep_search` | Search files for exact regex or string patterns with line numbers. |
+| | `delete_file` | Safely remove files from disk. |
+| **Web Intelligence** | `web_search` | Execute real-time search queries and return top web links and snippets. |
+| | `read_url` | Fetch any webpage and extract readable markdown text content. |
+| **Vision & Media** | `generate_image` | Synthesize images via DALL-E 3, Imagen 3, or FLUX.1. |
+| | `inspect_image` | Run forensic structural byte analysis (PNG chunks, entropy, dimensions, color channels). |
+
+---
+
+### 4. Interactive REPL Slash Commands
+
+When running the interactive chat streamer (`python chat_streamer.py`), you can use slash commands to control the session:
+
+| Slash Command | Description |
+| :--- | :--- |
+| `/auto [on\|off]` | Toggle Autonomous Agentic AI execution mode on/off. |
+| `/yolo [on\|off]` | Toggle hands-free tool execution without confirmation prompts. |
+| `/tools` | Display the list and schemas of all registered local agent tools. |
+| `/tasks` | List all running background tasks, PIDs, uptimes, and commands. |
+| `/task <id> [status\|logs\|kill]` | Inspect status, tail output logs, or terminate a background task. |
+| `/run <command>` | Instantly run a local PowerShell command directly from the REPL. |
+| `/shell` | Launch an interactive direct shell session within the chat streamer. |
+| `/model [name]` | Open the interactive numbered model selector or switch models. |
+| `/models` | Display the complete table of supported AI models and aliases. |
+| `/web [on\|off]` | Toggle live web search mode. |
+| `/image [prompt]` | Synthesize an AI image on demand or toggle image generation mode. |
+| `/inspect <path>` | Run forensic image inspection on a local file or image URL. |
+| `/attach <path>` | Stage a file or directory to be injected into the next prompt context. |
+| `/status` | View active model, token quotas, memory turns, and mode flags. |
+| `/clear` | Clear the current session conversation history. |
+| `/help` | List all available slash commands. |
 
 ---
 
@@ -321,10 +446,14 @@ FreeAI manages a rotating pool of authenticated accounts in `accounts.json`:
 ```
 g:\FreeAI\
 ├── api_server.py                        # OpenAI-Compatible REST API Gateway & Web Server
-├── chat_streamer.py                     # WebSocket token streamer & CLI interactive REPL
+├── chat_streamer.py                     # WebSocket token streamer, CLI REPL & Model Selector
+├── agent_engine.py                      # ReAct Autonomous Agent Loop, Parser & Account Rotator
+├── agent_tools.py                       # Root PowerShell, Task Manager, Filesystem & Vision Tools
 ├── pool_maintainer.py                   # Autonomous zero-quota session auditor & pool daemon
+├── proxy_manager.py                     # Multi-proxy pool, round-robin rotation & cooldown tracker
 ├── account_creator.py                   # Automated registration & session extraction
 ├── attachment_pipeline.py               # File & codebase attachment bundle engine
+├── image_inspector.py                   # Forensic byte-level structural image analyzer
 ├── accounts.json                        # Active authenticated account pool
 ├── chat_cache.json                      # Disk response cache (atomic SHA-256)
 ├── server.log                           # Rotating server log file (10MB x 5 backups)

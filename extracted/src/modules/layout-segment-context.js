@@ -1,12 +1,12 @@
 /**
- * Source: https://use.ai/_next/static/chunks/layout-segment-context-Byr4c-Gc.js
+ * Source: https://use.ai/_next/static/chunks/layout-segment-context-CZuaipKx.js
  * Module: layout-segment-context
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
-import { Bn as n } from "./vinext-CqpRraGS.js";
+import { Bn as n } from "./vinext-DaPQ-kLo.js";
 var r = e(t(), 1),
   i = new Map;
 

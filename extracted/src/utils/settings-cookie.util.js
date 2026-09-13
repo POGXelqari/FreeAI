@@ -1,14 +1,68 @@
 /**
- * Source: https://use.ai/_next/static/chunks/settings-cookie.util-C5vl4muy.js
+ * Source: https://use.ai/_next/static/chunks/settings-cookie.util-DFIv4tTh.js
  * Module: settings-cookie.util
  * Extracted & Beautified
  */
 
-import { t as e } from "./js.cookie-LuQ0sRX_.js";
-import { t } from "./cookie.interface-BM92z_O9.js";
-var n = { path: `/`, expires: 365, sameSite: `lax` },
-  r = () => { let n = e.get(t.SETTINGS); if (!n) return {}; try { let e = JSON.parse(n); return e && typeof e ==
-        `object` ? e : {} } catch { return {} } },
-  i = i => { let a = { ...r(), ...i }; return e.set(t.SETTINGS, JSON.stringify(a), { ...n, secure: globalThis.location
-        ?.protocol === `https:` }), a };
-export { i as n, r as t };
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t, r as n } from "./framework-D-uKrMmN.js";
+import { t as r } from "./button-B7ERdP8H.js";
+import { t as i } from "./utils-DBS9-MOh.js";
+import { t as a } from "./intl-CED8MIZm.js";
+import { t as o } from "./js.cookie-CuZGWQGl.js";
+import { t as s } from "./cookie.interface-BM92z_O9.js";
+import { i as c, n as l, t as u } from "./tooltip-WNS8Gl08.js";
+import "./active-row.constant-ECKBKjkl.js";
+var d = n(),
+  f = e => { let { isSidebarOpen: t, isPanelExpanded: n, children: r, panelClassName: a, panelStyle: o,
+    dataAttribute: s } = e, c = !t && n; return (0, d.jsx)(`div`, { className: i(
+        `user-select-none flex h-full shrink-0 transform-gpu overflow-hidden transition-[width] duration-200 ease-in-out`,
+        t ? `w-[260px]` : `w-[53px]`), ...s ? {
+        [s]: `` } : {}, children: (0, d.jsx)(`div`, { className: i(`relative flex h-full shrink-0 flex-col`, a, n ?
+          `w-[260px]` : `w-[53px]`, !c && `ms-auto`, c &&
+          `[&_[data-collapse-fade]]:opacity-0 [&_[data-collapse-fade]]:transition-opacity [&_[data-collapse-fade]]:duration-150 [&_[data-collapse-rows]_span:not(:has(svg))]:opacity-0 [&_[data-collapse-rows]_span:not(:has(svg))]:transition-opacity [&_[data-collapse-rows]_span:not(:has(svg))]:duration-150`
+          ), style: { paddingBottom: `calc(0.75rem + var(--cookie-banner-offset, 0px))` }, children: r }) }) };
+f.displayName = `DesktopSidebarFrame`;
+var p = `transform 200ms cubic-bezier(0.4, 0, 0.2, 1)`,
+  m = e => { let { children: t, sidebarSlot: n, isOpen: r, sidebarWidth: i = 288, side: a = `left` } = e, o = a ===
+      `left` ? -1 : 1; return (0, d.jsxs)(`div`, { className: `relative h-full min-h-0 w-full flex-1 overflow-hidden`,
+      children: [(0, d.jsx)(`div`, { className: `absolute inset-y-0 h-full will-change-transform`, style: {
+          [a]: 0, width: i, transform: `translateX(${r?0:o*i}px)`, transition: p }, children: n }), (0, d.jsx)(
+        `div`, { className: `absolute inset-y-0 flex h-full w-full will-change-transform`, style: {
+            [a]: 0, transform: `translateX(${r?-o*i:0}px)`, transition: p }, children: t })] }) };
+m.displayName = `SidebarDrawer`;
+var h = e(t(), 1),
+  g = e => { let [t, n] = (0, h.useState)(!1), r = (0, h.useRef)(void 0), i = (0, h.useRef)(e); return (0, h.useEffect)(
+      () => { let t = i.current; if (i.current = e, clearTimeout(r.current), !(e || !t)) return n(!0), r.current =
+          setTimeout(() => n(!1), 200), () => clearTimeout(r.current) }, [e]), e || t },
+  _ = `hover:bg-surface-secondary-active rounded-lg`,
+  v = `hover:bg-surface-secondary-active min-h-9! w-full justify-start gap-2 rounded-xl!`,
+  y =
+  `inline-flex shrink-0 items-center justify-center [&_svg]:shrink-0 [&_svg:not([class*='h-'])]:h-4 [&_svg:not([class*='w-'])]:w-4`,
+  b = e => { let { icon: t, label: n, onClick: o, isActive: s, isExpanded: f, href: p, replace: m, testId: h,
+      className: g } = e; if (!f) { let e = p ? (0, d.jsx)(r, { asChild: !0, className: i(_, s &&
+          `bg-surface-secondary-active dark:bg-gray-100/10`), size: `icon`, variant: `ghost`, children: (0, d.jsx)(
+          a, { "data-testid": h, href: p, onClick: o, prefetch: !0, replace: m, children: t }) }) : (0, d.jsx)(
+      r, { className: i(_, s && `bg-surface-secondary-active dark:bg-gray-100/10`), "data-testid": h, onClick: o,
+        size: `icon`, variant: `ghost`, children: t }); return (0, d.jsxs)(u, { children: [(0, d.jsx)(c, { asChild: !0,
+          children: e }), (0, d.jsx)(
+        l, { className: `border-none bg-[#0d0d0d] text-white dark:bg-white dark:text-[#0d0d0d]`,
+          side: `right`, children: (0, d.jsx)(`p`, { children: n }) })] }) } return p ? (0, d.jsx)(r, { asChild: !0,
+      className: i(v, s && `bg-surface-secondary-active dark:bg-gray-100/10`, g), size: `row`, tightWidth: !0,
+      variant: `ghost`, children: (0, d.jsxs)(a, { "data-testid": h, href: p, onClick: o, prefetch: !0, replace: m,
+        children: [(0, d.jsx)(`span`, { className: y, children: t }), (0, d.jsx)(`span`, { children: n })] }) }) : (0,
+      d.jsx)(r, { className: i(v, s && `bg-surface-secondary-active dark:bg-gray-100/10`, g), "data-testid": h,
+      onClick: o, size: `row`, startIcon: t, tightWidth: !0, variant: `ghost`, children: (0, d.jsx)(
+      `span`, { children: n }) }) };
+
+function x(e) { let { className: t, size: n = 20, color: r = `currentColor` } = e; return (0, d.jsxs)(
+  `svg`, { className: t, fill: `none`, height: n, viewBox: `0 0 20 20`, width: n,
+    xmlns: `http://www.w3.org/2000/svg`, children: [(0, d.jsx)(`rect`, { height: `13.66`, rx: `3.5`, stroke: r,
+      strokeWidth: `1.4`, width: `15.33`, x: `1.5`, y: `3.5` }), (0, d.jsx)(`line`, { stroke: r,
+      strokeWidth: `1.4`, x1: `7.5`, x2: `7.5`, y1: `3.5`, y2: `17.5` })] }) }
+var S = { path: `/`, expires: 365, sameSite: `lax` },
+  C = () => { let e = o.get(s.SETTINGS); if (!e) return {}; try { let t = JSON.parse(e); return t && typeof t ==
+        `object` ? t : {} } catch { return {} } },
+  w = e => { let t = { ...C(), ...e }; return o.set(s.SETTINGS, JSON.stringify(t), { ...S, secure: globalThis.location
+        ?.protocol === `https:` }), t };
+export { _ as a, m as c, b as i, f as l, w as n, v as o, x as r, g as s, C as t };

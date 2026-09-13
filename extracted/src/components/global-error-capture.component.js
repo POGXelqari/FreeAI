@@ -1,5 +1,5 @@
 /**
- * Source: https://use.ai/_next/static/chunks/global-error-capture.component-BaE1ds7c.js
+ * Source: https://use.ai/_next/static/chunks/global-error-capture.component-BMgoSi6-.js
  * Module: global-error-capture.component
  * Extracted & Beautified
  */
@@ -8,7 +8,7 @@ import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
 import { n, t as r } from "./abort-error.util-BDjcGeGf.js";
 import { n as i, r as a, t as o } from "./report-client-error.util-Bq41AYxy.js";
-import { n as s } from "./user-data.provider-fGhNbbcZ.js";
+import { n as s } from "./user-data.provider-D1zgVZeU.js";
 import { a as c, o as l } from "./chunk-error.util-8lmmDUxL.js";
 var u = e(t(), 1),
   d = [`resizeobserver loop completed with undelivered notifications`, `resizeobserver loop limit exceeded`],

@@ -1,13 +1,13 @@
 /**
- * Source: https://use.ai/_next/static/chunks/use-auth-click.hook-BHhXr5wJ.js
+ * Source: https://use.ai/_next/static/chunks/use-auth-click.hook-Jj14PxYy.js
  * Module: use-auth-click.hook
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
-import { n } from "./better-auth-client-session.service-ercwbZKT.js";
-import { t as r } from "./auth.store-CecpbI3z.js";
+import { n } from "./better-auth-client-session.service-1Lowatea.js";
+import { t as r } from "./auth.store-DeUNDeDH.js";
 var i = e(t(), 1);
 
 function a(e) { let { source: t, requireAuth: a = !0 } = e, { data: o, isPending: s } = n(), c = !!o?.user && o?.user

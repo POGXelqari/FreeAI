@@ -1,11 +1,11 @@
 /**
- * Source: https://use.ai/_next/static/chunks/vinext-CqpRraGS.js
+ * Source: https://use.ai/_next/static/chunks/vinext-DaPQ-kLo.js
  * Module: vinext
  * Extracted & Beautified
  */
 
 const __vite__mapDeps = (i, m = __vite__mapDeps, d = (m.f || (m.f = [
-  "_next/static/chunks/hybrid-client-route-owner-AJW_wX1X.js", "_next/static/chunks/query-DugiHe4Q.js"
+  "_next/static/chunks/hybrid-client-route-owner-C71k2b09.js", "_next/static/chunks/query-DugiHe4Q.js"
 ]))) => i.map(i => d[i]);
 import { n as e, o as t, r as n, t as r } from "./rolldown-runtime-C0FnF6B9.js";
 import { i, n as a, r as o } from "./framework-D-uKrMmN.js";
@@ -1127,7 +1127,7 @@ function Yo(e) { return e ?? `0` }
 
 function Xo(e) { return e && e.length > 0 ? e : null }
 
-function Zo() { return Xo(`98223225-59fe-467c-9f0a-e6691dd206a3`) }
+function Zo() { return Xo(`1583ecea-f786-4c9c-a6d8-cc17f484b616`) }
 
 function Qo(e, t = Zo()) { let n = Xo(t);
   n ? e.set(N, n) : e.delete(N) }
@@ -2026,7 +2026,7 @@ var Wu, Gu, Ku, qu, Ju = e((() => { Wu = `modulepreload`, Gu = function(e) { ret
 Ju();
 var Xu = null,
   Zu = null;
-async function Qu() { Xu ||= (Zu ??= qu(() => import(`./hybrid-client-route-owner-AJW_wX1X.js`), __vite__mapDeps([0,
+async function Qu() { Xu ||= (Zu ??= qu(() => import(`./hybrid-client-route-owner-C71k2b09.js`), __vite__mapDeps([0,
     1])), await Zu) }
 
 function $u(e, t) { return Xu?.resolveHybridClientRewriteHref(e, t) ?? null }

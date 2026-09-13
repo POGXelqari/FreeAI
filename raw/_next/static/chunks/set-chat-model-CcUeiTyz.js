@@ -1,0 +1,1 @@
+import{t as e}from"./useMutation-DldRSjFA.js";import{i as t}from"./rest-api-BL5a3YVm.js";import{t as n}from"./chat-key.constant-DXJEa87X.js";import{t as r}from"./chat.model-oMaun5dH.js";var i=async e=>await(await t.post(r.API_SET_CHAT_MODEL,{json:e})).json(),a=t=>e({mutationKey:[n.SET_CHAT_MODEL_MUTATION],mutationFn:i,onSuccess:t?.onSuccess});export{a as t};

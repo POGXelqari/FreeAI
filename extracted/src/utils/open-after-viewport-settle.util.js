@@ -1,23 +1,23 @@
 /**
- * Source: https://use.ai/_next/static/chunks/open-after-viewport-settle.util-BfKU5lGX.js
+ * Source: https://use.ai/_next/static/chunks/open-after-viewport-settle.util-LlI9f_aE.js
  * Module: open-after-viewport-settle.util
  * Extracted & Beautified
  */
 
-import { Q as e } from "./vinext-CqpRraGS.js";
-import { r as t } from "./freemium-funnel.util-D0KPcbFz.js";
-import { n } from "./user-data.provider-fGhNbbcZ.js";
-import { f as r, o as i, p as a } from "./chat.store-CVJElyGt.js";
-import { t as o } from "./use-is-freemium-funnel.hook-B8Epr2up.js";
+import { Q as e } from "./vinext-DaPQ-kLo.js";
+import { r as t } from "./freemium-funnel.util-BsrrWeXM.js";
+import { b as n, g as r, y as i } from "./chat.store-CCLMl5kX.js";
+import { n as a } from "./user-data.provider-D1zgVZeU.js";
+import { t as o } from "./use-is-freemium-funnel.hook-CjGJwE5O.js";
 import { n as s } from "./composer-modes.provider-C-48A9eP.js";
-import { i as c, r as l } from "./chat-model-cookie.util-BFNaMDUF.js";
+import { i as c, r as l } from "./chat-model-cookie.util-woL9U4Ul.js";
 var u = () => { s(); let u = e(),
       { isFreemiumFunnel: d } = o(),
-      { userProfileWithSubscription: f } = n(),
+      { userProfileWithSubscription: f } = a(),
       p = f.data?.data?.subscription?.status,
-      m = d && !t({ subscriptionStatus: p, isInTeam: f.data?.data?.user?.teamStatus === `active` }),
+      m = d && !t({ subscriptionStatus: p }),
       h = u?.projectId ? `project` : `simple`; return { chatModel: m ? void 0 : l() ?? void 0, pinnedChatModel: m ?
-        void 0 : c() ?? void 0, modes: r(h, i() ? null : a()), scope: h } },
+        void 0 : c() ?? void 0, modes: i(h, r() ? null : n()), scope: h } },
   d = { firstMoveMs: 120, settleMs: 90, maxWaitMs: 600 },
   f = (e, t, n = d) => { let r = !1,
       i = {},

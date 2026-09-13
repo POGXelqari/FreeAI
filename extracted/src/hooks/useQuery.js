@@ -1,5 +1,5 @@
 /**
- * Source: https://use.ai/_next/static/chunks/useQuery-B3vkDNet.js
+ * Source: https://use.ai/_next/static/chunks/useQuery-BgSNoQ7j.js
  * Module: useQuery
  * Extracted & Beautified
  */
@@ -8,7 +8,7 @@ import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t, r as n } from "./framework-D-uKrMmN.js";
 import { c as r, d as i, l as a, u as o } from "./mutation-DO0ikfMC.js";
 import { E as s, _ as c, b as l, d as u, h as d, t as f, v as p, w as m, x as h, y as g } from "./thenable-BrrDvP6E.js";
-import { r as _ } from "./rest-api.provider-DFR1ot1R.js";
+import { r as _ } from "./rest-api.provider-cvDCweR_.js";
 import { n as v } from "./QueryClientProvider-DGxN9XtP.js";
 var y = class extends i { constructor(e, t) { super(), this.options = t, this.#e = e, this.#s = null, this.#o = f(),
       this.bindMethods(), this.setOptions(t) } #e;

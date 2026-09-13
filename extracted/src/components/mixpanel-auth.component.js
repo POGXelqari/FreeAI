@@ -1,17 +1,17 @@
 /**
- * Source: https://use.ai/_next/static/chunks/mixpanel-auth.component-Bb51XnQp.js
+ * Source: https://use.ai/_next/static/chunks/mixpanel-auth.component-vLApWNOR.js
  * Module: mixpanel-auth.component
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
-import { n } from "./better-auth-client-session.service-ercwbZKT.js";
-import { I as r, t as i } from "./analytics.service-BIbiLKmC.js";
-import { d as a, m as o } from "./freemium-funnel.util-D0KPcbFz.js";
-import { a as s } from "./mixpanel-CkBALibP.js";
-import { _ as c, f as l, i as u, n as d } from "./chat-auth.util-CHugSHZw.js";
-import { t as f } from "./mixpanel.hook-CmubyvVR.js";
+import { n } from "./better-auth-client-session.service-1Lowatea.js";
+import { I as r, t as i } from "./analytics.service-9oUGcSKY.js";
+import { d as a, m as o } from "./freemium-funnel.util-BsrrWeXM.js";
+import { a as s } from "./mixpanel-B_WP0jc-.js";
+import { _ as c, f as l, i as u, n as d } from "./chat-auth.util-Bp8v6Dgm.js";
+import { t as f } from "./mixpanel.hook-C4pl5zUI.js";
 var p = e(t(), 1);
 
 function m() { let e = window.location.hostname; return e.includes(`localhost`) || e.includes(`127.0.0.1`) ? `dev` : e

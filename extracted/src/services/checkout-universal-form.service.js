@@ -1,97 +1,160 @@
 /**
- * Source: https://use.ai/_next/static/chunks/checkout-universal-form.service-CxHch_si.js
+ * Source: https://use.ai/_next/static/chunks/checkout-universal-form.service-igiRYXCk.js
  * Module: checkout-universal-form.service
  * Extracted & Beautified
  */
 
-import { a as e } from "./experiment-client.service-Dbg--_Jv.js";
-import { i as t } from "./rest-api-DNPFxXXP.js";
-import { n } from "./env-C6AULCj5.js";
-import { h as r } from "./billing-CclPhhLo.js";
-import { t as i } from "./report-client-error.util-Bq41AYxy.js";
-import { d as a, f as o } from "./analytics.service-BIbiLKmC.js";
-import { t as s } from "./react-D8-vnz5K.js";
-import { n as c } from "./middleware-BT98JsiD.js";
-import { n as l } from "./experiment.provider-CQRJZnpd.js";
-import "./client-DWC7O25X.js";
-import { a as u, i as d, n as f, r as p } from "./billing.interface-DgJbHepV.js";
-import { t as m } from "./safe-session-storage.util-D62mLdZm.js";
-import { t as h } from "./pure-BxuLq9I9.js";
-var g = Object.prototype.toString,
-  _ = e => g.call(e) === `[object Error]`,
-  v = new Set([`network error`, `NetworkError when attempting to fetch resource.`,
+import { o as e, t } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as n } from "./framework-D-uKrMmN.js";
+import { a as r } from "./experiment-client.service-CXqfLU-5.js";
+import { i } from "./rest-api-BL5a3YVm.js";
+import { n as a } from "./env-C6AULCj5.js";
+import "./billing-CTujHwgg.js";
+import { t as o } from "./report-client-error.util-Bq41AYxy.js";
+import { d as s, f as c } from "./analytics.service-9oUGcSKY.js";
+import { t as l } from "./react-D8-vnz5K.js";
+import { t as u } from "./middleware-Df3VXbEU.js";
+import { n as d } from "./experiment.provider-BEhampe0.js";
+import "./client-BL58m4Hx.js";
+import { t as f } from "./use-track-experiment-view.hook-D5ID5Wj0.js";
+import { a as p, i as m, n as h, r as g, t as _ } from "./billing.interface-DgJbHepV.js";
+import { t as v } from "./safe-session-storage.util-D62mLdZm.js";
+var y = e(n(), 1),
+  b = Object.prototype.toString,
+  x = e => b.call(e) === `[object Error]`,
+  S = new Set([`network error`, `NetworkError when attempting to fetch resource.`,
     `The Internet connection appears to be offline.`, `Network request failed`, `fetch failed`, `terminated`,
     ` A network error occurred.`, `Network connection lost`
   ]);
 
-function y(e) { if (!(e && _(e) && e.name === `TypeError` && typeof e.message == `string`)) return !1; let { message: t,
+function C(e) { if (!(e && x(e) && e.name === `TypeError` && typeof e.message == `string`)) return !1; let { message: t,
     stack: n } = e; return t === `Load failed` || t.startsWith(`Load failed (`) && t.endsWith(`)`) ? n === void 0 ||
     `__sentry_captured__` in e : t.startsWith(`error sending request for url`) || t === `Failed to fetch` || t
-    .startsWith(`Failed to fetch (`) && t.endsWith(`)`) ? !0 : v.has(t) }
+    .startsWith(`Failed to fetch (`) && t.endsWith(`)`) ? !0 : S.has(t) }
 
-function b(e) { if (typeof e == `number`) { if (e < 0) throw TypeError(
+function w(e) { if (typeof e == `number`) { if (e < 0) throw TypeError(
       "Expected `retries` to be a non-negative number."); if (Number.isNaN(e)) throw TypeError(
       "Expected `retries` to be a valid number or Infinity, got NaN.") } else if (e !== void 0) throw TypeError(
     "Expected `retries` to be a number or Infinity.") }
 
-function x(e, t, { min: n = 0, allowInfinity: r = !1 } = {}) { if (t !== void 0) { if (typeof t != `number` || Number
+function T(e, t, { min: n = 0, allowInfinity: r = !1 } = {}) { if (t !== void 0) { if (typeof t != `number` || Number
       .isNaN(t)) throw TypeError(`Expected \`${e}\` to be a number${r?` or Infinity`:``}.`); if (!r && !Number.isFinite(
         t)) throw TypeError(`Expected \`${e}\` to be a finite number.`); if (t < n) throw TypeError(
       `Expected \`${e}\` to be \u2265 ${n}.`) } }
 
-function S(e, t) { if (t !== void 0 && typeof t != `function`) throw TypeError(`Expected \`${e}\` to be a function.`) }
-var C = class extends Error { constructor(e) { super(), e instanceof Error ? (this.originalError = e, { message: e } =
+function E(e, t) { if (t !== void 0 && typeof t != `function`) throw TypeError(`Expected \`${e}\` to be a function.`) }
+var D = class extends Error { constructor(e) { super(), e instanceof Error ? (this.originalError = e, { message: e } =
         e) : (this.originalError = Error(e), this.originalError.stack = this.stack), this.name = `AbortError`, this
       .message = e } };
 
-function w(e, t) { let n = Math.max(1, e + 1),
+function O(e, t) { let n = Math.max(1, e + 1),
     r = t.randomize ? Math.random() + 1 : 1,
     i = Math.round(r * t.minTimeout * t.factor ** (n - 1)); return i = Math.min(i, t.maxTimeout), i }
 
-function T(e, t) { return Number.isFinite(t) ? t - (performance.now() - e) : t } async function E(e, t) { e <= 0 ||
+function k(e, t) { return Number.isFinite(t) ? t - (performance.now() - e) : t } async function A(e, t) { e <= 0 ||
     await new Promise((n, r) => { let i = () => { clearTimeout(a), t.signal?.removeEventListener(`abort`, i), r(t
             .signal.reason) },
         a = setTimeout(() => { t.signal?.removeEventListener(`abort`, i), n() }, e);
-      t.unref && a.unref?.(), t.signal?.addEventListener(`abort`, i, { once: !0 }) }) } async function D({ error: e,
+      t.unref && a.unref?.(), t.signal?.addEventListener(`abort`, i, { once: !0 }) }) } async function j({ error: e,
   attemptNumber: t, retriesConsumed: n, startTime: r, options: i }) { let a = e instanceof Error ? e : TypeError(
-    `Non-error was thrown: "${e}". You should only throw errors.`); if (a instanceof C) throw a.originalError; let
+    `Non-error was thrown: "${e}". You should only throw errors.`); if (a instanceof D) throw a.originalError; let
     o = Number.isFinite(i.retries) ? Math.max(0, i.retries - n) : i.retries,
     s = i.maxRetryTime ?? 1 / 0,
-    c = w(n, i); if (T(r, s) <= 0) { let e = Object.freeze({ error: a, attemptNumber: t, retriesLeft: o,
+    c = O(n, i); if (k(r, s) <= 0) { let e = Object.freeze({ error: a, attemptNumber: t, retriesLeft: o,
       retriesConsumed: n, retryDelay: 0 }); throw await i.onFailedAttempt(e), a } let l = Object.freeze({ error: a,
       attemptNumber: t, retriesLeft: o, retriesConsumed: n, retryDelay: o > 0 ? c : 0 }),
     u = await i.shouldConsumeRetry(l),
     d = u && o > 0 ? c : 0,
     f = Object.freeze({ error: a, attemptNumber: t, retriesLeft: o, retriesConsumed: n, retryDelay: d }); if (
-    await i.onFailedAttempt(f), T(r, s) <= 0 || T(r, s) <= 0 || o <= 0 || a instanceof TypeError && !y(a) || !
-    await i.shouldRetry(f)) throw a; let p = T(r, s); if (p <= 0) throw a; if (!u) return i.signal
-  ?.throwIfAborted(), !1; let m = Math.min(d, p); return i.signal?.throwIfAborted(), await E(m, i), i.signal
-    ?.throwIfAborted(), !0 } async function O(e, t = {}) { if (t = { ...t }, b(t.retries), Object.hasOwn(t,
+    await i.onFailedAttempt(f), k(r, s) <= 0 || k(r, s) <= 0 || o <= 0 || a instanceof TypeError && !C(a) || !
+    await i.shouldRetry(f)) throw a; let p = k(r, s); if (p <= 0) throw a; if (!u) return i.signal
+  ?.throwIfAborted(), !1; let m = Math.min(d, p); return i.signal?.throwIfAborted(), await A(m, i), i.signal
+    ?.throwIfAborted(), !0 } async function M(e, t = {}) { if (t = { ...t }, w(t.retries), Object.hasOwn(t,
       `forever`)) throw Error(
     "The `forever` option is no longer supported. For many use-cases, you can set `retries: Infinity` instead."
     );
   t.retries ??= 10, t.factor ??= 2, t.minTimeout ??= 1e3, t.maxTimeout ??= 1 / 0, t.maxRetryTime ??= 1 / 0, t
     .randomize ??= !1, t.onFailedAttempt ??= () => {}, t.shouldRetry ??= () => !0, t.shouldConsumeRetry ??= () =>
-    !0, S(`onFailedAttempt`, t.onFailedAttempt), S(`shouldRetry`, t.shouldRetry), S(`shouldConsumeRetry`, t
-      .shouldConsumeRetry), x(`factor`, t.factor, { min: 0, allowInfinity: !1 }), x(`minTimeout`, t
-    .minTimeout, { min: 0, allowInfinity: !1 }), x(`maxTimeout`, t.maxTimeout, { min: 0, allowInfinity: !0 }), x(
+    !0, E(`onFailedAttempt`, t.onFailedAttempt), E(`shouldRetry`, t.shouldRetry), E(`shouldConsumeRetry`, t
+      .shouldConsumeRetry), T(`factor`, t.factor, { min: 0, allowInfinity: !1 }), T(`minTimeout`, t
+    .minTimeout, { min: 0, allowInfinity: !1 }), T(`maxTimeout`, t.maxTimeout, { min: 0, allowInfinity: !0 }), T(
       `maxRetryTime`, t.maxRetryTime, { min: 0, allowInfinity: !0 }), t.factor > 0 || (t.factor = 1), t.signal
     ?.throwIfAborted(); let n = 0,
     r = 0,
     i = performance.now(); for (; !Number.isFinite(t.retries) || r <= t.retries;) { n++; try { t.signal
-        ?.throwIfAborted(); let r = await e(n); return t.signal?.throwIfAborted(), r } catch (e) { await D
+        ?.throwIfAborted(); let r = await e(n); return t.signal?.throwIfAborted(), r } catch (e) { await j
     ({ error: e, attemptNumber: n, retriesConsumed: r, startTime: i, options: t }) && r++ } } throw Error(
     `Retry attempts exhausted without throwing an error.`) }
-var k = h(),
-  A = async e => { try { return await O(async () => await (0, k.loadStripe)(e), { retries: 3 }) } catch (
+var N = t((e => { Object.defineProperty(e, "__esModule", { value: !0 });
+
+    function t(e) { "@babel/helpers - typeof"; return t = typeof Symbol == `function` && typeof Symbol.iterator ==
+        `symbol` ? function(e) { return typeof e } : function(e) { return e && typeof Symbol == `function` && e
+            .constructor === Symbol && e !== Symbol.prototype ? `symbol` : typeof e }, t(e) } var n = `dahlia`,
+      r = function(e) { return e === 3 ? `v3` : e },
+      i = `https://js.stripe.com`,
+      a = `${i}/${n}/stripe.js`,
+      o = /^https:\/\/js\.stripe\.com\/v3\/?(\?.*)?$/,
+      s = /^https:\/\/js\.stripe\.com\/(v3|[a-z]+)\/stripe\.js(\?.*)?$/,
+      c =
+      `loadStripe.setLoadParameters was called but an existing Stripe.js script already exists in the document; existing script parameters will be used`,
+      l = function(e) { return o.test(e) || s.test(e) },
+      u = function() { for (var e = document.querySelectorAll(`script[src^="${i}"]`), t = 0; t < e
+          .length; t++) { var n = e[t]; if (l(n.src)) return n } return null },
+      d = function(e) { var t = e && !e.advancedFraudSignals ? `?advancedFraudSignals=false` : ``,
+          n = document.createElement(`script`);
+        n.src = `${a}${t}`; var r = document.head || document.body; if (!r) throw Error(
+          `Expected document.body not to be null. Stripe.js requires a <body> element.`); return r.appendChild(n),
+        n },
+      f = function(e, t) {!e || !e._registerWrapper || e._registerWrapper({ name: `stripe-js`, version: `9.12.0`,
+          startTime: t }) },
+      p = null,
+      m = null,
+      h = null,
+      g = function(e) { return function(t) { e(Error(`Failed to load Stripe.js`, { cause: t })) } },
+      _ = function(e, t) { return function() { window.Stripe ? e(window.Stripe) : t(Error(
+            `Stripe.js not available`)) } },
+      v = function(e) { return p === null ? (p = new Promise(function(t, n) { if (typeof document > `u`) { t(
+            null); return } if (window.Stripe && e && console.warn(c), window.Stripe) { t(window
+            .Stripe); return } try { var r = u(); if (r && e) console.warn(c);
+            else if (!r) r = d(e);
+            else if (r && h !== null && m !== null) { var i;
+              r.removeEventListener(`load`, h), r.removeEventListener(`error`, m), (i = r.parentNode) ==
+                null || i.removeChild(r), r = d(e) } h = _(t, n), m = g(n), r.addEventListener(`load`, h), r
+              .addEventListener(`error`, m) } catch (e) { n(e); return } }), p.catch(function(e) { return p =
+            null, Promise.reject(e) })) : p },
+      y = function(e, i, a) { if (e === null) return null; var o = i[0]; if (typeof o != `string`) throw Error(
+          `Expected publishable key to be of type string, got type ${t(o)} instead.`); var s = o.match(/^pk_test/),
+          c = r(e.version),
+          l = n;
+        s && c !== l && console.warn(
+          `Stripe.js@${c} was loaded on the page, but @stripe/stripe-js@9.12.0 expected Stripe.js@${l}. This may result in unexpected behavior. For more information, see https://docs.stripe.com/sdks/stripejs-versioning`
+          ); var u = e.apply(void 0, i); return f(u, a), u },
+      b = function(e) { var n = `invalid load parameters; expected object of shape
+
+    {advancedFraudSignals: boolean}
+
+but received
+
+    ${JSON.stringify(e)}
+`; if (e === null || t(e) !== `object`) throw Error(n); if (Object.keys(e).length === 1 && typeof e
+          .advancedFraudSignals == `boolean`) return e; throw Error(n) },
+      x, S = !1,
+      C = function() { var e = [...arguments];
+        S = !0; var t = Date.now(); return v(x).then(function(n) { return y(n, e, t) }) };
+    C.setLoadParameters = function(e) { if (S && x) { var t = b(e); if (Object.keys(t).reduce(function(t,
+          n) { return t && e[n] === x?.[n] }, !0)) return } if (S) throw Error(
+        `You cannot change load parameters after calling loadStripe`);
+      x = b(e) }, e.loadStripe = C })),
+  P = t(((e, t) => { t.exports = N() }))(),
+  F = async e => { try { return await M(async () => await (0, P.loadStripe)(e), { retries: 3 }) } catch (
     e) { return typeof console < `u` && console.warn && console.warn(`Failed to load Stripe after retries:`, e),
-        null } }, j = async e => { let t = d[e]; if (t) try { let n = await A(t); if (!n)
-      return; let { radarSession: r, error: i } = await n.createRadarSession();!i && r && m.setItem(e, r
+        null } }, I = async e => { let t = m[e]; if (t) try { let n = await F(t); if (!n)
+      return; let { radarSession: r, error: i } = await n.createRadarSession();!i && r && v.setItem(e, r
         .id) } catch (t) { typeof console < `u` && console.warn && console.warn(
-          `Stripe Radar session skipped for ${e}:`, t) } }, M = () => u.reduce((e, t) => { let n = m.getItem(t) ||
+          `Stripe Radar session skipped for ${e}:`, t) } }, L = () => p.reduce((e, t) => { let n = v.getItem(t) ||
       ``; return n && (e[t] = n), e }, {
-    [p]: m.getItem(`paypal_session_id`) || ``, [f]: m.getItem(`paypal_session_id`) || `` }), N =
-async () => { try { await O(() => new Promise((e, t) => { if (window.Stripe) e();
+    [g]: v.getItem(`paypal_session_id`) || ``, [h]: v.getItem(`paypal_session_id`) || `` }), R =
+async () => { try { await M(() => new Promise((e, t) => { if (window.Stripe) e();
           else { let n = `stripe-js-script`,
               r = document.getElementById(n); if (r) { let n = () => { window.Stripe ? e() : t(Error(
                     `Stripe.js failed to load.`)) },
@@ -103,38 +166,69 @@ async () => { try { await O(() => new Promise((e, t) => { if (window.Stripe) e()
             () => { window.Stripe ? e() : t(Error(`Stripe.js failed to load.`)) }, r.onerror = () => t(
                 Error(`Stripe.js failed to load.`)), document.head.appendChild(r) } } }), { retries: 3 }) } catch (
         e) { typeof console < `u` && console.warn && console.warn(`Stripe.js failed to load after retries:`, e) } },
-    P = t => { let n = l(e.REQUIRE_TURNSTILE_CAPTCHA, `OFF`),
-        i = n === `A` || n === `B`,
-        a = n !== `B`; return r({ experimentName: e.REQUIRE_TURNSTILE_CAPTCHA, experimentValue: n, shouldTrack: i &&
-          t }), { variant: n, isEnabled: n === `B`, isInExperiment: i, shouldBypassTurnstile: a,
-        trackExperimentView: () => {} } }, F = 6e4, I = e => e ? [e.plan_id, e.billing_cycle, e.is_trial, e
-      .payment_currency ?? e.currency, e.amount
-    ].map(e => String(e ?? ``)).join(`|`) : ``, L = s()(c((e, t) => ({ clientToken: ``, preloadedSession: null,
+    z = `3.136.0`, B = `https://js.braintreegateway.com/web/${z}/js/client.min.js`, V =
+    `https://js.braintreegateway.com/web/${z}/js/data-collector.min.js`, H = (e, t) => new Promise((n, r) => { let
+        i = document.getElementById(e); if (i) { if (i.dataset.loaded === `true`) { n(); return } let e =
+        () => { i.removeEventListener(`load`, e), i.removeEventListener(`error`, a), i.dataset.loaded = `true`,
+            n() },
+          a = () => { i.removeEventListener(`load`, e), i.removeEventListener(`error`, a), i.remove(), r(Error(
+              `Failed to load script: ${t}`)) };
+        i.addEventListener(`load`, e), i.addEventListener(`error`, a); return } let a = document.createElement(
+        `script`);
+      a.id = e, a.src = t, a.async = !0, a.onload = () => { a.dataset.loaded = `true`, n() }, a.onerror =
+    () => { a.remove(), r(Error(`Failed to load script: ${t}`)) }, document.head.appendChild(a) }), U =
+async () => { try { await M(async () => { if (await H(`braintree-client-sdk`, B), await H(
+              `braintree-data-collector-sdk`, V), !window.braintree?.client || !window.braintree
+            ?.dataCollector) throw Error(`Braintree SDK failed to initialize`) }, { retries: 3 }) } catch (
+      e) { throw typeof console < `u` && console.warn && console.warn(
+          `Failed to load Braintree scripts after retries:`, e), e } }, W = async () => { let e = a
+        .NEXT_PUBLIC_BRAINTREE_TOKENIZATION_KEY; if (e) try { if (await U(), !window.braintree?.client || !
+          window.braintree?.dataCollector) return; let t = await M(() => window.braintree.client
+        .create({ authorization: e }), { retries: 3 }),
+          n = await M(() => window.braintree.dataCollector.create({ client: t }), { retries: 3 });
+        n?.deviceData && v.setItem(_, n.deviceData) } catch (e) { typeof console < `u` && console.warn &&
+          console.warn(`Braintree fraud session skipped:`, e) } }, G = () => { let e = v.getItem(_); return e ?
+      {
+        [_]: e } : {} }, K = null, q = () => K || (K = (async () => { try { await W() } catch (
+      e) { typeof console < `u` && console.warn && console.warn(
+          `Braintree session initialization skipped:`, e), K = null } })(), K), J = e => {
+      (0, y.useEffect)(() => { e && q() }, [e]) }, Y = null, X = () => Y || (Y = (async () => { try { await R
+      (); for (let e of p) await I(e) } catch (e) { typeof console < `u` && console.warn && console.warn(
+          `Stripe sessions initialization skipped:`, e), Y = null } })(), Y), Z = e => {
+      (0, y.useEffect)(() => { e && X() }, [e]) }, Q = e => { let t = d(r.REQUIRE_TURNSTILE_CAPTCHA, `OFF`),
+        n = t === `A` || t === `B`,
+        i = t !== `B`; return f({ experimentName: r.REQUIRE_TURNSTILE_CAPTCHA, experimentValue: t,
+        shouldTrack: n && e }), { variant: t, isEnabled: t === `B`, isInExperiment: n,
+        shouldBypassTurnstile: i, trackExperimentView: () => {} } }, ee = 6e4, te = e => e ? [e.plan_id, e
+      .billing_cycle, e.is_trial, e.payment_currency ?? e.currency, e.amount
+    ].map(e => String(e ?? ``)).join(`|`) : ``, $ = l()(u((e, t) => ({ clientToken: ``, preloadedSession: null,
       preloadInflight: null, setClientToken: t => e({ clientToken: t }), setPreloadedSession: t =>
     e({ preloadedSession: t }), setPreloadInflight: t => e({ preloadInflight: t }),
       consumePreloadedSession: n => { let r = t().preloadedSession; return !r || r.signature !== n || r
-            .expiresAt - Date.now() < F ? null : (e({ preloadedSession: null }), r.clientToken) },
-      handleModuleStore: t => e(e => ({ ...e, ...t })) }), { name: `CheckoutClientTokenModuleStore`, enabled: n
-        .NEXT_PUBLIC_ENV !== `production` && !0 })), R = async e => { if (!(e && typeof e == `object` &&
-          `response` in e)) return !1; let t = e.response; if (t?.status !== 403) return !1; try { return (await t
-          .clone().json())?.code === `TURNSTILE_REQUIRED` } catch { return !1 } }, z = e => { if (e)
-      try { return JSON.stringify(e) } catch (e) { console.error(`Failed to stringify checkout metadata`, e), i(
-          e, `render`); return } }, B = e => { if (!e) return `no-metadata`; let t = 0; for (let n = 0; n < e
-        .length; n += 1) t = (t << 5) - t + e.charCodeAt(n), t |= 0; return Math.abs(t).toString(36) }, V =
-  () => { let { setClientToken: e, clientToken: n } = L(); return { getClientToken: async (r, s = ``, c = !
-        1) => { let l = B(z(r)),
-            u = a(); try { let n = await t.post(`billing/checkout/session`, { priority: `high`,
-              json: { metadata: { ...r || {}, ...o(u) }, turnstileToken: s, ...c ? { turnstileBypass: !0 } :
-                {} }, timeout: 1e5, retry: { limit: 3, statusCodes: [408, 429, 500, 502, 503, 504],
-                backoffLimit: 1e4 } }).json(); return e(n.clientToken), { clientToken: n.clientToken,
-                clientTokenExpirationDate: n.clientTokenExpirationDate, response: n, sessionData: n
-                .sessionData } } catch (e) { let t = null,
-              r = `Unknown error`; if (e && typeof e == `object` && `response` in e) try { let n = e.response;
-              n && typeof n.json == `function` && (t = await n.clone().json(), r = t.error || r) } catch { r =
-                e instanceof Error ? e.message : `Unknown error` } else r = e instanceof Error ? e.message :
-              `Unknown error`; let a = e && typeof e == `object` && `response` in e && e.response?.status ===
-              401; throw console.error(
-            `Checkout client token request failed`, { request_url: `/v1/billing/checkout/session`,
-              metadata_signature: l, error_message: r, error_details: t, is_auth_error: a,
-              existing_client_token_set: !!n }), i(e, `render`), e } }, clientToken: n } };
-export { P as a, N as c, L as i, O as l, V as n, j as o, I as r, M as s, R as t };
+          .expiresAt - Date.now() < ee ? null : (e({ preloadedSession: null }), r.clientToken) },
+      handleModuleStore: t => e(e => ({ ...e, ...t })) }), { name: `CheckoutClientTokenModuleStore`,
+      enabled: a.NEXT_PUBLIC_ENV !== `production` && !0 })), ne = async e => { if (!(e && typeof e ==
+            `object` && `response` in e)) return !1; let t = e.response; if (t?.status !== 403) return !
+        1; try { return (await t.clone().json())?.code === `TURNSTILE_REQUIRED` } catch { return !1 } }, re =
+      e => { if (e) try { return JSON.stringify(e) } catch (e) { console.error(
+            `Failed to stringify checkout metadata`, e), o(e, `render`); return } }, ie = e => { if (!e)
+        return `no-metadata`; let t = 0; for (let n = 0; n < e.length; n += 1) t = (t << 5) - t + e.charCodeAt(
+          n), t |= 0; return Math.abs(t).toString(36) }, ae = () => { let { setClientToken: e,
+        clientToken: t } = $(); return { getClientToken: async (n, r = ``, a = !1) => { let l = ie(re(n)),
+              u = s(); try { let t = await i.post(`billing/checkout/session`, { priority: `high`,
+                json: { metadata: { ...n || {}, ...c(u) }, turnstileToken: r, ...a ? { turnstileBypass: !
+                    0 } : {} }, timeout: 1e5, retry: { limit: 3, statusCodes: [408, 429, 500, 502, 503,
+                    504
+                  ], backoffLimit: 1e4 } }).json(); return e(t.clientToken), { clientToken: t.clientToken,
+                clientTokenExpirationDate: t.clientTokenExpirationDate, response: t, sessionData: t
+                  .sessionData } } catch (e) { let n = null,
+                r = `Unknown error`; if (e && typeof e == `object` && `response` in e) try { let t = e
+                  .response;
+                t && typeof t.json == `function` && (n = await t.clone().json(), r = n.error ||
+                r) } catch { r = e instanceof Error ? e.message : `Unknown error` } else r =
+                e instanceof Error ? e.message : `Unknown error`; let i = e && typeof e == `object` &&
+                `response` in e && e.response?.status === 401; throw console.error(
+                `Checkout client token request failed`, { request_url: `/v1/billing/checkout/session`,
+                  metadata_signature: l, error_message: r, error_details: n, is_auth_error: i,
+                  existing_client_token_set: !!t }), o(e, `render`), e } }, clientToken: t } };
+export { Q as a, G as c, $ as i, L as l, ae as n, Z as o, te as r, J as s, ne as t };

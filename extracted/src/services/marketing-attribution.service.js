@@ -1,10 +1,10 @@
 /**
- * Source: https://use.ai/_next/static/chunks/marketing-attribution.service-CG12a6fw.js
+ * Source: https://use.ai/_next/static/chunks/marketing-attribution.service-DSbuhK1B.js
  * Module: marketing-attribution.service
  * Extracted & Beautified
  */
 
-import { d as e } from "./freemium-funnel.util-D0KPcbFz.js";
+import { d as e } from "./freemium-funnel.util-BsrrWeXM.js";
 var t = `marketing_traffic`,
   n = `id`,
   r = 2592e3;

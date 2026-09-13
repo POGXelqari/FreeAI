@@ -1,18 +1,18 @@
 /**
- * Source: https://use.ai/_next/static/chunks/use-root-chat-url-sync.hook-BLskOQaA.js
+ * Source: https://use.ai/_next/static/chunks/use-root-chat-url-sync.hook-CepHUWpO.js
  * Module: use-root-chat-url-sync.hook
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
-import { Q as n } from "./vinext-CqpRraGS.js";
-import { n as r } from "./better-auth-client-session.service-ercwbZKT.js";
-import { r as i } from "./analytics.service-BIbiLKmC.js";
-import { m as a } from "./freemium-funnel.util-D0KPcbFz.js";
+import { Q as n } from "./vinext-DaPQ-kLo.js";
+import { n as r } from "./better-auth-client-session.service-1Lowatea.js";
+import { r as i } from "./analytics.service-9oUGcSKY.js";
+import { m as a } from "./freemium-funnel.util-BsrrWeXM.js";
 import { t as o } from "./safe-session-storage.util-DN4NSHVM.js";
-import { n as s, t as c } from "./raw-history.util-43z6flYk.js";
-import { t as l } from "./use-incognito-chat.hook-Dun56_qv.js";
+import { n as s, t as c } from "./raw-history.util-BleUn4RV.js";
+import { t as l } from "./use-incognito-chat.hook-D4pEi9zH.js";
 var u = e(t(), 1),
   d = e => { let t = o.getItem(e); if (!t) return null; try { return JSON.parse(t) } catch { return null } };
 
@@ -37,8 +37,7 @@ var g = `guest_funnel_boundary`;
 function _({ chatId: e, chatExists: t, messageCount: r, hasSentLocally: a }) { let o = n(),
     c = (0, u.useRef)(!1);
   (0, u.useEffect)(() => { c.current = !1 }, [e]), (0, u.useEffect)(() => { if (c.current || t || r === 0 || !a || l())
-      return; let n = window.location.pathname; if (/\/teams(?:\/|$)/.test(n) || /\/project\//.test(n) || n.includes(
-        e)) return;
+      return; let n = window.location.pathname; if (/\/project\//.test(n) || n.includes(e)) return;
     c.current = !0; let u = o?.locale,
       d = typeof u == `string` && u !== `en` ? `/${u}/${e}` : `/${e}`,
       p = new URLSearchParams,

@@ -1,0 +1,1 @@
+import{t as e}from"./analytics.service-9oUGcSKY.js";import{a as t}from"./mixpanel-B_WP0jc-.js";var n=(n,r)=>{e.track(t.ELEMENT_CLICKED,{user_id:e.getAnalyticsProperty().user_id||null,element_name:n,element_type:r})};export{n as t};

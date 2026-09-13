@@ -1,0 +1,1 @@
+import"./footer.component-h2rkH1ca.js";

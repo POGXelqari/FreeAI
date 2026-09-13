@@ -1,0 +1,1 @@
+import{t as e}from"./analytics.service-9oUGcSKY.js";function t(){return{track:e.track,identify:e.identifyUser,setUserProperties:e.identify,reset:e.reset,isInitialized:e.initialized}}export{t};

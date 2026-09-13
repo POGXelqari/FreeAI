@@ -1,0 +1,1 @@
+import{n as e}from"./better-auth-client-session.service-1Lowatea.js";function t(){let{data:t}=e();return{user:t?.user}}export{t};

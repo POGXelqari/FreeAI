@@ -1,15 +1,14 @@
 /**
- * Source: https://use.ai/_next/static/chunks/use-has-mounted.hook-BZPIYb5B.js
+ * Source: https://use.ai/_next/static/chunks/use-has-mounted.hook-DsU-SnKZ.js
  * Module: use-has-mounted.hook
  * Extracted & Beautified
  */
 
-import { o as e, r as t } from "./rolldown-runtime-C0FnF6B9.js";
-import { i as n } from "./framework-D-uKrMmN.js";
-var r = t({ useHasMounted: () => c }),
-  i = e(n(), 1),
-  a = () => () => {},
-  o = () => !0,
-  s = () => !1,
-  c = () => (0, i.useSyncExternalStore)(a, o, s);
-export { r as n, c as t };
+import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { i as t } from "./framework-D-uKrMmN.js";
+var n = e(t(), 1),
+  r = () => () => {},
+  i = () => !0,
+  a = () => !1,
+  o = () => (0, n.useSyncExternalStore)(r, i, a);
+export { o as t };

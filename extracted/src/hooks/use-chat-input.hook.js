@@ -1,12 +1,12 @@
 /**
- * Source: https://use.ai/_next/static/chunks/use-chat-input.hook-BgXo6Yt2.js
+ * Source: https://use.ai/_next/static/chunks/use-chat-input.hook-D8Aj7IhL.js
  * Module: use-chat-input.hook
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
-import { r as n } from "./chat.store-CVJElyGt.js";
+import { r as n } from "./chat.store-CCLMl5kX.js";
 var r = e(t(), 1),
   i = () => ({ input: n(e => e.currentInput), setInput: (0, r.useCallback)(e => { let t = n.getState().currentInput,
         r = typeof e == `function` ? e(t) : e;

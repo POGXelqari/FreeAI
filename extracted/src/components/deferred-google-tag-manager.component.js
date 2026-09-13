@@ -1,12 +1,12 @@
 /**
- * Source: https://use.ai/_next/static/chunks/deferred-google-tag-manager.component-COj0PWA3.js
+ * Source: https://use.ai/_next/static/chunks/deferred-google-tag-manager.component-Kc5rD3_e.js
  * Module: deferred-google-tag-manager.component
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t, r as n } from "./framework-D-uKrMmN.js";
-import { n as r } from "./gtm-DkKjcpHp.js";
+import { n as r } from "./gtm-CzTak35f.js";
 var i = e(t(), 1),
   a = n();
 

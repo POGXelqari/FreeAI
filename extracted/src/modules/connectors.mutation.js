@@ -1,5 +1,5 @@
 /**
- * Source: https://use.ai/_next/static/chunks/connectors.mutation-DCZIwE-0.js
+ * Source: https://use.ai/_next/static/chunks/connectors.mutation-DEHKLDkx.js
  * Module: connectors.mutation
  * Extracted & Beautified
  */
@@ -7,7 +7,7 @@
 import { r as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { t } from "./useMutation-DldRSjFA.js";
 import { n } from "./QueryClientProvider-DGxN9XtP.js";
-import { i as r } from "./rest-api-DNPFxXXP.js";
+import { i as r } from "./rest-api-BL5a3YVm.js";
 var i = function(e) { return e.API_CONNECTORS = `connectors`, e }({}),
   a = function(e) { return e.LIST_CONNECTORS = `list_connectors`, e.CONNECT = `connect_connector`, e
       .CONNECT_CREDENTIALS = `connect_connector_credentials`, e.DISCONNECT = `disconnect_connector`, e }({}),

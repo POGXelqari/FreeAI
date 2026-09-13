@@ -1,22 +1,22 @@
 {
   "source": "https://use.ai",
-  "extractedAt": "2026-09-04T21:25:48.364Z",
-  "totalChunks": 299,
+  "extractedAt": "2026-09-13T00:49:10.273Z",
+  "totalChunks": 437,
   "categories": {
-    "utils": 29,
+    "utils": 44,
     "constants": 6,
-    "services": 29,
-    "components": 24,
-    "modules": 72,
-    "providers": 14,
+    "services": 51,
+    "components": 46,
+    "modules": 104,
+    "providers": 19,
     "icons": 35,
-    "components/ui": 13,
-    "stores": 14,
-    "interfaces": 4,
-    "vendor": 17,
+    "components/ui": 15,
+    "stores": 23,
+    "interfaces": 5,
+    "vendor": 19,
     "models": 8,
-    "hooks": 33,
-    "api": 1
+    "hooks": 60,
+    "api": 2
   },
   "files": [
     {
@@ -38,6 +38,12 @@
       "sizeBytes": 78
     },
     {
+      "rawChunk": "analytics-hooks.service-CjbWkebv.js",
+      "category": "services",
+      "extractedPath": "src/services/analytics-hooks.service.js",
+      "sizeBytes": 4002
+    },
+    {
       "rawChunk": "analytics-hooks.service-fJFOoVJi.js",
       "category": "services",
       "extractedPath": "src/services/analytics-hooks.service.js",
@@ -48,6 +54,18 @@
       "category": "components",
       "extractedPath": "src/components/analytics-initializer.component.js",
       "sizeBytes": 2743
+    },
+    {
+      "rawChunk": "analytics-initializer.component-D_xMZRoX.js",
+      "category": "components",
+      "extractedPath": "src/components/analytics-initializer.component.js",
+      "sizeBytes": 2743
+    },
+    {
+      "rawChunk": "analytics.service-9oUGcSKY.js",
+      "category": "services",
+      "extractedPath": "src/services/analytics.service.js",
+      "sizeBytes": 57176
     },
     {
       "rawChunk": "analytics.service-BIbiLKmC.js",
@@ -92,6 +110,12 @@
       "sizeBytes": 1746
     },
     {
+      "rawChunk": "auth-modal.component-Dz_y3DxX.js",
+      "category": "components",
+      "extractedPath": "src/components/auth-modal.component.js",
+      "sizeBytes": 29982
+    },
+    {
       "rawChunk": "auth-modal.component-hFpdr88a.js",
       "category": "components",
       "extractedPath": "src/components/auth-modal.component.js",
@@ -104,10 +128,22 @@
       "sizeBytes": 2052
     },
     {
+      "rawChunk": "auth-modal.service-Cuedadps.js",
+      "category": "services",
+      "extractedPath": "src/services/auth-modal.service.js",
+      "sizeBytes": 2052
+    },
+    {
       "rawChunk": "auth-redirect-context.util-DZvFX7LK.js",
       "category": "utils",
       "extractedPath": "src/utils/auth-redirect-context.util.js",
       "sizeBytes": 472
+    },
+    {
+      "rawChunk": "auth-redirect-verifier.component-BQbCnVqK.js",
+      "category": "components",
+      "extractedPath": "src/components/auth-redirect-verifier.component.js",
+      "sizeBytes": 115
     },
     {
       "rawChunk": "auth-redirect-verifier.component-Du5DDh0U.js",
@@ -122,16 +158,34 @@
       "sizeBytes": 2569
     },
     {
+      "rawChunk": "auth.store-DeUNDeDH.js",
+      "category": "stores",
+      "extractedPath": "src/stores/auth.store.js",
+      "sizeBytes": 2569
+    },
+    {
       "rawChunk": "badge-fH5lAmij.js",
       "category": "components/ui",
       "extractedPath": "src/components/ui/badge.js",
       "sizeBytes": 1418
     },
     {
+      "rawChunk": "BaseLink-CDxnuSW2.js",
+      "category": "modules",
+      "extractedPath": "src/modules/BaseLink.js",
+      "sizeBytes": 20110
+    },
+    {
       "rawChunk": "BaseLink-DAgr-zci.js",
       "category": "modules",
       "extractedPath": "src/modules/BaseLink.js",
       "sizeBytes": 20110
+    },
+    {
+      "rawChunk": "better-auth-client-session.service-1Lowatea.js",
+      "category": "services",
+      "extractedPath": "src/services/better-auth-client-session.service.js",
+      "sizeBytes": 2704
     },
     {
       "rawChunk": "better-auth-client-session.service-ercwbZKT.js",
@@ -150,6 +204,12 @@
       "category": "modules",
       "extractedPath": "src/modules/billing.js",
       "sizeBytes": 17771
+    },
+    {
+      "rawChunk": "billing-CTujHwgg.js",
+      "category": "modules",
+      "extractedPath": "src/modules/billing.js",
+      "sizeBytes": 17060
     },
     {
       "rawChunk": "billing.interface-DgJbHepV.js",
@@ -194,6 +254,12 @@
       "sizeBytes": 1291
     },
     {
+      "rawChunk": "catalog-locale-B-OI0E7H.js",
+      "category": "modules",
+      "extractedPath": "src/modules/catalog-locale-B.js",
+      "sizeBytes": 3126
+    },
+    {
       "rawChunk": "catalog-locale-C1DasskV.js",
       "category": "modules",
       "extractedPath": "src/modules/catalog-locale.js",
@@ -212,6 +278,18 @@
       "sizeBytes": 292
     },
     {
+      "rawChunk": "chat-actions-dropdown.service-Du7y710h.js",
+      "category": "services",
+      "extractedPath": "src/services/chat-actions-dropdown.service.js",
+      "sizeBytes": 269
+    },
+    {
+      "rawChunk": "chat-auth.util-Bp8v6Dgm.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chat-auth.util.js",
+      "sizeBytes": 4057
+    },
+    {
       "rawChunk": "chat-auth.util-CHugSHZw.js",
       "category": "utils",
       "extractedPath": "src/utils/chat-auth.util.js",
@@ -222,6 +300,12 @@
       "category": "modules",
       "extractedPath": "src/modules/chat-history.js",
       "sizeBytes": 5709
+    },
+    {
+      "rawChunk": "chat-history-De2sMMgt.js",
+      "category": "modules",
+      "extractedPath": "src/modules/chat-history.js",
+      "sizeBytes": 6990
     },
     {
       "rawChunk": "chat-key.constant-DXJEa87X.js",
@@ -240,6 +324,18 @@
       "category": "utils",
       "extractedPath": "src/utils/chat-model-cookie.util.js",
       "sizeBytes": 504
+    },
+    {
+      "rawChunk": "chat-model-cookie.util-woL9U4Ul.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chat-model-cookie.util.js",
+      "sizeBytes": 504
+    },
+    {
+      "rawChunk": "chat-route.util-CxSmRzCy.js",
+      "category": "utils",
+      "extractedPath": "src/utils/chat-route.util.js",
+      "sizeBytes": 1183
     },
     {
       "rawChunk": "chat-route.util-DIaoD1cB.js",
@@ -266,6 +362,12 @@
       "sizeBytes": 177025
     },
     {
+      "rawChunk": "chat.store-CCLMl5kX.js",
+      "category": "stores",
+      "extractedPath": "src/stores/chat.store.js",
+      "sizeBytes": 41534
+    },
+    {
       "rawChunk": "chat.store-CVJElyGt.js",
       "category": "stores",
       "extractedPath": "src/stores/chat.store.js",
@@ -284,10 +386,22 @@
       "sizeBytes": 3423
     },
     {
+      "rawChunk": "checkout-token-preload-initializer.component-Cv0myRrM.js",
+      "category": "components",
+      "extractedPath": "src/components/checkout-token-preload-initializer.component.js",
+      "sizeBytes": 3361
+    },
+    {
       "rawChunk": "checkout-universal-form.service-CxHch_si.js",
       "category": "services",
       "extractedPath": "src/services/checkout-universal-form.service.js",
       "sizeBytes": 10806
+    },
+    {
+      "rawChunk": "checkout-universal-form.service-igiRYXCk.js",
+      "category": "services",
+      "extractedPath": "src/services/checkout-universal-form.service.js",
+      "sizeBytes": 17654
     },
     {
       "rawChunk": "chevron-down-CY8S3ZfR.js",
@@ -332,6 +446,12 @@
       "sizeBytes": 294
     },
     {
+      "rawChunk": "client-BL58m4Hx.js",
+      "category": "modules",
+      "extractedPath": "src/modules/client.js",
+      "sizeBytes": 166
+    },
+    {
       "rawChunk": "client-DWC7O25X.js",
       "category": "modules",
       "extractedPath": "src/modules/client.js",
@@ -350,6 +470,12 @@
       "sizeBytes": 193
     },
     {
+      "rawChunk": "connector-catalog-lazy.service-B48j1ZN6.js",
+      "category": "services",
+      "extractedPath": "src/services/connector-catalog-lazy.service.js",
+      "sizeBytes": 869
+    },
+    {
       "rawChunk": "connector-catalog-lazy.service-BSf-5rRs.js",
       "category": "services",
       "extractedPath": "src/services/connector-catalog-lazy.service.js",
@@ -362,10 +488,28 @@
       "sizeBytes": 3940
     },
     {
+      "rawChunk": "connector-icon.component-DV8c2_6l.js",
+      "category": "components",
+      "extractedPath": "src/components/connector-icon.component.js",
+      "sizeBytes": 3940
+    },
+    {
       "rawChunk": "connector-intl.provider-BHMUftuf.js",
       "category": "providers",
       "extractedPath": "src/providers/connector-intl.provider.js",
       "sizeBytes": 5831
+    },
+    {
+      "rawChunk": "connector-intl.provider-vUpVkkDZ.js",
+      "category": "providers",
+      "extractedPath": "src/providers/connector-intl.provider.js",
+      "sizeBytes": 5831
+    },
+    {
+      "rawChunk": "connector-search-input.component-BR_TyNYO.js",
+      "category": "components",
+      "extractedPath": "src/components/connector-search-input.component.js",
+      "sizeBytes": 2076
     },
     {
       "rawChunk": "connector-search-input.component-DgBAGGEg.js",
@@ -378,6 +522,12 @@
       "category": "modules",
       "extractedPath": "src/modules/connectors.js",
       "sizeBytes": 12461
+    },
+    {
+      "rawChunk": "connectors-catalog.service-BLpnAOqf.js",
+      "category": "services",
+      "extractedPath": "src/services/connectors-catalog.service.js",
+      "sizeBytes": 1228
     },
     {
       "rawChunk": "connectors-catalog.service-C2W0ZTIl.js",
@@ -398,7 +548,25 @@
       "sizeBytes": 2747
     },
     {
+      "rawChunk": "connectors-page-skeleton.component-JxQ-9y1C.js",
+      "category": "components",
+      "extractedPath": "src/components/connectors-page-skeleton.component.js",
+      "sizeBytes": 2747
+    },
+    {
+      "rawChunk": "connectors-Z5GCAY9t.js",
+      "category": "modules",
+      "extractedPath": "src/modules/connectors.js",
+      "sizeBytes": 11984
+    },
+    {
       "rawChunk": "connectors.hook-BS1NEVLs.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/connectors.hook.js",
+      "sizeBytes": 1679
+    },
+    {
+      "rawChunk": "connectors.hook-yn2Q-Dup.js",
       "category": "hooks",
       "extractedPath": "src/hooks/connectors.hook.js",
       "sizeBytes": 1679
@@ -410,10 +578,28 @@
       "sizeBytes": 2338
     },
     {
+      "rawChunk": "connectors.mutation-DEHKLDkx.js",
+      "category": "modules",
+      "extractedPath": "src/modules/connectors.mutation.js",
+      "sizeBytes": 2338
+    },
+    {
       "rawChunk": "connectors.service-BvuH6FUI.js",
       "category": "services",
       "extractedPath": "src/services/connectors.service.js",
       "sizeBytes": 6175
+    },
+    {
+      "rawChunk": "connectors.service-Gsyl5hDa.js",
+      "category": "services",
+      "extractedPath": "src/services/connectors.service.js",
+      "sizeBytes": 6143
+    },
+    {
+      "rawChunk": "connectors.store-NL-qi5yD.js",
+      "category": "stores",
+      "extractedPath": "src/stores/connectors.store.js",
+      "sizeBytes": 4309
     },
     {
       "rawChunk": "connectors.store-ta4ejFxC.js",
@@ -440,6 +626,12 @@
       "sizeBytes": 2372
     },
     {
+      "rawChunk": "copy-formatted.util-SR1wwy9I.js",
+      "category": "utils",
+      "extractedPath": "src/utils/copy-formatted.util.js",
+      "sizeBytes": 2372
+    },
+    {
       "rawChunk": "createLucideIcon-CVSF7wvO.js",
       "category": "modules",
       "extractedPath": "src/modules/createLucideIcon.js",
@@ -453,6 +645,12 @@
     },
     {
       "rawChunk": "deferred-google-tag-manager.component-COj0PWA3.js",
+      "category": "components",
+      "extractedPath": "src/components/deferred-google-tag-manager.component.js",
+      "sizeBytes": 993
+    },
+    {
+      "rawChunk": "deferred-google-tag-manager.component-Kc5rD3_e.js",
       "category": "components",
       "extractedPath": "src/components/deferred-google-tag-manager.component.js",
       "sizeBytes": 993
@@ -506,7 +704,19 @@
       "sizeBytes": 4177
     },
     {
+      "rawChunk": "dist-CQK36Nza.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 5584
+    },
+    {
       "rawChunk": "dist-DbhSOkZC.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dist.js",
+      "sizeBytes": 9769
+    },
+    {
+      "rawChunk": "dist-DbhSOkZC2.js",
       "category": "modules",
       "extractedPath": "src/modules/dist.js",
       "sizeBytes": 9769
@@ -572,16 +782,34 @@
       "sizeBytes": 18504
     },
     {
+      "rawChunk": "download-chat-button.service-CYTvg0Ok.js",
+      "category": "services",
+      "extractedPath": "src/services/download-chat-button.service.js",
+      "sizeBytes": 17248
+    },
+    {
       "rawChunk": "drawer-CrlfHJuB.js",
       "category": "components/ui",
       "extractedPath": "src/components/ui/drawer.js",
       "sizeBytes": 36063
     },
     {
+      "rawChunk": "dropdown-menu-CoJMIpYs.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/dropdown-menu.js",
+      "sizeBytes": 27932
+    },
+    {
       "rawChunk": "dropdown-menu-D6_Lrewr.js",
       "category": "components/ui",
       "extractedPath": "src/components/ui/dropdown-menu.js",
       "sizeBytes": 27931
+    },
+    {
+      "rawChunk": "dynamic-preload-chunks-BkpXLrkh.js",
+      "category": "modules",
+      "extractedPath": "src/modules/dynamic-preload-chunks.js",
+      "sizeBytes": 268
     },
     {
       "rawChunk": "dynamic-preload-chunks-C2tdlbzD.js",
@@ -596,6 +824,18 @@
       "sizeBytes": 3119
     },
     {
+      "rawChunk": "dynamic.service-D2nUn8U-.js",
+      "category": "services",
+      "extractedPath": "src/services/dynamic.service.js",
+      "sizeBytes": 3119
+    },
+    {
+      "rawChunk": "email.util-C0TZUqJL.js",
+      "category": "utils",
+      "extractedPath": "src/utils/email.util.js",
+      "sizeBytes": 6467
+    },
+    {
       "rawChunk": "email.util-D8k5pUXC.js",
       "category": "utils",
       "extractedPath": "src/utils/email.util.js",
@@ -603,6 +843,12 @@
     },
     {
       "rawChunk": "ensure-connector-registrations.service-8f4euYJb.js",
+      "category": "services",
+      "extractedPath": "src/services/ensure-connector-registrations.service.js",
+      "sizeBytes": 1289
+    },
+    {
+      "rawChunk": "ensure-connector-registrations.service-DEA3kqyH.js",
       "category": "services",
       "extractedPath": "src/services/ensure-connector-registrations.service.js",
       "sizeBytes": 1289
@@ -632,16 +878,34 @@
       "sizeBytes": 20072
     },
     {
+      "rawChunk": "experiment-client.service-CXqfLU-5.js",
+      "category": "services",
+      "extractedPath": "src/services/experiment-client.service.js",
+      "sizeBytes": 58379
+    },
+    {
       "rawChunk": "experiment-client.service-Dbg--_Jv.js",
       "category": "services",
       "extractedPath": "src/services/experiment-client.service.js",
       "sizeBytes": 58331
     },
     {
+      "rawChunk": "experiment.provider-BEhampe0.js",
+      "category": "providers",
+      "extractedPath": "src/providers/experiment.provider.js",
+      "sizeBytes": 985
+    },
+    {
       "rawChunk": "experiment.provider-CQRJZnpd.js",
       "category": "providers",
       "extractedPath": "src/providers/experiment.provider.js",
       "sizeBytes": 985
+    },
+    {
+      "rawChunk": "file-upload-BQohwt_Z.js",
+      "category": "modules",
+      "extractedPath": "src/modules/file-upload.js",
+      "sizeBytes": 2690
     },
     {
       "rawChunk": "file-upload.constant-B3pVoarn.js",
@@ -680,7 +944,19 @@
       "sizeBytes": 41
     },
     {
+      "rawChunk": "footer-DLjWpBov.js",
+      "category": "modules",
+      "extractedPath": "src/modules/footer.js",
+      "sizeBytes": 41
+    },
+    {
       "rawChunk": "footer.component-CiKJBwzY.js",
+      "category": "components",
+      "extractedPath": "src/components/footer.component.js",
+      "sizeBytes": 11330
+    },
+    {
+      "rawChunk": "footer.component-h2rkH1ca.js",
       "category": "components",
       "extractedPath": "src/components/footer.component.js",
       "sizeBytes": 11330
@@ -710,10 +986,28 @@
       "sizeBytes": 769
     },
     {
+      "rawChunk": "freemium-funnel.store-CpLcwrVv.js",
+      "category": "stores",
+      "extractedPath": "src/stores/freemium-funnel.store.js",
+      "sizeBytes": 769
+    },
+    {
+      "rawChunk": "freemium-funnel.util-BsrrWeXM.js",
+      "category": "utils",
+      "extractedPath": "src/utils/freemium-funnel.util.js",
+      "sizeBytes": 3635
+    },
+    {
       "rawChunk": "freemium-funnel.util-D0KPcbFz.js",
       "category": "utils",
       "extractedPath": "src/utils/freemium-funnel.util.js",
       "sizeBytes": 3656
+    },
+    {
+      "rawChunk": "funnel-guest-topbar.component-BD4jtxhU.js",
+      "category": "components",
+      "extractedPath": "src/components/funnel-guest-topbar.component.js",
+      "sizeBytes": 3701
     },
     {
       "rawChunk": "funnel-guest-topbar.component-CaUCBSkE.js",
@@ -723,6 +1017,12 @@
     },
     {
       "rawChunk": "geo.service-BPKKTJpo.js",
+      "category": "services",
+      "extractedPath": "src/services/geo.service.js",
+      "sizeBytes": 583
+    },
+    {
+      "rawChunk": "geo.service-Dx27YAEH.js",
       "category": "services",
       "extractedPath": "src/services/geo.service.js",
       "sizeBytes": 583
@@ -740,10 +1040,28 @@
       "sizeBytes": 2888
     },
     {
+      "rawChunk": "global-error-capture.component-BMgoSi6-.js",
+      "category": "components",
+      "extractedPath": "src/components/global-error-capture.component.js",
+      "sizeBytes": 2888
+    },
+    {
+      "rawChunk": "global-error-rdtD9BTI.js",
+      "category": "modules",
+      "extractedPath": "src/modules/global-error.js",
+      "sizeBytes": 17096
+    },
+    {
       "rawChunk": "global.store-DsM3x4UJ.js",
       "category": "stores",
       "extractedPath": "src/stores/global.store.js",
       "sizeBytes": 2370
+    },
+    {
+      "rawChunk": "global.store-DXaW4jb5.js",
+      "category": "stores",
+      "extractedPath": "src/stores/global.store.js",
+      "sizeBytes": 2304
     },
     {
       "rawChunk": "globe-D1MVs8b6.js",
@@ -758,10 +1076,28 @@
       "sizeBytes": 10096
     },
     {
+      "rawChunk": "greeting-DWuLTDrZ.js",
+      "category": "components/ui",
+      "extractedPath": "src/components/ui/greeting.js",
+      "sizeBytes": 10119
+    },
+    {
       "rawChunk": "growthbook-server-to-client-analytics.component-CMkevCIi.js",
       "category": "components",
       "extractedPath": "src/components/growthbook-server-to-client-analytics.component.js",
       "sizeBytes": 1093
+    },
+    {
+      "rawChunk": "growthbook-server-to-client-analytics.component-Cu96U1ei.js",
+      "category": "components",
+      "extractedPath": "src/components/growthbook-server-to-client-analytics.component.js",
+      "sizeBytes": 1093
+    },
+    {
+      "rawChunk": "gtm-CzTak35f.js",
+      "category": "modules",
+      "extractedPath": "src/modules/gtm.js",
+      "sizeBytes": 5523
     },
     {
       "rawChunk": "gtm-DkKjcpHp.js",
@@ -776,10 +1112,28 @@
       "sizeBytes": 682
     },
     {
+      "rawChunk": "guest-limit-retry.util-Bwus5YZI.js",
+      "category": "utils",
+      "extractedPath": "src/utils/guest-limit-retry.util.js",
+      "sizeBytes": 682
+    },
+    {
+      "rawChunk": "guest-new-chat.component-aPuR1-OB.js",
+      "category": "components",
+      "extractedPath": "src/components/guest-new-chat.component.js",
+      "sizeBytes": 52984
+    },
+    {
       "rawChunk": "guest-new-chat.component-DnE9bgPv.js",
       "category": "components",
       "extractedPath": "src/components/guest-new-chat.component.js",
       "sizeBytes": 53797
+    },
+    {
+      "rawChunk": "guest-sidebar-menu.component-BX5FuleY.js",
+      "category": "components",
+      "extractedPath": "src/components/guest-sidebar-menu.component.js",
+      "sizeBytes": 32123
     },
     {
       "rawChunk": "guest-sidebar-menu.component-WviJnH5Q.js",
@@ -794,6 +1148,12 @@
       "sizeBytes": 377
     },
     {
+      "rawChunk": "header-BLRnrWpa.js",
+      "category": "modules",
+      "extractedPath": "src/modules/header.js",
+      "sizeBytes": 53
+    },
+    {
       "rawChunk": "header-CVRMnOaC.js",
       "category": "modules",
       "extractedPath": "src/modules/header.js",
@@ -806,10 +1166,28 @@
       "sizeBytes": 7809
     },
     {
+      "rawChunk": "header.component-Bs0dJD0g.js",
+      "category": "components",
+      "extractedPath": "src/components/header.component.js",
+      "sizeBytes": 7809
+    },
+    {
       "rawChunk": "help-category.module-BsXxWyLm.js",
       "category": "modules",
       "extractedPath": "src/modules/help-category.module.js",
       "sizeBytes": 4203
+    },
+    {
+      "rawChunk": "help-category.module-D2gGNSYn.js",
+      "category": "modules",
+      "extractedPath": "src/modules/help-category.module.js",
+      "sizeBytes": 4203
+    },
+    {
+      "rawChunk": "help-route.util-BnHl9c--.js",
+      "category": "utils",
+      "extractedPath": "src/utils/help-route.util.js",
+      "sizeBytes": 148
     },
     {
       "rawChunk": "help-route.util-DOvwIYGh.js",
@@ -860,6 +1238,12 @@
       "sizeBytes": 3119
     },
     {
+      "rawChunk": "index-BdKF18HC.js",
+      "category": "modules",
+      "extractedPath": "src/modules/index.js",
+      "sizeBytes": 256377
+    },
+    {
       "rawChunk": "index-uz8tLlss.js",
       "category": "modules",
       "extractedPath": "src/modules/index.js",
@@ -890,6 +1274,12 @@
       "sizeBytes": 4146
     },
     {
+      "rawChunk": "intl-CED8MIZm.js",
+      "category": "modules",
+      "extractedPath": "src/modules/intl.js",
+      "sizeBytes": 4146
+    },
+    {
       "rawChunk": "intl.constant-DpFKv8U4.js",
       "category": "constants",
       "extractedPath": "src/constants/intl.constant.js",
@@ -908,10 +1298,28 @@
       "sizeBytes": 90
     },
     {
+      "rawChunk": "is-locale-arabic.util-BT0uO3uA.js",
+      "category": "utils",
+      "extractedPath": "src/utils/is-locale-arabic.util.js",
+      "sizeBytes": 90
+    },
+    {
+      "rawChunk": "is-mobile.service-BZEOpDHM.js",
+      "category": "services",
+      "extractedPath": "src/services/is-mobile.service.js",
+      "sizeBytes": 639
+    },
+    {
       "rawChunk": "is-mobile.service-c24xKO50.js",
       "category": "services",
       "extractedPath": "src/services/is-mobile.service.js",
       "sizeBytes": 639
+    },
+    {
+      "rawChunk": "js.cookie-CuZGWQGl.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/js.cookie.js",
+      "sizeBytes": 3313
     },
     {
       "rawChunk": "js.cookie-LuQ0sRX_.js",
@@ -926,10 +1334,22 @@
       "sizeBytes": 611
     },
     {
+      "rawChunk": "layout-segment-context-CZuaipKx.js",
+      "category": "modules",
+      "extractedPath": "src/modules/layout-segment-context.js",
+      "sizeBytes": 611
+    },
+    {
       "rawChunk": "layout-sidebar-icon.component-Chawdw6U.js",
       "category": "components",
       "extractedPath": "src/components/layout-sidebar-icon.component.js",
       "sizeBytes": 4919
+    },
+    {
+      "rawChunk": "limits-BXIc-Ice.js",
+      "category": "modules",
+      "extractedPath": "src/modules/limits.js",
+      "sizeBytes": 2253
     },
     {
       "rawChunk": "limits.interface-CnG5W0wJ.js",
@@ -1004,10 +1424,22 @@
       "sizeBytes": 748
     },
     {
+      "rawChunk": "marketing-attribution.service-DSbuhK1B.js",
+      "category": "services",
+      "extractedPath": "src/services/marketing-attribution.service.js",
+      "sizeBytes": 748
+    },
+    {
       "rawChunk": "menu-DmuxtmLj.js",
       "category": "icons",
       "extractedPath": "src/icons/menu.js",
       "sizeBytes": 708
+    },
+    {
+      "rawChunk": "message-reducer.service-BcIDAcUg.js",
+      "category": "services",
+      "extractedPath": "src/services/message-reducer.service.js",
+      "sizeBytes": 14215
     },
     {
       "rawChunk": "mic-Cuoatejj.js",
@@ -1028,16 +1460,40 @@
       "sizeBytes": 6717
     },
     {
+      "rawChunk": "middleware-Df3VXbEU.js",
+      "category": "modules",
+      "extractedPath": "src/modules/middleware.js",
+      "sizeBytes": 6709
+    },
+    {
       "rawChunk": "mixpanel-auth.component-Bb51XnQp.js",
       "category": "components",
       "extractedPath": "src/components/mixpanel-auth.component.js",
       "sizeBytes": 2263
     },
     {
+      "rawChunk": "mixpanel-auth.component-vLApWNOR.js",
+      "category": "components",
+      "extractedPath": "src/components/mixpanel-auth.component.js",
+      "sizeBytes": 2263
+    },
+    {
+      "rawChunk": "mixpanel-B_WP0jc-.js",
+      "category": "modules",
+      "extractedPath": "src/modules/mixpanel.js",
+      "sizeBytes": 15985
+    },
+    {
       "rawChunk": "mixpanel-CkBALibP.js",
       "category": "modules",
       "extractedPath": "src/modules/mixpanel.js",
       "sizeBytes": 18337
+    },
+    {
+      "rawChunk": "mixpanel.hook-C4pl5zUI.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/mixpanel.hook.js",
+      "sizeBytes": 223
     },
     {
       "rawChunk": "mixpanel.hook-CmubyvVR.js",
@@ -1052,6 +1508,12 @@
       "sizeBytes": 16337
     },
     {
+      "rawChunk": "mobile-chat-header.component-oOGK-Div.js",
+      "category": "components",
+      "extractedPath": "src/components/mobile-chat-header.component.js",
+      "sizeBytes": 15683
+    },
+    {
       "rawChunk": "mobile-drawer.provider-D6C04T1C.js",
       "category": "providers",
       "extractedPath": "src/providers/mobile-drawer.provider.js",
@@ -1064,10 +1526,28 @@
       "sizeBytes": 738
     },
     {
+      "rawChunk": "mobile-header-logo-CpKg0dh8.js",
+      "category": "modules",
+      "extractedPath": "src/modules/mobile-header-logo.js",
+      "sizeBytes": 738
+    },
+    {
       "rawChunk": "mobile-page-header-Bw-GZZb2.js",
       "category": "modules",
       "extractedPath": "src/modules/mobile-page-header.js",
       "sizeBytes": 53
+    },
+    {
+      "rawChunk": "mobile-page-header-DIZSnpWv.js",
+      "category": "modules",
+      "extractedPath": "src/modules/mobile-page-header.js",
+      "sizeBytes": 53
+    },
+    {
+      "rawChunk": "mobile-page-header.component-DQQwDZPR.js",
+      "category": "components",
+      "extractedPath": "src/components/mobile-page-header.component.js",
+      "sizeBytes": 2625
     },
     {
       "rawChunk": "mobile-page-header.component-rYkBNUPE.js",
@@ -1082,10 +1562,28 @@
       "sizeBytes": 2358
     },
     {
+      "rawChunk": "model-catalog.provider-Cwkj1DM4.js",
+      "category": "providers",
+      "extractedPath": "src/providers/model-catalog.provider.js",
+      "sizeBytes": 2358
+    },
+    {
+      "rawChunk": "model-selector-B-4SXsDe.js",
+      "category": "modules",
+      "extractedPath": "src/modules/model-selector-B.js",
+      "sizeBytes": 12156
+    },
+    {
       "rawChunk": "model-selector-CHLHhIlL.js",
       "category": "modules",
       "extractedPath": "src/modules/model-selector.js",
       "sizeBytes": 12219
+    },
+    {
+      "rawChunk": "model-selector.util-DAqemhw9.js",
+      "category": "utils",
+      "extractedPath": "src/utils/model-selector.util.js",
+      "sizeBytes": 1303
     },
     {
       "rawChunk": "model-selector.util-s4hzcUFp.js",
@@ -1112,6 +1610,12 @@
       "sizeBytes": 2161
     },
     {
+      "rawChunk": "new-chat.service-D_uV9h89.js",
+      "category": "services",
+      "extractedPath": "src/services/new-chat.service.js",
+      "sizeBytes": 2054
+    },
+    {
       "rawChunk": "NextIntlClientProvider-BP5AYJiO.js",
       "category": "modules",
       "extractedPath": "src/modules/NextIntlClientProvider.js",
@@ -1122,6 +1626,12 @@
       "category": "components",
       "extractedPath": "src/components/no-trial-initializer.component.js",
       "sizeBytes": 653
+    },
+    {
+      "rawChunk": "oauth-error-recovery.component-DTsNs7D5.js",
+      "category": "components",
+      "extractedPath": "src/components/oauth-error-recovery.component.js",
+      "sizeBytes": 4169
     },
     {
       "rawChunk": "oauth-error-recovery.component-E4xkzbUY.js",
@@ -1136,6 +1646,12 @@
       "sizeBytes": 1576
     },
     {
+      "rawChunk": "open-after-viewport-settle.util-LlI9f_aE.js",
+      "category": "utils",
+      "extractedPath": "src/utils/open-after-viewport-settle.util.js",
+      "sizeBytes": 1526
+    },
+    {
       "rawChunk": "page.model-BtgmfPnr.js",
       "category": "models",
       "extractedPath": "src/models/page.model.js",
@@ -1148,10 +1664,22 @@
       "sizeBytes": 600
     },
     {
+      "rawChunk": "payment-modals.store-Bak_UFLs.js",
+      "category": "stores",
+      "extractedPath": "src/stores/payment-modals.store.js",
+      "sizeBytes": 1820
+    },
+    {
       "rawChunk": "payment-modals.store-Ds_qXI-N.js",
       "category": "stores",
       "extractedPath": "src/stores/payment-modals.store.js",
       "sizeBytes": 1815
+    },
+    {
+      "rawChunk": "paywall-intent.util-CFXBPX-N.js",
+      "category": "utils",
+      "extractedPath": "src/utils/paywall-intent.util.js",
+      "sizeBytes": 928
     },
     {
       "rawChunk": "paywall-intent.util-T2BKTtbQ.js",
@@ -1167,6 +1695,12 @@
     },
     {
       "rawChunk": "paywall.service-DJtJHTep.js",
+      "category": "services",
+      "extractedPath": "src/services/paywall.service.js",
+      "sizeBytes": 6431
+    },
+    {
+      "rawChunk": "paywall.service-QwRZP910.js",
       "category": "services",
       "extractedPath": "src/services/paywall.service.js",
       "sizeBytes": 6431
@@ -1202,6 +1736,12 @@
       "sizeBytes": 1552
     },
     {
+      "rawChunk": "privacy.module-GRBQ2D5h.js",
+      "category": "modules",
+      "extractedPath": "src/modules/privacy.module.js",
+      "sizeBytes": 1704
+    },
+    {
       "rawChunk": "privacy.module-TZjAaQ17.js",
       "category": "modules",
       "extractedPath": "src/modules/privacy.module.js",
@@ -1218,6 +1758,12 @@
       "category": "components",
       "extractedPath": "src/components/provider-shell.component.js",
       "sizeBytes": 7379
+    },
+    {
+      "rawChunk": "provider-shell.component-CPOWB-nq.js",
+      "category": "components",
+      "extractedPath": "src/components/provider-shell.component.js",
+      "sizeBytes": 6307
     },
     {
       "rawChunk": "proxy-B_99oKrn.js",
@@ -1256,6 +1802,12 @@
       "sizeBytes": 269
     },
     {
+      "rawChunk": "raw-history.util-BleUn4RV.js",
+      "category": "utils",
+      "extractedPath": "src/utils/raw-history.util.js",
+      "sizeBytes": 269
+    },
+    {
       "rawChunk": "react-client-CTfy1ioc.js",
       "category": "vendor",
       "extractedPath": "src/vendor/react-client.js",
@@ -1286,6 +1838,12 @@
       "sizeBytes": 258
     },
     {
+      "rawChunk": "recovery-marker.util-CkI39M8u.js",
+      "category": "utils",
+      "extractedPath": "src/utils/recovery-marker.util.js",
+      "sizeBytes": 39855
+    },
+    {
       "rawChunk": "registries-BHxkc4G_.js",
       "category": "modules",
       "extractedPath": "src/modules/registries.js",
@@ -1296,6 +1854,12 @@
       "category": "modules",
       "extractedPath": "src/modules/rename-chat-modal.js",
       "sizeBytes": 7540
+    },
+    {
+      "rawChunk": "rename-chat-modal-CXNm7mct.js",
+      "category": "modules",
+      "extractedPath": "src/modules/rename-chat-modal.js",
+      "sizeBytes": 13766
     },
     {
       "rawChunk": "rename-item-modal-2hixoasb.js",
@@ -1310,10 +1874,22 @@
       "sizeBytes": 1762
     },
     {
+      "rawChunk": "rest-api-BL5a3YVm.js",
+      "category": "modules",
+      "extractedPath": "src/modules/rest-api.js",
+      "sizeBytes": 18539
+    },
+    {
       "rawChunk": "rest-api-DNPFxXXP.js",
       "category": "modules",
       "extractedPath": "src/modules/rest-api.js",
       "sizeBytes": 18539
+    },
+    {
+      "rawChunk": "rest-api.provider-cvDCweR_.js",
+      "category": "providers",
+      "extractedPath": "src/providers/rest-api.provider.js",
+      "sizeBytes": 19026
     },
     {
       "rawChunk": "rest-api.provider-DFR1ot1R.js",
@@ -1329,6 +1905,12 @@
     },
     {
       "rawChunk": "review-trigger.store-C2KfqDZw.js",
+      "category": "stores",
+      "extractedPath": "src/stores/review-trigger.store.js",
+      "sizeBytes": 2957
+    },
+    {
+      "rawChunk": "review-trigger.store-CzZ64ny6.js",
       "category": "stores",
       "extractedPath": "src/stores/review-trigger.store.js",
       "sizeBytes": 2957
@@ -1364,6 +1946,12 @@
       "sizeBytes": 211
     },
     {
+      "rawChunk": "select-language.service-CLNBPLNQ.js",
+      "category": "services",
+      "extractedPath": "src/services/select-language.service.js",
+      "sizeBytes": 1758
+    },
+    {
       "rawChunk": "select-language.service-K5m-X5CX.js",
       "category": "services",
       "extractedPath": "src/services/select-language.service.js",
@@ -1376,6 +1964,18 @@
       "sizeBytes": 1013
     },
     {
+      "rawChunk": "select-plan.store-g7_ZRL0f.js",
+      "category": "stores",
+      "extractedPath": "src/stores/select-plan.store.js",
+      "sizeBytes": 1018
+    },
+    {
+      "rawChunk": "select-theme.service-D1qsc29T.js",
+      "category": "services",
+      "extractedPath": "src/services/select-theme.service.js",
+      "sizeBytes": 1976
+    },
+    {
       "rawChunk": "select-theme.service-DWChOL78.js",
       "category": "services",
       "extractedPath": "src/services/select-theme.service.js",
@@ -1386,6 +1986,12 @@
       "category": "components/ui",
       "extractedPath": "src/components/ui/separator.js",
       "sizeBytes": 1093
+    },
+    {
+      "rawChunk": "set-chat-model-CcUeiTyz.js",
+      "category": "modules",
+      "extractedPath": "src/modules/set-chat-model.js",
+      "sizeBytes": 418
     },
     {
       "rawChunk": "set-chat-model-DIyq3S5u.js",
@@ -1406,10 +2012,22 @@
       "sizeBytes": 507
     },
     {
+      "rawChunk": "settings-cookie.util-DFIv4tTh.js",
+      "category": "utils",
+      "extractedPath": "src/utils/settings-cookie.util.js",
+      "sizeBytes": 5293
+    },
+    {
       "rawChunk": "shallow-CKWb1b-W.js",
       "category": "vendor",
       "extractedPath": "src/vendor/shallow.js",
       "sizeBytes": 1160
+    },
+    {
+      "rawChunk": "share-chat-invite.api-DKLG9zAF.js",
+      "category": "api",
+      "extractedPath": "src/api/share-chat-invite.api.js",
+      "sizeBytes": 960
     },
     {
       "rawChunk": "share-chat-invite.api-kdUDCneo.js",
@@ -1436,10 +2054,22 @@
       "sizeBytes": 2140
     },
     {
+      "rawChunk": "sidebar.store-3O6FZkMw.js",
+      "category": "stores",
+      "extractedPath": "src/stores/sidebar.store.js",
+      "sizeBytes": 348
+    },
+    {
       "rawChunk": "sidebar.store-CMHpt4Zm.js",
       "category": "stores",
       "extractedPath": "src/stores/sidebar.store.js",
       "sizeBytes": 343
+    },
+    {
+      "rawChunk": "site-route.interface-CnbxJHY2.js",
+      "category": "interfaces",
+      "extractedPath": "src/interfaces/site-route.interface.js",
+      "sizeBytes": 575
     },
     {
       "rawChunk": "site-route.interface-DlOSDxTR.js",
@@ -1460,6 +2090,12 @@
       "sizeBytes": 315
     },
     {
+      "rawChunk": "ssr-session-heal.component-CgXLJu8u.js",
+      "category": "components",
+      "extractedPath": "src/components/ssr-session-heal.component.js",
+      "sizeBytes": 794
+    },
+    {
       "rawChunk": "ssr-session-heal.component-DPW9j3td.js",
       "category": "components",
       "extractedPath": "src/components/ssr-session-heal.component.js",
@@ -1467,6 +2103,12 @@
     },
     {
       "rawChunk": "subscription-C_QA18f9.js",
+      "category": "modules",
+      "extractedPath": "src/modules/subscription.js",
+      "sizeBytes": 1739
+    },
+    {
+      "rawChunk": "subscription-YCtyUATX.js",
       "category": "modules",
       "extractedPath": "src/modules/subscription.js",
       "sizeBytes": 1739
@@ -1514,6 +2156,12 @@
       "sizeBytes": 2569
     },
     {
+      "rawChunk": "terms.module-8lWaHXOv.js",
+      "category": "modules",
+      "extractedPath": "src/modules/terms.module.js",
+      "sizeBytes": 10125
+    },
+    {
       "rawChunk": "terms.module-SmyIa-se.js",
       "category": "modules",
       "extractedPath": "src/modules/terms.module.js",
@@ -1544,10 +2192,22 @@
       "sizeBytes": 567
     },
     {
+      "rawChunk": "use-auth-click.hook-Jj14PxYy.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-auth-click.hook.js",
+      "sizeBytes": 567
+    },
+    {
       "rawChunk": "use-auth-known.hook-C1WWcve_.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-auth-known.hook.js",
       "sizeBytes": 272
+    },
+    {
+      "rawChunk": "use-auth-redirect.hook-CyrTKHFv.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-auth-redirect.hook.js",
+      "sizeBytes": 1111
     },
     {
       "rawChunk": "use-auth-redirect.hook-DywLfOjS.js",
@@ -1562,7 +2222,19 @@
       "sizeBytes": 498
     },
     {
+      "rawChunk": "use-chat-input.hook-D8Aj7IhL.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-chat-input.hook.js",
+      "sizeBytes": 498
+    },
+    {
       "rawChunk": "use-display-user.hook-sY0IkKdE.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-display-user.hook.js",
+      "sizeBytes": 576
+    },
+    {
+      "rawChunk": "use-display-user.hook-YphSqSE-.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-display-user.hook.js",
       "sizeBytes": 576
@@ -1572,6 +2244,12 @@
       "category": "hooks",
       "extractedPath": "src/hooks/use-feature-flag.hook.js",
       "sizeBytes": 223
+    },
+    {
+      "rawChunk": "use-freemium-funnel-gate.hook-B1o4rR0l.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-freemium-funnel-gate.hook.js",
+      "sizeBytes": 1383
     },
     {
       "rawChunk": "use-freemium-funnel-gate.hook-sv-Z0STl.js",
@@ -1586,16 +2264,40 @@
       "sizeBytes": 2725
     },
     {
+      "rawChunk": "use-guest-sidebar-menu.hook-YCGK8tSI.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-guest-sidebar-menu.hook.js",
+      "sizeBytes": 2725
+    },
+    {
       "rawChunk": "use-has-mounted.hook-BZPIYb5B.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-has-mounted.hook.js",
       "sizeBytes": 302
     },
     {
+      "rawChunk": "use-has-mounted.hook-DsU-SnKZ.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-has-mounted.hook.js",
+      "sizeBytes": 249
+    },
+    {
       "rawChunk": "use-help-href.hook-CLIRRwj-.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-help-href.hook.js",
       "sizeBytes": 194
+    },
+    {
+      "rawChunk": "use-help-href.hook-vPkLpzXv.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-help-href.hook.js",
+      "sizeBytes": 194
+    },
+    {
+      "rawChunk": "use-history-backed-flag.hook-BJi3PAz-.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-history-backed-flag.hook.js",
+      "sizeBytes": 1370
     },
     {
       "rawChunk": "use-history-backed-flag.hook-C0Nr0kvF.js",
@@ -1610,10 +2312,28 @@
       "sizeBytes": 508
     },
     {
+      "rawChunk": "use-image-model-label.hook-yOBUVvtu.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-image-model-label.hook.js",
+      "sizeBytes": 508
+    },
+    {
       "rawChunk": "use-immediate-signup.hook-6A_wzI3j.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-immediate-signup.hook.js",
       "sizeBytes": 2403
+    },
+    {
+      "rawChunk": "use-immediate-signup.hook-ipxMOBWM.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-immediate-signup.hook.js",
+      "sizeBytes": 2426
+    },
+    {
+      "rawChunk": "use-incognito-chat.hook-D4pEi9zH.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-incognito-chat.hook.js",
+      "sizeBytes": 4600
     },
     {
       "rawChunk": "use-incognito-chat.hook-Dun56_qv.js",
@@ -1628,16 +2348,34 @@
       "sizeBytes": 300
     },
     {
+      "rawChunk": "use-is-freemium-funnel.hook-CjGJwE5O.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-is-freemium-funnel.hook.js",
+      "sizeBytes": 300
+    },
+    {
       "rawChunk": "use-page-scroll.hook-DpmNgPID.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-page-scroll.hook.js",
       "sizeBytes": 598
     },
     {
+      "rawChunk": "use-payment-session-initializer.hook-CtGClyZQ.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-payment-session-initializer.hook.js",
+      "sizeBytes": 4899
+    },
+    {
       "rawChunk": "use-payment-session-initializer.hook-DGfCVYjX.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-payment-session-initializer.hook.js",
       "sizeBytes": 4898
+    },
+    {
+      "rawChunk": "use-paywall-flow.hook-BDNn4Ikm.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-paywall-flow.hook.js",
+      "sizeBytes": 2166
     },
     {
       "rawChunk": "use-paywall-flow.hook-Co3B8FHN.js",
@@ -1652,10 +2390,22 @@
       "sizeBytes": 518
     },
     {
+      "rawChunk": "use-paywall-variant.experiment.hook-Dj0GQmjq.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-paywall-variant.experiment.hook.js",
+      "sizeBytes": 551
+    },
+    {
       "rawChunk": "use-post-auth-guest-hold.hook-DKAjN6Dj.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-post-auth-guest-hold.hook.js",
       "sizeBytes": 401
+    },
+    {
+      "rawChunk": "use-pricing-config.hook-CCDP4LPj.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-pricing-config.hook.js",
+      "sizeBytes": 16852
     },
     {
       "rawChunk": "use-pricing-config.hook-RC78R-t_.js",
@@ -1664,13 +2414,31 @@
       "sizeBytes": 16852
     },
     {
+      "rawChunk": "use-r2-uppy-upload.hook-CKKwVYPa.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-r2-uppy-upload.hook.js",
+      "sizeBytes": 69949
+    },
+    {
       "rawChunk": "use-root-chat-url-sync.hook-BLskOQaA.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-root-chat-url-sync.hook.js",
       "sizeBytes": 2466
     },
     {
+      "rawChunk": "use-root-chat-url-sync.hook-CepHUWpO.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-root-chat-url-sync.hook.js",
+      "sizeBytes": 2428
+    },
+    {
       "rawChunk": "use-session-recovery.hook-Cfs6gO86.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-session-recovery.hook.js",
+      "sizeBytes": 714
+    },
+    {
+      "rawChunk": "use-session-recovery.hook-DJxYUW5N.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-session-recovery.hook.js",
       "sizeBytes": 714
@@ -1688,16 +2456,40 @@
       "sizeBytes": 3018
     },
     {
+      "rawChunk": "use-track-experiment-view.hook-D5ID5Wj0.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-track-experiment-view.hook.js",
+      "sizeBytes": 728
+    },
+    {
       "rawChunk": "use-traffic-detection.hook-CKzLJPTv.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-traffic-detection.hook.js",
       "sizeBytes": 539
     },
     {
+      "rawChunk": "use-traffic-detection.hook-DS84CRee.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-traffic-detection.hook.js",
+      "sizeBytes": 539
+    },
+    {
+      "rawChunk": "use-user.hook-C0ENPFwj.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-user.hook.js",
+      "sizeBytes": 155
+    },
+    {
       "rawChunk": "use-user.hook-DIvUDXD9.js",
       "category": "hooks",
       "extractedPath": "src/hooks/use-user.hook.js",
       "sizeBytes": 155
+    },
+    {
+      "rawChunk": "use-visibility-calculator.hook-CnAiT3pd.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/use-visibility-calculator.hook.js",
+      "sizeBytes": 14788
     },
     {
       "rawChunk": "use-visibility-calculator.hook-DIRo381x.js",
@@ -1736,6 +2528,24 @@
       "sizeBytes": 11442
     },
     {
+      "rawChunk": "useQuery-BgSNoQ7j.js",
+      "category": "hooks",
+      "extractedPath": "src/hooks/useQuery.js",
+      "sizeBytes": 11442
+    },
+    {
+      "rawChunk": "user-CU5C7S8a.js",
+      "category": "modules",
+      "extractedPath": "src/modules/user.js",
+      "sizeBytes": 1840
+    },
+    {
+      "rawChunk": "user-data.provider-D1zgVZeU.js",
+      "category": "providers",
+      "extractedPath": "src/providers/user-data.provider.js",
+      "sizeBytes": 450
+    },
+    {
       "rawChunk": "user-data.provider-fGhNbbcZ.js",
       "category": "providers",
       "extractedPath": "src/providers/user-data.provider.js",
@@ -1758,6 +2568,12 @@
       "category": "modules",
       "extractedPath": "src/modules/utils.js",
       "sizeBytes": 960
+    },
+    {
+      "rawChunk": "utm-initializer.component-BAkF1Pda.js",
+      "category": "components",
+      "extractedPath": "src/components/utm-initializer.component.js",
+      "sizeBytes": 1222
     },
     {
       "rawChunk": "utm-initializer.component-DxP2ds-c.js",
@@ -1784,10 +2600,22 @@
       "sizeBytes": 184380
     },
     {
+      "rawChunk": "vinext-DaPQ-kLo.js",
+      "category": "vendor",
+      "extractedPath": "src/vendor/vinext.js",
+      "sizeBytes": 184380
+    },
+    {
       "rawChunk": "worker-auth.service-BtTnG2J5.js",
       "category": "services",
       "extractedPath": "src/services/worker-auth.service.js",
       "sizeBytes": 2909
+    },
+    {
+      "rawChunk": "worker-auth.service-oGq_wKdT.js",
+      "category": "services",
+      "extractedPath": "src/services/worker-auth.service.js",
+      "sizeBytes": 2903
     },
     {
       "rawChunk": "workspace-scope.provider-Cm72CHah.js",

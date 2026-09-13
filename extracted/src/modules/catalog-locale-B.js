@@ -1,0 +1,40 @@
+/**
+ * Source: https://use.ai/_next/static/chunks/catalog-locale-B-OI0E7H.js
+ * Module: catalog-locale-B
+ * Extracted & Beautified
+ */
+
+import { r as e } from "./rolldown-runtime-C0FnF6B9.js";
+import { nt as t, rt as n } from "./vinext-DaPQ-kLo.js";
+import { t as r } from "./_rolldown_dynamic_import_helper-CIAwlR2T.js";
+var i = e({ loadCatalogLocale: () => a });
+n();
+var a = e => r(Object.assign({ "./catalog-locale/ar-sa.json": () => t(() => import(`./ar-sa-D2vFtWOx.js`),
+[]), "./catalog-locale/bg.json": () => t(() => import(`./bg-CNo53SzT.js`), []), "./catalog-locale/da.json": () =>
+    t(() => import(`./da-CC3YwnDo.js`), []), "./catalog-locale/de.json": () => t(() => import(`./de-tRuSz2NQ.js`),
+    []), "./catalog-locale/el.json": () => t(() => import(`./el-BMJ8dg3B.js`),
+[]), "./catalog-locale/en.json": () => t(() => import(`./en-BU65ytdX.js`), []), "./catalog-locale/es.json": () => t(
+    () => import(`./es-LL_VX95G.js`), []), "./catalog-locale/fi.json": () => t(() => import(`./fi-CnfXLZ8q.js`),
+  []), "./catalog-locale/fr.json": () => t(() => import(`./fr-BZknZKCk.js`),
+[]), "./catalog-locale/he.json": () => t(() => import(`./he-Cjmz2uje.js`), []), "./catalog-locale/hr.json": () => t(
+    () => import(`./hr-BkU7ya84.js`), []), "./catalog-locale/hu.json": () => t(() => import(`./hu-DDlQjZOm.js`),
+  []), "./catalog-locale/id.json": () => t(() => import(`./id-DPeQje_j.js`),
+[]), "./catalog-locale/is.json": () => t(() => import(`./is-C27gtUKT.js`), []), "./catalog-locale/it.json": () => t(
+    () => import(`./it-mWttQj8K.js`), []), "./catalog-locale/ja.json": () => t(() => import(`./ja-DO881Muq.js`),
+  []), "./catalog-locale/ko.json": () => t(() => import(`./ko-DsJ8hF6Z.js`),
+[]), "./catalog-locale/ms.json": () => t(() => import(`./ms-CAXDd1Ky.js`), []), "./catalog-locale/nl-BE.json": () =>
+    t(() => import(`./nl-BE-B1vz_WGQ.js`), []), "./catalog-locale/nl.json": () => t(() => import(
+    `./nl-DOVSdfYR.js`), []), "./catalog-locale/no.json": () => t(() => import(`./no-CyTPohEG.js`),
+[]), "./catalog-locale/pl.json": () => t(() => import(`./pl-CeSM-jsw.js`), []), "./catalog-locale/pt.json": () =>
+    t(() => import(`./pt-C1OmTuzm.js`), []), "./catalog-locale/ro.json": () => t(() => import(`./ro-DznELKnH.js`),
+    []), "./catalog-locale/ru.json": () => t(() => import(`./ru-0vUjEJx1.js`),
+[]), "./catalog-locale/sk.json": () => t(() => import(`./sk-C4IfjMKJ.js`), []), "./catalog-locale/sl.json": () => t(
+    () => import(`./sl-De0ARRPO.js`), []), "./catalog-locale/sr-RS.json": () => t(() => import(
+    `./sr-RS-M4N-BKMM.js`), []), "./catalog-locale/sv.json": () => t(() => import(`./sv-f685F0pz.js`),
+[]), "./catalog-locale/th.json": () => t(() => import(`./th-Ci5m4xmD.js`), []), "./catalog-locale/tl.json": () =>
+    t(() => import(`./tl-CCdpVwj9.js`), []), "./catalog-locale/tr.json": () => t(() => import(`./tr-BmcnctRR.js`),
+    []), "./catalog-locale/ua.json": () => t(() => import(`./ua-BpQUkSzP.js`),
+[]), "./catalog-locale/vi.json": () => t(() => import(`./vi-BW0S01L-.js`), []), "./catalog-locale/zh-TW.json": () =>
+    t(() => import(`./zh-TW-CRsFb2yQ.js`), []), "./catalog-locale/zh.json": () => t(() => import(
+    `./zh-CwdfMYqY.js`), []) }), `./catalog-locale/${e}.json`, 3);
+export { a as n, i as t };

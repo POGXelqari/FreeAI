@@ -1,10 +1,10 @@
 /**
- * Source: https://use.ai/_next/static/chunks/use-display-user.hook-sY0IkKdE.js
+ * Source: https://use.ai/_next/static/chunks/use-display-user.hook-YphSqSE-.js
  * Module: use-display-user.hook
  * Extracted & Beautified
  */
 
-import { n as e } from "./user-data.provider-fGhNbbcZ.js";
+import { n as e } from "./user-data.provider-D1zgVZeU.js";
 
 function t() { let { session: t, userProfileWithSubscription: n } = e(), r = n.data?.data?.user, i = t.data
   ?.user; return { name: r?.name ?? i?.name ?? null, email: r?.email ?? i?.email ?? null, image: r?.image ?? i?.image ??

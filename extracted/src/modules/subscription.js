@@ -1,14 +1,14 @@
 /**
- * Source: https://use.ai/_next/static/chunks/subscription-C_QA18f9.js
+ * Source: https://use.ai/_next/static/chunks/subscription-YCtyUATX.js
  * Module: subscription
  * Extracted & Beautified
  */
 
-import { t as e } from "./useQuery-B3vkDNet.js";
+import { t as e } from "./useQuery-BgSNoQ7j.js";
 import { t } from "./useMutation-DldRSjFA.js";
 import { n } from "./QueryClientProvider-DGxN9XtP.js";
 import { t as r } from "./queryOptions-Dfvzj6n2.js";
-import { i } from "./rest-api-DNPFxXXP.js";
+import { i } from "./rest-api-BL5a3YVm.js";
 import { n as a, t as o } from "./subscription.model-Bs1FyJgo.js";
 import { n as s } from "./user.model-CISYB7eF.js";
 import { n as c } from "./limits.interface-CnG5W0wJ.js";

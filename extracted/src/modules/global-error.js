@@ -1,16 +1,16 @@
 /**
- * Source: https://use.ai/_next/static/chunks/global-error-9wsj_fxP.js
+ * Source: https://use.ai/_next/static/chunks/global-error-rdtD9BTI.js
  * Module: global-error
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t, r as n } from "./framework-D-uKrMmN.js";
-import { t as r } from "./vinext-CqpRraGS.js";
+import { t as r } from "./vinext-DaPQ-kLo.js";
 import { t as i } from "./abort-error.util-BDjcGeGf.js";
 import { t as a } from "./report-client-error.util-Bq41AYxy.js";
-import { t as o } from "./analytics.service-BIbiLKmC.js";
-import { a as s } from "./mixpanel-CkBALibP.js";
+import { t as o } from "./analytics.service-9oUGcSKY.js";
+import { a as s } from "./mixpanel-B_WP0jc-.js";
 import { t as c } from "./useai-CiXQTOJ8.js";
 import { i as l } from "./chunk-error.util-8lmmDUxL.js";
 var u = e(t(), 1),

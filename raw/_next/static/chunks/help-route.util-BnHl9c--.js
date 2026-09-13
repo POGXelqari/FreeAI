@@ -1,0 +1,1 @@
+import{t as e}from"./site-route.interface-CnbxJHY2.js";function t(t){return t.endsWith(e.HELP)||t.includes(`${e.HELP}/`)}export{t};

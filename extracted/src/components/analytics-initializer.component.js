@@ -1,16 +1,16 @@
 /**
- * Source: https://use.ai/_next/static/chunks/analytics-initializer.component-Di7Tyel_.js
+ * Source: https://use.ai/_next/static/chunks/analytics-initializer.component-D_xMZRoX.js
  * Module: analytics-initializer.component
  * Extracted & Beautified
  */
 
 import { o as e } from "./rolldown-runtime-C0FnF6B9.js";
 import { i as t } from "./framework-D-uKrMmN.js";
-import { tt as n } from "./vinext-CqpRraGS.js";
-import { n as r } from "./better-auth-client-session.service-ercwbZKT.js";
-import { I as i, t as a } from "./analytics.service-BIbiLKmC.js";
-import { d as o, m as s } from "./freemium-funnel.util-D0KPcbFz.js";
-import { a as c } from "./mixpanel-CkBALibP.js";
+import { tt as n } from "./vinext-DaPQ-kLo.js";
+import { n as r } from "./better-auth-client-session.service-1Lowatea.js";
+import { I as i, t as a } from "./analytics.service-9oUGcSKY.js";
+import { d as o, m as s } from "./freemium-funnel.util-BsrrWeXM.js";
+import { a as c } from "./mixpanel-B_WP0jc-.js";
 import { t as l } from "./uuid.util-BB0yd8wz.js";
 import { t as u } from "./app.constant-CQOe5N6O.js";
 var d = e(t(), 1),
